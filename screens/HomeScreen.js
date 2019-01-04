@@ -1,5 +1,5 @@
 import React from 'react';
-import Articles from './Articles';
+// import Articles from './Articles';
 import {
     Image,
     Platform,
@@ -9,14 +9,16 @@ import {
     TouchableOpacity,
     View,
     FlatList,
+    SafeAreaView,
 } from 'react-native';
 
-import { ListItem, List } from 'react-native-elements'
+import { ListItem, List, Tile } from 'react-native-elements'
 import {
     WebBrowser
 } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+const defaultImg ='https://wallpaper.wiki/wp-content/uploads/2017/04/wallpaper.wiki-Images-HD-Diamond-Pattern-PIC-WPB009691.jpg';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -27,23 +29,18 @@ export default class HomeScreen extends React.Component {
         }
     }
     static navigationOptions = {
-        header: null,
+        title: "Home",
     };
     componentWillMount() {
         this.fetchNews()
     }
     fetchNews = () => {
-        var url = 'https://newsapi.org/v2/top-headlines?' +
-          'country=us&' +
-          'apiKey=68a4777092bb462aa192eb8c45b0c95a';
-        fetch(url)
-        .then(response => response.json())
-        .then(json => {
-            this.setState({
-                articles: json.articles,
-                refreshing: false,
-            })
-        })
+        fetch("https://baomoi.press/api/get_recent_posts/")
+        .then(res => res.json())
+        .then(json => this.setState({
+            articles:json.posts,
+            refreshing: false,
+        }))
         .catch(err => console.log(err))
     }
     handleRefresh = () => {
@@ -53,30 +50,36 @@ export default class HomeScreen extends React.Component {
             () => this.fetchNews()
         );
     }
-    renderNews ({ item }) {
-        return (
-            <View>
-                <Image
-                     style={{width: 180, height: 180}}
-                     source={{uri: item.urlToImage}}
-               />
-                <ListItem
-                    title={item.title}
-                    subtitle={item.description}
-                />
-            </View>
-        )
-    }
-
     render() {
-        return (
-            <List>
+        return(
+            <View>
                 <FlatList
                     data={this.state.articles}
-                    renderItem={({ item }) => <Articles article={item} />}
-                    keyExtractor={item => item.title}
+                    renderItem={({ item }) =>
+                        <Tile
+                            activeOpacity={1}
+                            onPress={() => this.props.navigation.navigate("Article", {
+                                Article: item
+                            })}
+                            title={item.title}
+                            titleStyle={{textAlign: "left", textAlignVertical: "bottom"}}
+                            featured
+                            imageSrc={{uri: item.custom_fields.ht_iframe_thumb[0] || defaultImg}}
+                        />}
+                    keyExtractor={item => item.slug}
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.handleRefresh}
                 />
-            </List>
-        );
+            </View>
+
+        )
     }
 }
+
+// <FlatList
+//     data={this.state.articles}
+//     renderItem={({ item }) => <Articles articles={item} navigation={this.navigation} />}
+//     keyExtractor={item => item.slug}
+//     refreshing={this.state.refreshing}
+//     onRefresh={this.handleRefresh}
+// />

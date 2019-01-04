@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-
+import ArticleScreen from '../screens/ArticleScreen';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ListCategories from '../screens/ListCategories';
@@ -9,6 +9,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Article: ArticleScreen,
 });
 
 HomeStack.navigationOptions = {
@@ -29,7 +30,7 @@ const ListCategoriesStack = createStackNavigator({
   List: ListCategories,
 });
 
-ListCategories.navigationOptions = {
+ListCategoriesStack.navigationOptions = {
   tabBarLabel: 'List Categories',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -53,8 +54,9 @@ SettingsStack.navigationOptions = {
   ),
 };
 
+
 export default createBottomTabNavigator({
   HomeStack,
-  ListCategories,
+  ListCategoriesStack,
   SettingsStack,
 });
