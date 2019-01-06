@@ -12,14 +12,13 @@ import {
     SafeAreaView,
 } from 'react-native';
 
-import { ListItem, List, Tile } from 'react-native-elements'
+import { ListItem, List, Tile, Card } from 'react-native-elements'
 import {
     WebBrowser
 } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 const defaultImg ='https://wallpaper.wiki/wp-content/uploads/2017/04/wallpaper.wiki-Images-HD-Diamond-Pattern-PIC-WPB009691.jpg';
-
 export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -35,12 +34,13 @@ export default class HomeScreen extends React.Component {
         this.fetchNews()
     }
     fetchNews = () => {
-        fetch("https://baomoi.press/api/get_recent_posts/")
+        fetch("https://baomoi.press/wp-json/wp/v2/posts")
         .then(res => res.json())
         .then(json => this.setState({
-            articles:json.posts,
+            articles: json,
             refreshing: false,
         }))
+        // .then(json => console.log(json))
         .catch(err => console.log(err))
     }
     handleRefresh = () => {
@@ -61,11 +61,14 @@ export default class HomeScreen extends React.Component {
                             onPress={() => this.props.navigation.navigate("Article", {
                                 Article: item
                             })}
-                            title={item.title}
-                            titleStyle={{textAlign: "left", textAlignVertical: "bottom"}}
-                            featured
-                            imageSrc={{uri: item.custom_fields.ht_iframe_thumb[0] || defaultImg}}
-                        />}
+                            title={item.title.rendered}
+                            titleStyle={{textAlign: "left"}}
+                
+                            containerStyle={{backgroundColor: "white"}}
+                        >
+                            <Text>{item.excerpt.rendered}</Text>
+                        </Tile>
+                    }
                     keyExtractor={item => item.slug}
                     refreshing={this.state.refreshing}
                     onRefresh={this.handleRefresh}
@@ -75,11 +78,3 @@ export default class HomeScreen extends React.Component {
         )
     }
 }
-
-// <FlatList
-//     data={this.state.articles}
-//     renderItem={({ item }) => <Articles articles={item} navigation={this.navigation} />}
-//     keyExtractor={item => item.slug}
-//     refreshing={this.state.refreshing}
-//     onRefresh={this.handleRefresh}
-// />

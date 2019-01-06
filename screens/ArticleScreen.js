@@ -14,14 +14,11 @@ export default class ArticleScreen extends React.Component {
             Article: this.props.navigation.getParam("Article", "ERR")
         })
     }
-    componentDidMount() {
-        console.log(this.state.Article.content);
-    }
     render(){
         return(
                 <WebView
                     originWhitelist={['*']}
-                    source={{html: this.state.Article.content}}
+                    source={{html: this.state.Article.content.rendered}}
                     style={{marginTop: 20}}
                 />
         )
