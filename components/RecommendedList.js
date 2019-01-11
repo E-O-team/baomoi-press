@@ -11,6 +11,7 @@ import {
     SafeAreaView,
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 import { Divider } from 'react-native-elements';
 import Moment from 'moment';
@@ -128,6 +129,33 @@ export default class RecommendedList extends React.Component{
                 />
               }
 
+<<<<<<< HEAD
+=======
+      <Text style={{fontSize: 30, textAlign: 'center'}}>Bài viết đề xuất</Text>
+      {this.state.Articles && <FlatList
+            data={this.state.Articles}
+            renderItem={({ item }) =>
+                <Tile
+                    activeOpacity={1}
+
+                    onPress={() => {
+                      this.props.navigation.push("Article", {
+                        Article: item
+                    });
+                  }
+                  }
+                    title={item.title.rendered}
+                    titleStyle={{textAlign: "left"}}
+                    imageSrc={{uri : item.thumb || defaultImg}}
+
+                >
+                    <HTMLView value={item.excerpt.plainexcerpt} />
+                </Tile>
+            }
+            keyExtractor={(item, index) => index.toString()}
+        />
+      }
+>>>>>>> 778c93381d6297b412570f0a125c3b9f13fd1165
         </View>
 
 

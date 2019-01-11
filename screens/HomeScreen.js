@@ -10,7 +10,8 @@ import {
     View,
     FlatList,
     SafeAreaView,
-    Button
+    Button,
+    TouchableHighlight,
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon, Header } from 'react-native-elements'
@@ -78,7 +79,7 @@ export default class HomeScreen extends React.Component {
         this.setState({
                 refreshing: true
             },
-            () => this.fetchNews()
+            () => this.fetchNews(this.state.selectedCategory)
         );
     }
 
@@ -94,12 +95,21 @@ export default class HomeScreen extends React.Component {
     render() {
         return(
             <View style={{flex: 1}}>
-                <View style={{flex: 2}}>
-                    <Button onPress={() => this.setCategory("Home")} title="Home"/>
+                <View style={{height: 35}}>
                     <FlatList
-                        style={{flex: 1}}
+
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}
                         data={this.state.categories}
-                        renderItem={({item}) => <Button onPress={() => this.setCategory(item.id)} title={item.name}/>}
+                        renderItem={({item}) =>
+                            <TouchableHighlight
+                                onPress={() => this.setCategory(item.id)}
+                                style={{padding: 10, backgroundColor:"gray" }} 
+                                underlayColor="blue"
+                                activeOpacity={0}
+                            >
+                                <Text>{item.name}</Text>
+                            </TouchableHighlight>}
                         keyExtractor={item => item.slug}
                     />
                 </View>
@@ -126,3 +136,5 @@ export default class HomeScreen extends React.Component {
         )
     }
 }
+// onRefresh={this.handleRefresh}
+// renderItem={({item}) => <Button onPress={() => this.setCategory(item.id)} title={item.name}/>
