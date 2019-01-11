@@ -27,8 +27,8 @@ class Provider extends React.Component {
       <Context.Provider
         value={{ textColor: this.state.textColor,
           backGround: this.state.backGround,
-          login: this.login,
-          logout: this.logout }}
+          changeDay: this.changeDay,
+          changeNight: this.changeNight, }}
       >
         {this.props.children}
       </Context.Provider>
