@@ -1,19 +1,39 @@
 import React from 'react';
-import { Text, StyleSheet, View, TouchableHighlight} from 'react-native';
 
-const { Provider, Consumer } = React.createContext({
-  textColor: 'black',
-  background: 'white'
-  ChangeDay: () => {
-    this.setState({
-      textColor: 'black',
-      background: 'white'
-    })
+const Context = React.createContext();
+
+class Provider extends React.Component {
+  state = {
+    textColor: 'black',
+    backGround: 'white',
+    }
+    constructor() {
+    super()
+    this.changeDay = this.changeDay.bind(this)
+    this.changeNight = this.changeNight.bind(this)
+    }
+    changeDay() {
+    // setting timeout to mimic an async login
+      this.setState({  textColor: 'black',
+        backGround: 'white', })
+      }
+    changeNight() {
+      this.setState({ textColor: 'white',
+      backGround: 'black', })
+      }
+
+  render() {
+    return (
+      <Context.Provider
+        value={{ textColor: this.state.textColor,
+          backGround: this.state.backGround,
+          login: this.login,
+          logout: this.logout }}
+      >
+        {this.props.children}
+      </Context.Provider>
+    )
   }
-  ChangeNight: () => {
-    this.setState({
-      textColor: 'white',
-      background: 'black'
-    })
-  }
-});
+}
+const Consumer = Context.Consumer
+export { Provider, Consumer }
