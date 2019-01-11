@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
     color: '#FF3366', // make links coloured pink
   },
   p: {
-    fontFamily: 'sans-serif-thin',
     fontSize: 20,
     lineHeight: 28,
   },
