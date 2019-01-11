@@ -34,7 +34,7 @@ export default class HomeScreen extends React.Component {
         this.fetchNews()
     }
     fetchNews = () => {
-        fetch("https://baomoi.press/wp-json/wp/v2/posts")
+        fetch("https://baomoi.press/wp-json/wp/v2/posts?per_page=15")
         .then(res => res.json())
         .then(json => this.setState({
             articles: json,
@@ -63,10 +63,11 @@ export default class HomeScreen extends React.Component {
                             })}
                             title={item.title.rendered}
                             titleStyle={{textAlign: "left"}}
-                
+                            imageSrc={{uri : item.thumb}}
+                            featured
+
                             containerStyle={{backgroundColor: "white"}}
                         >
-                            <Text>{item.excerpt.rendered}</Text>
                         </Tile>
                     }
                     keyExtractor={item => item.slug}
