@@ -50,17 +50,19 @@ export default class ArticleScreen extends React.Component {
 }
     render(){
         return(
-          <ScrollView style={{ flex: 1 , backgroundColor: 'white', padding: 10}}>
-            <Consumer>
-              {({textColor}) => console.log(textColor)}
-            </Consumer>
+        <Consumer>
+        {({textColor, backGround}) => (
+          <ScrollView style={{ flex: 1 , backgroundColor: backGround, padding: 10}}>
+
+
+
             <HTMLView
               value={this.state.title}
-              stylesheet={styles}
+              stylesheet={this.textStyle(textColor)}
               />
             <HTMLView
               value={this.state.Article.content.plaintext}
-              stylesheet={styles}
+              stylesheet={this.textStyle(textColor)}
               />
               <TouchableHighlight style={{alignItems: 'center', marginBottom:20}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
                   OriginalUrl: this.state.Article.source_link
@@ -80,9 +82,25 @@ export default class ArticleScreen extends React.Component {
             <RecommendedList article={this.state.Article} navigation={this.props.navigation}/>
 
           </ScrollView>
+        )}
+        </Consumer>
 
         );
     }
+    textStyle = (myColor) => {
+       return {
+         p: {
+           fontFamily: 'sans-serif-thin',
+           fontSize: 20,
+           lineHeight: 28,
+           color: myColor,
+         },
+         h2: {
+           color: myColor,
+           fontSize: 30,
+         }
+       }
+     }
 };
 
 const styles = StyleSheet.create({
