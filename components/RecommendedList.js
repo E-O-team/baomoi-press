@@ -12,8 +12,10 @@ import {
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 
-import { ListItem, List, Tile, Card } from 'react-native-elements';
+import { Divider } from 'react-native-elements';
 import Moment from 'moment';
+import {Consumer} from '../context/context.js'
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 
 export default class RecommendedList extends React.Component{
@@ -85,10 +87,13 @@ export default class RecommendedList extends React.Component{
   })
 
 
+  }
 
+  contentCustomize = (article) =>{
 
-
-
+      var title= "<h4>"+article.title.rendered+"</h4>"
+      var excerpt = "<p>"+ article.excerpt.plainexcerpt +"</p>"
+      return {title, excerpt}
   }
   render(){
 
@@ -96,31 +101,33 @@ export default class RecommendedList extends React.Component{
     return(
       <View>
 
+              <Text style={{fontSize: 30, textAlign: 'center',color:this.props.ui.textColor}}>Bài viết đề xuất</Text>
+              {this.state.Articles && <FlatList
+                    data={this.state.Articles}
+                    renderItem={({ item }) =>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => this.props.navigation.push("Article", {
+                            Article: item
+                        })}
+                    >
+                        <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                            <View style={{flex: 2}}>
+                                <HTMLView value={this.contentCustomize(item).title} stylesheet={{h4:{color:this.props.ui.textColor, fontSize:22}}}/>
+                            </View>
+                            <Image
+                                source={{uri :item.thumb || defaultImg}}
+                                style={{height: 80, width: 180, flex: 1}}
+                            />
+                        </View>
+                        <HTMLView value={this.contentCustomize(item).excerpt} stylesheet={{p :{fontSize: 12, marginTop: 5, color:this.props.ui.textColor}}}/>
+                        <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
+                    </TouchableOpacity>
+                    }
+                    keyExtractor={(item, index) => index.toString()}
+                />
+              }
 
-      <Text style={{fontSize: 30, textAlign: 'center'}}>Bài viết đề xuất</Text>
-      {this.state.Articles && <FlatList
-            data={this.state.Articles}
-            renderItem={({ item }) =>
-                <Tile
-                    activeOpacity={1}
-
-                    onPress={() => {
-                      this.props.navigation.push("Article", {
-                        Article: item
-                    });
-                  }
-                  }
-                    title={item.title.rendered}
-                    titleStyle={{textAlign: "left"}}
-                    imageSrc={{uri : item.thumb}}
-
-                >
-                    <HTMLView value={item.excerpt.plainexcerpt} />
-                </Tile>
-            }
-            keyExtractor={(item, index) => index.toString()}
-        />
-      }
         </View>
 
 

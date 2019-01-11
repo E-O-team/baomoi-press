@@ -19,6 +19,7 @@ export default class CommentList extends React.Component{
   }
   componentWillMount(){
     this.fetchCommentList()
+
   }
   fetchCommentList = () => {
     fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.article.id)
@@ -32,7 +33,7 @@ export default class CommentList extends React.Component{
   render(){
     return(
         <View>
-            <Text style={{fontSize : 30, textAlign: 'center'}}>Comment</Text>
+            <Text style={{fontSize : 30, textAlign: 'center', marginTop: 20, color: this.props.ui.textColor}}>Comment</Text>
             {
           this.state.comments && <FlatList
                 style={styles.root}
@@ -43,9 +44,7 @@ export default class CommentList extends React.Component{
           <View style={styles.separator}/>
         )
       }}
-      keyExtractor={(item)=>{
-        return item.id;
-      }}
+      keyExtractor={(item, index) => index.toString()}
       renderItem={(item) => {
         const Notification = item.item;
         return(
@@ -60,12 +59,14 @@ export default class CommentList extends React.Component{
             </TouchableOpacity>
             <View style={styles.content}>
               <View style={styles.contentHeader}>
-                <Text  style={styles.name}>{Notification.author_name}</Text>
+                <Text  style={{fontSize:16,
+                              fontWeight:"bold",
+                              color:this.props.ui.textColor}}>{Notification.author_name}</Text>
                 <Text style={styles.time}>
                   {Notification.date}
                 </Text>
               </View>
-              <HTMLView value={Notification.content.rendered} />
+              <HTMLView value={Notification.content.rendered} stylesheet={{p:{color:this.props.ui.textColor}}}/>
             </View>
           </View>
         );
@@ -80,7 +81,6 @@ export default class CommentList extends React.Component{
 
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: "#ffffff",
     marginTop:10,
   },
   container: {

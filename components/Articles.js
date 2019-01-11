@@ -12,7 +12,8 @@ import {
     SafeAreaView,
 } from 'react-native';
 
-import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
+import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements';
+import HTMLView from 'react-native-htmlview';
 import {
     WebBrowser
 } from 'expo';
@@ -23,12 +24,14 @@ export default class Articles extends React.Component {
         super(props);
         this.state={
             numberOfComments: 'loading',
-            featured_post: undefined
+            featured_post: undefined,
+            title: ''
         }
     }
     componentWillMount() {
         this.setState({
-            featured_post: this.props.item.featured_post
+            featured_post: this.props.item.featured_post,
+            title: "<h4>"+this.props.item.title.rendered+"</h4>"
         })
     }
     componentDidMount() {
@@ -48,6 +51,7 @@ export default class Articles extends React.Component {
         // check to see if the post is featured
         Post = (prop) => {
             const item = prop.item
+
             if (item.content.images.length >= 3){
                 // post with more than 3 pic
                 return(
@@ -96,7 +100,7 @@ export default class Articles extends React.Component {
                                     Article: item
                                 })}
                             >
-                                <Text style={{fontSize: 20, fontWeight: "bold", flex: 1}}>{item.title.rendered}</Text>
+                                <HTMLView value={this.state.title}/>
                                 <Text numberOfLines={2} style={{fontSize: 20, color: '#696969'}} >{item.excerpt.plainexcerpt}</Text>
                             </TouchableOpacity>
                         </View>
@@ -114,7 +118,7 @@ export default class Articles extends React.Component {
                         >
                             <View style={{flex: 1, flexDirection: "row"}}>
                                 <View style={{flex: 2}}>
-                                    <Text style={{fontSize: 20, fontWeight: "bold", color: '#000000' }}>{item.title.rendered}</Text>
+                                    <HTMLView value={this.state.title}/>
                                 </View>
                                 <Image
                                     source={{uri :item.thumb || defaultImg}}
