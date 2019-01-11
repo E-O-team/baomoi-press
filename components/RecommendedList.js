@@ -11,6 +11,7 @@ import {
     SafeAreaView,
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 import { ListItem, List, Tile, Card } from 'react-native-elements';
 import Moment from 'moment';
@@ -112,7 +113,7 @@ export default class RecommendedList extends React.Component{
                   }
                     title={item.title.rendered}
                     titleStyle={{textAlign: "left"}}
-                    imageSrc={{uri : item.thumb}}
+                    imageSrc={{uri : item.thumb || defaultImg}}
 
                 >
                     <HTMLView value={item.excerpt.plainexcerpt} />
