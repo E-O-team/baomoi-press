@@ -122,7 +122,7 @@ export default class HomeScreen extends React.Component {
                         data={this.state.articles}
                         renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
                         }
-                        keyExtractor={item => item.id.toString()}
+                        keyExtractor={item => item.slug}
                         refreshing={this.state.refreshing}
                         onRefresh={this.handleRefresh}
                     />
