@@ -37,6 +37,7 @@ export default class HomeScreen extends React.Component {
     componentWillMount() {
         this.fetchNews(this.state.selectedCategory)
     }
+<<<<<<< HEAD
 
     fetchNews = (selectedCategory) => {
         // Home
@@ -64,6 +65,10 @@ export default class HomeScreen extends React.Component {
 
     fetchCategories = () => {
         fetch("https://baomoi.press/wp-json/wp/v2/categories")
+=======
+    fetchNews = () => {
+        fetch("https://baomoi.press/wp-json/wp/v2/posts?per_page=15")
+>>>>>>> kien
         .then(res => res.json())
         .then(json => this.setState({
             categories: json
@@ -93,6 +98,7 @@ export default class HomeScreen extends React.Component {
     }
     render() {
         return(
+<<<<<<< HEAD
             <View style={{flex: 1}}>
                 <View style={{flex: 2}}>
                     <Button onPress={() => this.setCategory("Home")} title="Home"/>
@@ -121,6 +127,30 @@ export default class HomeScreen extends React.Component {
                         onRefresh={this.handleRefresh}
                     />
                 </View>
+=======
+            <View>
+                <FlatList
+                    data={this.state.articles}
+                    renderItem={({ item }) =>
+                        <Tile
+                            activeOpacity={1}
+                            onPress={() => this.props.navigation.navigate("Article", {
+                                Article: item
+                            })}
+                            title={item.title.rendered}
+                            titleStyle={{textAlign: "left"}}
+                            imageSrc={{uri : item.thumb}}
+                            featured
+
+                            containerStyle={{backgroundColor: "white"}}
+                        >
+                        </Tile>
+                    }
+                    keyExtractor={item => item.slug}
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.handleRefresh}
+                />
+>>>>>>> kien
             </View>
 
         )
