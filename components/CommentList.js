@@ -19,7 +19,6 @@ export default class CommentList extends React.Component{
   }
   componentWillMount(){
     this.fetchCommentList()
-
   }
   fetchCommentList = () => {
     fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.article.id)
