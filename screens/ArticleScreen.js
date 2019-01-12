@@ -6,19 +6,16 @@ import RecommendedList from '../components/RecommendedList';
 import {Consumer, Provider} from '../context/context.js'
 const { width } = Dimensions.get('window');
 
-const FACEBOOK_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAAYFBMVEUAAAAAQIAAWpwAX5kAX5gAX5gAX5gAXJwAXpgAWZ8AX5gAXaIAX5gAXpkAVaoAX5gAXJsAX5gAX5gAYJkAYJkAXpoAX5gAX5gAX5kAXpcAX5kAX5gAX5gAX5YAXpoAYJijtTrqAAAAIHRSTlMABFis4vv/JL0o4QvSegbnQPx8UHWwj4OUgo7Px061qCrcMv8AAAB0SURBVEjH7dK3DoAwDEVRqum9BwL//5dIscQEEjFiCPhubziTbVkc98dsx/V8UGnbIIQjXRvFQMZJCnScAR3nxQNcIqrqRqWHW8Qd6cY94oGER8STMVioZsQLLnEXw1mMr5OqFdGGS378wxgzZvwO5jiz2wFnjxABOufdfQAAAABJRU5ErkJggg==";
 export default class ArticleScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             Article: {},
-            title: '',
         }
     }
     componentWillMount() {
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
-            title: "<h3>"+this.props.navigation.getParam("Article", "ERR").title.rendered+"</h3>",
         })
     }
     onShare = () => {
@@ -56,24 +53,21 @@ export default class ArticleScreen extends React.Component {
 
 
 
+            <Text style={{fontSize: 26, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</Text>
             <HTMLView
-              value={this.state.title}
-              stylesheet={this.textStyle(textColor)}
-              />
-            <HTMLView
-              value={this.state.Article.content.plaintext}
+              value={this.state.Article.content.plaintext.replace(/\r?\n|\r/g, '')}
               stylesheet={this.textStyle(textColor)}
               renderNode={this.renderNode}
               />
-              <TouchableHighlight style={{alignItems: 'center', marginBottom:50}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
+              <TouchableHighlight style={{alignItems: 'center', marginBottom:30, marginTop:20}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
                   OriginalUrl: this.state.Article.source_link
               })}>
-                <View style={{alignItems: 'center',justifyContent:'center', width: 150, height: 30,backgroundColor:'red'}}>
+                <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#cc0000'}}>
                  <Text style={{color:'#ffffff',fontWeight:'800',}}>Link gốc</Text>
                 </View>
               </TouchableHighlight>
             <TouchableHighlight style={{alignItems: 'center'}} onPress={this.onShare}>
-              <View style={{alignItems: 'center',justifyContent:'center', width: 150, height: 40,backgroundColor:'#3b5998'}}>
+              <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#3b5998'}}>
                <Text style={{color:'#ffffff',fontWeight:'800',}}>Share</Text>
               </View>
             </TouchableHighlight>
@@ -90,6 +84,7 @@ export default class ArticleScreen extends React.Component {
     }
     textStyle = (myColor) => {
        return {
+         color: myColor,
          p: {
            fontFamily: 'sans-serif-thin',
            fontSize: 18,

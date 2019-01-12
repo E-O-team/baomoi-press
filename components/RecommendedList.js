@@ -11,8 +11,6 @@ import {
     SafeAreaView,
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
-const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-
 import { Divider } from 'react-native-elements';
 import Moment from 'moment';
 import {Consumer} from '../context/context.js'
@@ -90,17 +88,11 @@ export default class RecommendedList extends React.Component{
 
   }
 
-  contentCustomize = (article) =>{
-
-      var title= "<h4>"+article.title.rendered+"</h4>"
-      var excerpt = "<p>"+ article.excerpt.plainexcerpt +"</p>"
-      return {title, excerpt}
-  }
   render(){
 
 
     return(
-      <View>
+      <View style={{padding: 10, borderColor: '#e0e0e0', borderWidth: 2}}>
 
               <Text style={{fontSize: 30, textAlign: 'center',color:this.props.ui.textColor}}>Bài viết đề xuất</Text>
               {this.state.Articles && <FlatList
@@ -114,48 +106,20 @@ export default class RecommendedList extends React.Component{
                     >
                         <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
                             <View style={{flex: 2}}>
-                                <HTMLView value={this.contentCustomize(item).title} stylesheet={{h4:{color:this.props.ui.textColor, fontSize:22}}}/>
+                              <Text style={{fontSize:18, color: this.props.ui.textColor}}>{item.title.plaintitle}</Text>
                             </View>
                             <Image
                                 source={{uri :item.thumb || defaultImg}}
                                 style={{height: 80, width: 180, flex: 1}}
                             />
                         </View>
-                        <HTMLView value={this.contentCustomize(item).excerpt} stylesheet={{p :{fontSize: 12, marginTop: 5, color:this.props.ui.textColor}}}/>
-                        <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
+                            <Text style={{fontSize:15, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</Text>
+                            <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
                     </TouchableOpacity>
                     }
                     keyExtractor={(item, index) => index.toString()}
                 />
               }
-
-<<<<<<< HEAD
-=======
-      <Text style={{fontSize: 30, textAlign: 'center'}}>Bài viết đề xuất</Text>
-      {this.state.Articles && <FlatList
-            data={this.state.Articles}
-            renderItem={({ item }) =>
-                <Tile
-                    activeOpacity={1}
-
-                    onPress={() => {
-                      this.props.navigation.push("Article", {
-                        Article: item
-                    });
-                  }
-                  }
-                    title={item.title.rendered}
-                    titleStyle={{textAlign: "left"}}
-                    imageSrc={{uri : item.thumb || defaultImg}}
-
-                >
-                    <HTMLView value={item.excerpt.plainexcerpt} />
-                </Tile>
-            }
-            keyExtractor={(item, index) => index.toString()}
-        />
-      }
->>>>>>> 778c93381d6297b412570f0a125c3b9f13fd1165
         </View>
 
 

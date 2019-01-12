@@ -25,13 +25,11 @@ export default class Articles extends React.Component {
         this.state={
             numberOfComments: 'loading',
             featured_post: undefined,
-            title: ''
         }
     }
     componentWillMount() {
         this.setState({
             featured_post: this.props.item.featured_post,
-            title: "<h4>"+this.props.item.title.rendered+"</h4>"
         })
     }
     componentDidMount() {
@@ -100,8 +98,8 @@ export default class Articles extends React.Component {
                                     Article: item
                                 })}
                             >
-                                <HTMLView value={this.state.title}/>
-                                <Text numberOfLines={2} style={{fontSize: 20, color: '#696969'}} >{item.excerpt.plainexcerpt}</Text>
+                                <Text style={{fontSize: 22, fontWeight: '500'}}>{item.title.plaintitle}</Text>
+                                <Text numberOfLines={2} style={{fontSize: 20, color: '#696969', marginTop:10}} >{item.excerpt.plainexcerpt}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -118,14 +116,15 @@ export default class Articles extends React.Component {
                         >
                             <View style={{flex: 1, flexDirection: "row"}}>
                                 <View style={{flex: 2}}>
-                                    <HTMLView value={this.state.title}/>
+                                    <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
                                 </View>
                                 <Image
                                     source={{uri :item.thumb || defaultImg}}
                                     style={{height: 80, width: 180, flex: 1}}
                                 />
                             </View>
-                            <Text numberOfLines={3} style={{fontSize: 20, color: '#696969'}} >{item.excerpt.plainexcerpt}</Text>
+
+                            <Text style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</Text>
                         </TouchableOpacity>
                     </View>
                 )
