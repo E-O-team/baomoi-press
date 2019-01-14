@@ -14,11 +14,12 @@ import {
     TouchableHighlight,
 } from 'react-native';
 
-import { ListItem, List, Tile, Card, Divider, Icon, Header } from 'react-native-elements'
+import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
 import {
     WebBrowser
 } from 'expo';
 import Articles from '../components/Articles';
+import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
@@ -34,6 +35,7 @@ export default class HomeScreen extends React.Component {
     }
     static navigationOptions = {
         title: "Home",
+        header: <Header/>
     };
 
     componentWillMount() {

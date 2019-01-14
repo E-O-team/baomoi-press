@@ -12,7 +12,8 @@ import {
     SafeAreaView,
 } from 'react-native';
 
-import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
+import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements';
+import HTMLView from 'react-native-htmlview';
 import {
     WebBrowser
 } from 'expo';
@@ -23,7 +24,7 @@ export default class Articles extends React.Component {
         super(props);
         this.state={
             numberOfComments: 'loading',
-            featured_post: undefined
+            featured_post: undefined,
         }
     }
     componentWillMount() {
@@ -50,6 +51,7 @@ export default class Articles extends React.Component {
         // check to see if the post have more than 3 pic
         Post = (prop) => {
             const item = prop.item
+
             if (item.content.images.length >= 3){
                 // post with more than 3 pic
                 return(
@@ -98,8 +100,8 @@ export default class Articles extends React.Component {
                                     Article: item
                                 })}
                             >
-                                <Text style={{fontSize: 20, fontWeight: "bold", flex: 1}}>{item.title.rendered}</Text>
-                                <Text numberOfLines={2} style={{fontSize: 20, color: '#696969'}} >{item.excerpt.plainexcerpt}</Text>
+                                <Text style={{fontSize: 22, fontWeight: '500'}}>{item.title.plaintitle}</Text>
+                                <Text numberOfLines={2} style={{fontSize: 20, color: '#696969', marginTop:10}} >{item.excerpt.plainexcerpt}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -116,14 +118,15 @@ export default class Articles extends React.Component {
                         >
                             <View style={{flex: 1, flexDirection: "row"}}>
                                 <View style={{flex: 2}}>
-                                    <Text style={{fontSize: 20, fontWeight: "bold", color: '#000000' }}>{item.title.rendered}</Text>
+                                    <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
                                 </View>
                                 <Image
                                     source={{uri :item.thumb || defaultImg}}
                                     style={{height: 80, width: 180, flex: 1}}
                                 />
                             </View>
-                            <Text numberOfLines={3} style={{fontSize: 20, color: '#696969'}} >{item.excerpt.plainexcerpt}</Text>
+
+                            <Text style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</Text>
                         </TouchableOpacity>
                     </View>
                 )

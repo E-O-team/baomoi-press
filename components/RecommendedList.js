@@ -11,10 +11,10 @@ import {
     SafeAreaView,
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
-const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-
-import { ListItem, List, Tile, Card } from 'react-native-elements';
+import { Divider } from 'react-native-elements';
 import Moment from 'moment';
+import {Consumer} from '../context/context.js'
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 
 export default class RecommendedList extends React.Component{
@@ -86,42 +86,40 @@ export default class RecommendedList extends React.Component{
   })
 
 
-
-
-
-
   }
+
   render(){
 
 
     return(
-      <View>
+      <View style={{padding: 10, borderColor: '#e0e0e0', borderWidth: 2}}>
 
-
-      <Text style={{fontSize: 30, textAlign: 'center'}}>Bài viết đề xuất</Text>
-      {this.state.Articles && <FlatList
-            data={this.state.Articles}
-            renderItem={({ item }) =>
-                <Tile
-                    activeOpacity={1}
-
-                    onPress={() => {
-                      this.props.navigation.push("Article", {
-                        Article: item
-                    });
-                  }
-                  }
-                    title={item.title.rendered}
-                    titleStyle={{textAlign: "left"}}
-                    imageSrc={{uri : item.thumb || defaultImg}}
-
-                >
-                    <HTMLView value={item.excerpt.plainexcerpt} />
-                </Tile>
-            }
-            keyExtractor={(item, index) => index.toString()}
-        />
-      }
+              <Text style={{fontSize: 30, textAlign: 'center',color:this.props.ui.textColor}}>Bài viết đề xuất</Text>
+              {this.state.Articles && <FlatList
+                    data={this.state.Articles}
+                    renderItem={({ item }) =>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => this.props.navigation.push("Article", {
+                            Article: item
+                        })}
+                    >
+                        <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                            <View style={{flex: 2}}>
+                              <Text style={{fontSize:18, color: this.props.ui.textColor}}>{item.title.plaintitle}</Text>
+                            </View>
+                            <Image
+                                source={{uri :item.thumb || defaultImg}}
+                                style={{height: 80, width: 180, flex: 1}}
+                            />
+                        </View>
+                            <Text style={{fontSize:15, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</Text>
+                            <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
+                    </TouchableOpacity>
+                    }
+                    keyExtractor={(item, index) => index.toString()}
+                />
+              }
         </View>
 
 
