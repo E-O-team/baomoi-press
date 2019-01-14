@@ -27,9 +27,11 @@ export default class Articles extends React.Component {
         }
     }
     componentWillMount() {
-        this.setState({
-            featured_post: this.props.item.featured_post
-        })
+        if(this.props.item.featured_post){
+            this.setState({
+                featured_post: this.props.item.featured_post
+            })
+        }
     }
     componentDidMount() {
         fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id)
@@ -41,11 +43,11 @@ export default class Articles extends React.Component {
     render(){
         Comments = (props) => {
             return(
-                <View style={{flexDirection: "row", justifyContent: 'flex-end', marginTop: 5}}><Text>{this.state.numberOfComments} </Text><Icon name='comment'/></View>
+                <View style={{flexDirection: "row", justifyContent: 'flex-end', marginTop: 5}}><Text>{this.state.numberOfComments} </Text><Icon name='comment' color='#696969'/></View>
             )
         }
 
-        // check to see if the post is featured
+        // check to see if the post have more than 3 pic
         Post = (prop) => {
             const item = prop.item
             if (item.content.images.length >= 3){

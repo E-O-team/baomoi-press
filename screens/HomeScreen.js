@@ -28,7 +28,8 @@ export default class HomeScreen extends React.Component {
             refreshing: true,
             articles: [],
             categories: [],
-            selectedCategory: 'Home'
+            selectedCategory: 'Home',
+            CategoryStyle: style.categories
         }
     }
     static navigationOptions = {
@@ -67,7 +68,7 @@ export default class HomeScreen extends React.Component {
         fetch("https://baomoi.press/wp-json/wp/v2/categories")
         .then(res => res.json())
         .then(json => this.setState({
-            categories: json
+            categories: [{name: "Home", id:"Home", key:"HOME"},...json],
         }))
         .catch(err => console.log(err))
     }
@@ -86,7 +87,8 @@ export default class HomeScreen extends React.Component {
     setCategory = (id) => {
         console.log(id);
         this.setState({
-            selectedCategory: id
+            selectedCategory: id,
+            CategoryStyle: style.selectedCategory
         }, () => {
             this.fetchNews(this.state.selectedCategory);
         })
@@ -104,13 +106,13 @@ export default class HomeScreen extends React.Component {
                         renderItem={({item}) =>
                             <TouchableHighlight
                                 onPress={() => this.setCategory(item.id)}
-                                style={{padding: 10, backgroundColor:"gray" }} 
-                                underlayColor="blue"
-                                activeOpacity={0}
+                                style={this.state.CategoryStyle}
+                                underlayColor="white"
+                                activeOpacity={1}
                             >
                                 <Text>{item.name}</Text>
                             </TouchableHighlight>}
-                        keyExtractor={item => item.slug}
+                        keyExtractor={item => item.id.toString()}
                     />
                 </View>
                 <View
@@ -136,5 +138,17 @@ export default class HomeScreen extends React.Component {
         )
     }
 }
+
+const style = StyleSheet.create({
+    categories:{
+        backgroundColor: 'white',
+        padding: 10,
+    },
+    selectedCategory:{
+        backgroundColor: 'blue',
+        padding: 10,
+    },
+})
+
 // onRefresh={this.handleRefresh}
 // renderItem={({item}) => <Button onPress={() => this.setCategory(item.id)} title={item.name}/>
