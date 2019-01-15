@@ -12,7 +12,6 @@ import {
 import {Icon} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
 
-
 export default class Header extends React.Component{
   constructor(props){
     super(props);
@@ -31,7 +30,7 @@ export default class Header extends React.Component{
           <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
             <Icon
               name='menu'
-              size={22}
+              size={20}
               color='#696969'
             />
           </View>
@@ -43,7 +42,7 @@ export default class Header extends React.Component{
           <View style={{flex: 1, alignItems:'flex-end', justifyContent:'center'}}>
             <Icon
               name='search'
-              size={22}
+              size={20}
               color='#696969'
               onPress={()=>this.props.navigation.navigate("Search")}
             />
@@ -51,7 +50,7 @@ export default class Header extends React.Component{
           <View style={{flex: 1, alignItems:'flex-end', marginRight: 10, justifyContent:'center'}}>
             <Icon
               name='settings'
-              size={22}
+              size={20}
               color='#696969'
             />
           </View>

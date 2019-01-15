@@ -6,12 +6,14 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ListCategories from '../screens/ListCategories';
 import SettingsScreen from '../screens/SettingsScreen';
-import OriginalWebView from '../screens/OriginalWebView'
+import OriginalWebView from '../screens/OriginalWebView';
+import SearchScreen from '../screens/SearchScreen'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
+  Search: SearchScreen
 });
 
 HomeStack.navigationOptions = {
@@ -47,6 +49,9 @@ const SettingsStack = createStackNavigator({
 });
 
 SettingsStack.navigationOptions = {
+  headerStyle:{
+                backgroundColor: '#212121', // this will handle the cutOff at the top the screen
+          },
   tabBarLabel: 'Settings',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
