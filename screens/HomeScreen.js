@@ -33,10 +33,12 @@ export default class HomeScreen extends React.Component {
             CategoryStyle: style.categories
         }
     }
-    static navigationOptions = {
-        title: "Home",
-        header: <Header/>
-    };
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: "Home",
+            header: <Header navigation={navigation}/>
+        }
+    }
 
     componentWillMount() {
         this.fetchNews(this.state.selectedCategory)

@@ -86,7 +86,6 @@ export default class ArticleScreen extends React.Component {
        return {
          color: myColor,
          p: {
-           fontFamily: 'sans-serif-thin',
            fontSize: 18,
            lineHeight: 25,
            color: myColor,
