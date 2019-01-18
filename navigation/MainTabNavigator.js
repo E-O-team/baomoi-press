@@ -13,11 +13,8 @@ const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
-<<<<<<< HEAD
-  Search: SearchScreen
-=======
-  Settings: SettingsScreen,
->>>>>>> master
+  Search: SearchScreen,
+  Settings: SettingsScreen, 
 });
 
 HomeStack.navigationOptions = {
