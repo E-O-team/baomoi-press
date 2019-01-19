@@ -20,26 +20,13 @@ export default class SignUpScreen extends React.Component {
         }
     }
     handleSubmit = () => {
-        if(this.state.email !== "" && this.state.username !== "" && this.state.password !== ""){
-            axios({
-                method: "post",
-                url: 'https://baomoi.press/wp-json/wp/v2/users',
-                headers: {'Authorization': 'Bearer ' + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYmFvbW9pLnByZXNzIiwiaWF0IjoxNTQ3NzQzMjk3LCJuYmYiOjE1NDc3NDMyOTcsImV4cCI6MTU0ODM0ODA5NywiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMjAifX19.iAs8cW6oXuGLOJgQbHh8e4D2NdaGUnDVnBlk8hHKV0Q"},
-                data: {
-                    email: this.state.email,
-                    username: this.state.username,
-                    password: this.state.password,
-                }
-            })
-            .then(() => this.props.navigation.navigate('Auth'))
-            .catch(err => console.log(err))
-        }else{
-            this.setState({
-                errorMessage: "Please fill all fields"
-            })
-        }
+        console.log(this.state);
+        axios.post("https://baomoi.press/wp-json/wp/v2/users", {
+            email: this.state.email,
+            username: this.state.username,
+            password: this.state.password,
+        })
     }
-
     render(){
         return(
             <View style={styles.container}>
