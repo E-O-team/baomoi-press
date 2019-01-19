@@ -57,7 +57,13 @@ export default TabNavigator(
   SettingsStack,
   },
   {
+    navigationOptions: ({ navigation }) => {
 
+      return {
+        tabBarLabel: 'Demo',
+        tabBarVisible: true,
+      }
+    },
     tabBarComponent: props => <CustomTabBarBottom {...props}/>,
     tabBarPosition: "bottom",
 
