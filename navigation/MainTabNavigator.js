@@ -1,13 +1,14 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator, TabNavigator } from 'react-navigation';
 import ArticleScreen from '../screens/ArticleScreen';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import ListCategories from '../screens/ListCategories';
 import SettingsScreen from '../screens/SettingsScreen';
 import OriginalWebView from '../screens/OriginalWebView';
-import SearchScreen from '../screens/SearchScreen'
+import SearchScreen from '../screens/SearchScreen';
+import CustomTabBarBottom from '../components/CustomTabBarBottom'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -30,19 +31,7 @@ HomeStack.navigationOptions = {
   ),
 };
 
-const ListCategoriesStack = createStackNavigator({
-  List: ListCategories,
-});
 
-ListCategoriesStack.navigationOptions = {
-  tabBarLabel: 'List Categories',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-    />
-  ),
-};
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -62,8 +51,15 @@ SettingsStack.navigationOptions = {
 };
 
 
-export default createBottomTabNavigator({
+export default TabNavigator(
+  {
   HomeStack,
-  ListCategoriesStack,
   SettingsStack,
-});
+  },
+  {
+
+    tabBarComponent: props => <CustomTabBarBottom {...props}/>,
+    tabBarPosition: "bottom",
+
+  }
+  );

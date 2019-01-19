@@ -12,6 +12,7 @@ import {
     SafeAreaView,
     Button,
     TouchableHighlight,
+    Dimensions,
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
@@ -21,6 +22,7 @@ import {
 import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
+var { width, height } = Dimensions.get('window');
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -98,7 +100,7 @@ export default class HomeScreen extends React.Component {
     }
     render() {
         return(
-            <View style={{flex: 1}}>
+          <View style={{flex: 1}}>
                 <View style={{height: 35}}>
                     <FlatList
 
@@ -135,7 +137,8 @@ export default class HomeScreen extends React.Component {
                         onRefresh={this.handleRefresh}
                     />
                 </View>
-            </View>
+
+          </View>
 
         )
     }
