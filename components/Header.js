@@ -9,19 +9,24 @@ import {
     Button,
     TouchableHighlight,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
-import {SafeAreaView} from 'react-navigation';
+import {
+    Icon
+} from 'react-native-elements';
+import {
+    SafeAreaView
+} from 'react-navigation';
 
 
-export default class Header extends React.Component{
-  constructor(props){
-    super(props);
-    this.state={
+export default class Header extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+
+        }
     }
-  }
-  render(){
-    return(
-        <View
+    render(){
+        return(
+            <View
           style={{
             flexDirection: "row",
             height: 50,
@@ -50,13 +55,13 @@ export default class Header extends React.Component{
           </View>
           <View style={{flex: 1, alignItems:'flex-end', marginRight: 10, justifyContent:'center'}}>
             <Icon
-              name='settings'
-              size={22}
-              color='#696969'
+                onPress={() => this.props.navigation.navigate("Settings")}
+                name='settings'
+                size={22}
+                color='#696969'
             />
           </View>
         </View>
-    )
-  }
-
+        )
+    }
 }
