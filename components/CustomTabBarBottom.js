@@ -2,6 +2,7 @@ import React from "react";
 import {
   TabBarBottom
 } from "react-navigation";
+import {BottomTabBar} from "react-navigation-tabs";
 import { View, Text, Dimensions, Platform, Animated, Easing, Image, Button, TouchableOpacity} from "react-native";
 import { LinearGradient } from "expo";
 import { Ionicons  } from '@expo/vector-icons';
@@ -118,7 +119,7 @@ export default class CustomTabBarBottom extends React.Component {
             </View>
           </View>
           <View style={{backgroundColor: "#fff", }}>
-            <TabBarBottom {...this.props } />
+            <BottomTabBar {...this.props } />
           </View>
           {blackscreen}
           {expandedView}

@@ -31,7 +31,9 @@ export default class HomeScreen extends React.Component {
             refreshing: true,
             articles: [],
             categories: [],
-            selectedCategory: 'Home'
+            selectedCategory: 'Home',
+            y: 0,
+            isScrollDown: false,
         }
     }
     static navigationOptions = ({ navigation }) => {
@@ -98,6 +100,22 @@ export default class HomeScreen extends React.Component {
         })
 
     }
+    handleBeginDrag = (e) =>{
+      this.setState({y: e.nativeEvent.contentOffset.y})
+      if(this.state.y != 0){
+        if(this.state.isScrollDown) this.props.navigation.setParams({ visible: false })
+      }
+    }
+    handleEndDrag = (e) =>{
+      this.setState({y: e.nativeEvent.contentOffset.y})
+      if(e.nativeEvent.contentOffset.y <= this.state.y)
+      {
+        this.props.navigation.setParams({ visible: true })
+        this.setState({isScrollDown : false})
+      }else{
+        this.setState({isScrollDown: true})
+      }
+    }
     render() {
         return(
           <View style={{flex: 1}}>
@@ -119,7 +137,7 @@ export default class HomeScreen extends React.Component {
                         keyExtractor={item => item.slug}
                     />
                 </View>
-                <View
+                <ScrollView onScrollBeginDrag={this.handleBeginDrag} onScrollEndDrag={this.handleEndDrag}
                     style={{
                         flex: 5,
                         flexDirection: 'column',
@@ -136,7 +154,7 @@ export default class HomeScreen extends React.Component {
                         refreshing={this.state.refreshing}
                         onRefresh={this.handleRefresh}
                     />
-                </View>
+                </ScrollView>
 
           </View>
 
