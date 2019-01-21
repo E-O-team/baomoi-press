@@ -12,6 +12,7 @@ import {
     SafeAreaView,
     Button,
     TouchableHighlight,
+    Dimensions,
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
@@ -22,6 +23,10 @@ import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
 import axios from 'axios';
+
+var { width, height } = Dimensions.get('window');
+
+
 export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -32,6 +37,11 @@ export default class HomeScreen extends React.Component {
             selectedCategory: 'Home',
             CategoryStyle: style.categories,
             featuredPost: "",
+
+            y: 0,
+            isScrollDown: false,
+            CategoryStyle: style.categories
+
         }
     }
     static navigationOptions = ({navigation}) => {
@@ -106,6 +116,22 @@ export default class HomeScreen extends React.Component {
         })
 
     }
+    handleBeginDrag = (e) =>{
+      this.setState({y: e.nativeEvent.contentOffset.y})
+      if(this.state.y != 0){
+        if(this.state.isScrollDown) this.props.navigation.setParams({ visible: false })
+      }
+    }
+    handleEndDrag = (e) =>{
+      this.setState({y: e.nativeEvent.contentOffset.y})
+      if(e.nativeEvent.contentOffset.y <= this.state.y)
+      {
+        this.props.navigation.setParams({ visible: true })
+        this.setState({isScrollDown : false})
+      }else{
+        this.setState({isScrollDown: true})
+      }
+    }
     render() {
         const FeaturedPost = (props) => {
             const featuredPost = props.featuredPost
@@ -151,7 +177,9 @@ export default class HomeScreen extends React.Component {
                     />
                 </View>
 
-                <View
+                <ScrollView
+                    onScrollBeginDrag={this.handleBeginDrag}
+                    onScrollEndDrag={this.handleEndDrag}
                     style={{
                         flex: 5,
                         flexDirection: 'column',
@@ -160,21 +188,20 @@ export default class HomeScreen extends React.Component {
                         }
                     }}
                 >
-                    <ScrollView>
-                        <View style={style.featuredPost}>
-                            <FeaturedPost featuredPost={this.state.featuredPost}/>
-                        </View>
-                        <FlatList
-                            data={this.state.articles}
-                            renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
-                            }
-                            keyExtractor={item => item.slug}
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.handleRefresh}
-                        />
-                    </ScrollView>
-                </View>
-            </View>
+                    <View style={style.featuredPost}>
+                        <FeaturedPost featuredPost={this.state.featuredPost}/>
+                    </View>
+                    <FlatList
+                        data={this.state.articles}
+                        renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
+                        }
+                        keyExtractor={item => item.slug}
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.handleRefresh}
+                    />
+                </ScrollView>
+          </View>
+
 
         )
     }
