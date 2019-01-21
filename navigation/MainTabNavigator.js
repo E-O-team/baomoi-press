@@ -12,6 +12,7 @@ import SearchScreen from '../screens/SearchScreen';
 import {MultiBar, MultiBarToggle} from 'react-native-multibar';
 import {Icon} from 'react-native-elements';
 import UserProfile from '../screens/UserProfileScreen';
+import VideoScreen from '../screens/VideoScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -20,6 +21,7 @@ const HomeStack = createStackNavigator({
   Search: SearchScreen,
   Settings: SettingsScreen,
   UserProfile: UserProfile,
+  Video: VideoScreen,
 });
 
 HomeStack.navigationOptions = {
@@ -31,17 +33,17 @@ HomeStack.navigationOptions = {
 
 
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+const VideoStack = createStackNavigator({
+  Video: VideoScreen,
 });
 
-SettingsStack.navigationOptions = {
+VideoStack.navigationOptions = {
   headerStyle:{
                 backgroundColor: '#212121', // this will handle the cutOff at the top the screen
           },
-  tabBarLabel: 'Settings',
+  tabBarLabel: 'Video',
   tabBarIcon: ({ focused }) => (
-    <Text style={{color:'white'}}>Settings</Text>
+    <Text style={{color:'white'}}>Video</Text>
   ),
 };
 
@@ -151,7 +153,7 @@ Home: HomeStack,
         params: {
             navigationDisabled: true
         }
-    },Setting: SettingsStack
+    },Video: VideoStack
 
 }, {
   tabBarComponent: props =>
