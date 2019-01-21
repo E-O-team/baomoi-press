@@ -15,17 +15,21 @@ export default class AuthLoadingScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
-    console.log(userToken);
-    axios({
-        method: "POST",
-        url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
-        headers: {'Authorization': 'Bearer ' + userToken},
-    })
-    .catch(err => console.log(err))
+    let user = await AsyncStorage.getItem('user');
+    if(user){
+        user = JSON.parse(user)
+        axios({
+            method: "POST",
+            url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
+            headers: {'Authorization': 'Bearer ' + user.token},
+        })
+        .then(() => this.props.navigation.navigate("App"))
+        .catch(err => console.log(err))
+    }else{
+        this.props.navigation.navigate("Auth")
+    }
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
   };
 
   // Render any loading content that you like here

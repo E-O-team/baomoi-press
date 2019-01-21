@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     View,
     Button,
-    TouchableHighlight,
+    TouchableHighlight,Dimensions
 } from 'react-native';
 import {
     Icon
@@ -15,6 +15,8 @@ import {
 import {
     SafeAreaView
 } from 'react-navigation';
+
+const {width} = Dimensions.get('window')
 
 
 export default class Header extends React.Component {
@@ -26,25 +28,29 @@ export default class Header extends React.Component {
     }
     render(){
         return(
-            <View
-          style={{
-            flexDirection: "row",
-            height: 50,
-            marginTop: Platform.OS == "ios" ? 20 : 0 // only for IOS to give StatusBar Space
-          }}
-        >
+            <SafeAreaView
+                style={{
+                    flexDirection: "row",
+                    height: 50,
+                    // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
+                }}
+            >
           <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
             <Icon
-              name='menu'
+              name='person'
               size={22}
               color='#696969'
+              onPress={() => this.props.navigation.navigate("UserProfile")}
             />
           </View>
-
-          <Image
-          source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
-          style={{ width: 30, height: 30,marginLeft:50,marginTop:10, resizeMode:'contain', flex:2}}
-          />
+          <View
+              style={{ flex:2 }}
+          >
+              <Image
+              source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
+              style={{ height: 35 ,marginLeft:73,marginTop:5, resizeMode:'contain', }}
+              />
+          </View>
           <View style={{flex: 1, alignItems:'flex-end', justifyContent:'center'}}>
             <Icon
               name='search'
@@ -61,7 +67,7 @@ export default class Header extends React.Component {
                 color='#696969'
             />
           </View>
-        </View>
+        </SafeAreaView>
         )
     }
 }

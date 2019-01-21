@@ -27,7 +27,8 @@ export default class SignInScreen extends React.Component {
                 password: this.state.password
             })
             .then((response) => {
-                this.signInApp(response.data.token)
+                let user = JSON.stringify(response.data)
+                this.signInApp(user)
             })
             .catch((err) => {
                 console.log(err);
@@ -42,8 +43,8 @@ export default class SignInScreen extends React.Component {
         }
     }
 
-    signInApp = async (userToken) => {
-        await AsyncStorage.setItem('userToken', userToken)
+    signInApp = async (user) => {
+        await AsyncStorage.setItem('user', user)
         this.props.navigation.navigate('App')
     }
 

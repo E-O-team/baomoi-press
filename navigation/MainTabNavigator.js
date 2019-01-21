@@ -8,13 +8,14 @@ import ListCategories from '../screens/ListCategories';
 import SettingsScreen from '../screens/SettingsScreen';
 import OriginalWebView from '../screens/OriginalWebView';
 import SearchScreen from '../screens/SearchScreen'
-
+import UserProfile from '../screens/UserProfileScreen';
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
   Search: SearchScreen,
-  Settings: SettingsScreen, 
+  Settings: SettingsScreen,
+  UserProfile: UserProfile,
 });
 
 HomeStack.navigationOptions = {

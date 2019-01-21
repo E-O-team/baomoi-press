@@ -21,7 +21,7 @@ import {
 import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
-
+import axios from 'axios';
 export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -30,7 +30,8 @@ export default class HomeScreen extends React.Component {
             articles: [],
             categories: [],
             selectedCategory: 'Home',
-            CategoryStyle: style.categories
+            CategoryStyle: style.categories,
+            featuredPost: "",
         }
     }
     static navigationOptions = ({navigation}) => {
@@ -40,7 +41,16 @@ export default class HomeScreen extends React.Component {
         }
     }
     componentWillMount() {
+        this.fetchFeaturedPost()
         this.fetchNews(this.state.selectedCategory)
+    }
+
+    fetchFeaturedPost = () => {
+        axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on")
+        .then(res => this.setState({
+            featuredPost: res.data[0]
+        }))
+        .catch(err => console.log(err))
     }
 
     fetchNews = (selectedCategory) => {
@@ -88,7 +98,6 @@ export default class HomeScreen extends React.Component {
     }
 
     setCategory = (id) => {
-        console.log(id);
         this.setState({
             selectedCategory: id,
             CategoryStyle: style.selectedCategory
@@ -98,11 +107,34 @@ export default class HomeScreen extends React.Component {
 
     }
     render() {
+        const FeaturedPost = (props) => {
+            const featuredPost = props.featuredPost
+            if(featuredPost !== ""){
+                return(
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => this.props.navigation.navigate("Article", {
+                            Article: featuredPost
+                        })}
+                    >
+                        <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 5}}>Tin Nóng</Text>
+                        <Image
+                            source={{uri: featuredPost.thumb}}
+                            style= {{height: 180, width: 340, marginLeft: 10}}
+                        />
+                        <Text style={style.featuredPostTitle}>{featuredPost.title.plaintitle}</Text>
+                        <Text numberOfLines={2} style={{fontSize: 20, color: '#696969', marginTop:10, marginBottom: 10}} >{featuredPost.excerpt.plainexcerpt}</Text>
+                        <Divider style={{ backgroundColor: '#e0e0e0' }} />
+                    </TouchableOpacity>
+                )
+            }else{
+                return <Text>Loading</Text>
+            }
+        }
         return(
             <View style={{flex: 1}}>
-                <View style={{height: 35}}>
+                <View style={{height: 37}}>
                     <FlatList
-
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         data={this.state.categories}
@@ -113,11 +145,12 @@ export default class HomeScreen extends React.Component {
                                 underlayColor="white"
                                 activeOpacity={1}
                             >
-                                <Text>{item.name}</Text>
+                                <Text style={{color: "white"}}>{item.name}</Text>
                             </TouchableHighlight>}
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
+
                 <View
                     style={{
                         flex: 5,
@@ -127,14 +160,19 @@ export default class HomeScreen extends React.Component {
                         }
                     }}
                 >
-                    <FlatList
-                        data={this.state.articles}
-                        renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
-                        }
-                        keyExtractor={item => item.slug}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.handleRefresh}
-                    />
+                    <ScrollView>
+                        <View style={style.featuredPost}>
+                            <FeaturedPost featuredPost={this.state.featuredPost}/>
+                        </View>
+                        <FlatList
+                            data={this.state.articles}
+                            renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
+                            }
+                            keyExtractor={item => item.slug}
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.handleRefresh}
+                        />
+                    </ScrollView>
                 </View>
             </View>
 
@@ -144,8 +182,15 @@ export default class HomeScreen extends React.Component {
 
 const style = StyleSheet.create({
     categories:{
-        backgroundColor: 'white',
+        backgroundColor: '#e12f28',
         padding: 10,
+    },
+    featuredPost:{
+        padding: 10,
+        backgroundColor: "white",
+    },
+    featuredPostTitle:{
+        fontSize: 30,
     },
     selectedCategory:{
         backgroundColor: 'blue',
