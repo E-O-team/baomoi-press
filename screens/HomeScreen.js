@@ -13,6 +13,7 @@ import {
     Button,
     TouchableHighlight,
     Dimensions,
+    AsyncStorage,
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
@@ -22,7 +23,10 @@ import {
 import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
+import axios from 'axios';
+
 var { width, height } = Dimensions.get('window');
+
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -32,9 +36,13 @@ export default class HomeScreen extends React.Component {
             articles: [],
             categories: [],
             selectedCategory: 'Home',
+            loading: false,
+            CategoryStyle: style.categories,
+            page: 1,
             y: 0,
             isScrollDown: false,
             CategoryStyle: style.categories
+
         }
     }
     static navigationOptions = ({navigation}) => {
@@ -45,22 +53,21 @@ export default class HomeScreen extends React.Component {
     }
     componentWillMount() {
         this.fetchNews(this.state.selectedCategory)
+        this.fetchCategories()
     }
-
     fetchNews = (selectedCategory) => {
         // Home
         if(selectedCategory === "Home"){
-            fetch("https://baomoi.press/wp-json/wp/v2/posts")
-            .then(res => res.json())
-            .then(json => this.setState({
-                articles: json,
+            axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+            .then(res => this.setState({
+                articles: [...this.state.articles,...res.data],
                 refreshing: false,
             }))
             // .then(json => console.log(json))
             .catch(err => console.log(err))
         // Other categories
         }else{
-            fetch("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory)
+            fetch("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
             .then(res => res.json())
             .then(json => this.setState({
                 articles: json,
@@ -79,10 +86,6 @@ export default class HomeScreen extends React.Component {
         }))
         .catch(err => console.log(err))
     }
-
-    componentDidMount() {
-        this.fetchCategories()
-    }
     handleRefresh = () => {
         this.setState({
                 refreshing: true
@@ -90,12 +93,18 @@ export default class HomeScreen extends React.Component {
             () => this.fetchNews(this.state.selectedCategory)
         );
     }
+    handleLoadMore = () => {
+        console.log("loading more");
+        this.setState({
+            page: this.state.page + 1,
+        }, () => this.fetchNews(this.state.selectedCategory))
+    }
 
     setCategory = (id) => {
-        console.log(id);
         this.setState({
             selectedCategory: id,
-            CategoryStyle: style.selectedCategory
+            CategoryStyle: style.selectedCategory,
+            page: 1,
         }, () => {
             this.fetchNews(this.state.selectedCategory);
         })
@@ -119,10 +128,9 @@ export default class HomeScreen extends React.Component {
     }
     render() {
         return(
-          <View style={{flex: 1}}>
-                <View style={{height: 35}}>
+            <View style={{flex: 1}}>
+                <View style={{height: 37}}>
                     <FlatList
-
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         data={this.state.categories}
@@ -133,31 +141,25 @@ export default class HomeScreen extends React.Component {
                                 underlayColor="white"
                                 activeOpacity={1}
                             >
-                                <Text>{item.name}</Text>
+                                <Text style={{color: "white"}}>{item.name}</Text>
                             </TouchableHighlight>}
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
-                <ScrollView onScrollBeginDrag={this.handleBeginDrag} onScrollEndDrag={this.handleEndDrag}
-                    style={{
-                        flex: 5,
-                        flexDirection: 'column',
-                        contentContainer: {
-                            alignItems: 'stretch',
-                        }
-                    }}
-                >
+                <View>
                     <FlatList
+                        onScrollBeginDrag={this.handleBeginDrag}
+                        onScrollEndDrag={this.handleEndDrag}
                         data={this.state.articles}
                         renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
                         }
-                        keyExtractor={item => item.slug}
+                        keyExtractor={item => item.id.toString()}
                         refreshing={this.state.refreshing}
                         onRefresh={this.handleRefresh}
                     />
-                </ScrollView>
-
+                </View>
           </View>
+
 
         )
     }
@@ -165,8 +167,15 @@ export default class HomeScreen extends React.Component {
 
 const style = StyleSheet.create({
     categories:{
-        backgroundColor: 'white',
+        backgroundColor: '#e12f28',
         padding: 10,
+    },
+    featuredPost:{
+        padding: 10,
+        backgroundColor: "white",
+    },
+    featuredPostTitle:{
+        fontSize: 30,
     },
     selectedCategory:{
         backgroundColor: 'blue',

@@ -5,42 +5,46 @@ import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs';
 import ArticleScreen from '../screens/ArticleScreen';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import ListCategories from '../screens/ListCategories';
 import SettingsScreen from '../screens/SettingsScreen';
 import OriginalWebView from '../screens/OriginalWebView';
 import SearchScreen from '../screens/SearchScreen';
 import {MultiBar, MultiBarToggle} from 'react-native-multibar';
 import {Icon} from 'react-native-elements';
-
-
+import UserProfile from '../screens/UserProfileScreen';
+import VideoScreen from '../screens/VideoScreen';
+import SignInScreen from '../screens/SignInScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
   Search: SearchScreen,
-  Settings: SettingsScreen, 
-});
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <Text style={{color:'white'}}>Home</Text>
-  ),
-};
-
-
-
-const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
+  UserProfile: UserProfile,
+  Video: VideoScreen,
 });
 
-SettingsStack.navigationOptions = {
+// HomeStack.navigationOptions = {
+//   tabBarLabel: 'Home',
+//   tabBarIcon: ({ focused }) => (
+//     <Text style={{color:'white'}}>Home</Text>
+//   ),
+// };
+
+
+
+const VideoStack = createStackNavigator({
+  Video: VideoScreen,
+});
+
+VideoStack.navigationOptions = {
   headerStyle:{
                 backgroundColor: '#212121', // this will handle the cutOff at the top the screen
           },
-  tabBarLabel: 'Settings',
+  tabBarLabel: 'Video',
   tabBarIcon: ({ focused }) => (
-    <Text style={{color:'white'}}>Settings</Text>
+    <Text style={{color:'white'}}>Video</Text>
   ),
 };
 
@@ -150,7 +154,7 @@ Home: HomeStack,
         params: {
             navigationDisabled: true
         }
-    },Setting: SettingsStack
+    },Video: VideoStack
 
 }, {
   tabBarComponent: props =>
