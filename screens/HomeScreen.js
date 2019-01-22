@@ -13,6 +13,7 @@ import {
     Button,
     TouchableHighlight,
     Dimensions,
+    AsyncStorage,
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
@@ -35,9 +36,9 @@ export default class HomeScreen extends React.Component {
             articles: [],
             categories: [],
             selectedCategory: 'Home',
+            loading: false,
             CategoryStyle: style.categories,
-            featuredPost: "",
-
+            page: 1,
             y: 0,
             isScrollDown: false,
             CategoryStyle: style.categories
@@ -51,32 +52,22 @@ export default class HomeScreen extends React.Component {
         }
     }
     componentWillMount() {
-        this.fetchFeaturedPost()
         this.fetchNews(this.state.selectedCategory)
+        this.fetchCategories()
     }
-
-    fetchFeaturedPost = () => {
-        axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on")
-        .then(res => this.setState({
-            featuredPost: res.data[0]
-        }))
-        .catch(err => console.log(err))
-    }
-
     fetchNews = (selectedCategory) => {
         // Home
         if(selectedCategory === "Home"){
-            fetch("https://baomoi.press/wp-json/wp/v2/posts")
-            .then(res => res.json())
-            .then(json => this.setState({
-                articles: json,
+            axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+            .then(res => this.setState({
+                articles: [...this.state.articles,...res.data],
                 refreshing: false,
             }))
             // .then(json => console.log(json))
             .catch(err => console.log(err))
         // Other categories
         }else{
-            fetch("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory)
+            fetch("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
             .then(res => res.json())
             .then(json => this.setState({
                 articles: json,
@@ -95,10 +86,6 @@ export default class HomeScreen extends React.Component {
         }))
         .catch(err => console.log(err))
     }
-
-    componentDidMount() {
-        this.fetchCategories()
-    }
     handleRefresh = () => {
         this.setState({
                 refreshing: true
@@ -106,11 +93,18 @@ export default class HomeScreen extends React.Component {
             () => this.fetchNews(this.state.selectedCategory)
         );
     }
+    handleLoadMore = () => {
+        console.log("loading more");
+        this.setState({
+            page: this.state.page + 1,
+        }, () => this.fetchNews(this.state.selectedCategory))
+    }
 
     setCategory = (id) => {
         this.setState({
             selectedCategory: id,
-            CategoryStyle: style.selectedCategory
+            CategoryStyle: style.selectedCategory,
+            page: 1,
         }, () => {
             this.fetchNews(this.state.selectedCategory);
         })
@@ -133,30 +127,6 @@ export default class HomeScreen extends React.Component {
       }
     }
     render() {
-        const FeaturedPost = (props) => {
-            const featuredPost = props.featuredPost
-            if(featuredPost !== ""){
-                return(
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={() => this.props.navigation.navigate("Article", {
-                            Article: featuredPost
-                        })}
-                    >
-                        <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 5}}>Tin Nóng</Text>
-                        <Image
-                            source={{uri: featuredPost.thumb}}
-                            style= {{height: 180, width: 340, marginLeft: 10}}
-                        />
-                        <Text style={style.featuredPostTitle}>{featuredPost.title.plaintitle}</Text>
-                        <Text numberOfLines={2} style={{fontSize: 20, color: '#696969', marginTop:10, marginBottom: 10}} >{featuredPost.excerpt.plainexcerpt}</Text>
-                        <Divider style={{ backgroundColor: '#e0e0e0' }} />
-                    </TouchableOpacity>
-                )
-            }else{
-                return <Text>Loading</Text>
-            }
-        }
         return(
             <View style={{flex: 1}}>
                 <View style={{height: 37}}>
@@ -176,30 +146,18 @@ export default class HomeScreen extends React.Component {
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
-
-                <ScrollView
-                    onScrollBeginDrag={this.handleBeginDrag}
-                    onScrollEndDrag={this.handleEndDrag}
-                    style={{
-                        flex: 5,
-                        flexDirection: 'column',
-                        contentContainer: {
-                            alignItems: 'stretch',
-                        }
-                    }}
-                >
-                    <View style={style.featuredPost}>
-                        <FeaturedPost featuredPost={this.state.featuredPost}/>
-                    </View>
+                <View>
                     <FlatList
+                        onScrollBeginDrag={this.handleBeginDrag}
+                        onScrollEndDrag={this.handleEndDrag}
                         data={this.state.articles}
                         renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
                         }
-                        keyExtractor={item => item.slug}
+                        keyExtractor={item => item.id.toString()}
                         refreshing={this.state.refreshing}
                         onRefresh={this.handleRefresh}
                     />
-                </ScrollView>
+                </View>
           </View>
 
 

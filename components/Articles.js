@@ -19,19 +19,12 @@ import {
 } from 'expo';
 import { MonoText } from './StyledText';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-export default class Articles extends React.Component {
+export default class Articles extends React.PureComponent {
     constructor(props){
         super(props);
         this.state={
             numberOfComments: 'loading',
             featured_post: undefined,
-        }
-    }
-    componentWillMount() {
-        if(this.props.item.featured_post){
-            this.setState({
-                featured_post: this.props.item.featured_post
-            })
         }
     }
     componentDidMount() {
@@ -131,12 +124,6 @@ export default class Articles extends React.Component {
                     </View>
                 )
             }
-        }
-        FeaturedPost = (prop) => {
-            const item = prop.item
-            return(
-                <Text>bitch this post is featured</Text>
-            )
         }
         const item = this.props.item
         return(

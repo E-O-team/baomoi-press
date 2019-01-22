@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, AsyncStorage, StyleSheet } from 'react-native';
+import { Text, View, AsyncStorage, StyleSheet, Button } from 'react-native';
 import axios from 'axios';
 import { Avatar, Card } from 'react-native-elements';
 export default class UserProfile extends React.Component {
@@ -9,38 +9,17 @@ export default class UserProfile extends React.Component {
             user: {}
         }
     }
-    getAsyncStorage = async () => {
-        let user = await AsyncStorage.getItem('user');
-        return JSON.parse(user)
-    }
     componentWillMount() {
-        this.getAsyncStorage()
+        AsyncStorage.getItem('user')
         .then(user => {
-            axios({
-                method: "GET",
-                url: 'https://baomoi.press/wp-json/wp/v2/current_user',
-                headers: {'Authorization': 'Bearer ' + user.token},
-            })
-            .then(res => {
-                let id = res.data.data.ID
-                // console.log(id);
-                axios({
-                    method: "GET",
-                    url: "https://baomoi.press/wp-json/wp/v2/users/" + id,
-                    headers: {'Authorization': 'Bearer ' + user.token},
+            if(user){
+                this.setState({
+                    user: JSON.parse(user)
                 })
-                .then(res => this.setState({
-                    user: res.data
-                }))
-                .catch(err => console.log(err))
-            })
-            .catch(err => console.log(err))
+            }else{
+                this.props.navigation.navigate("Auth")
+            }
         })
-        // AsyncStorage.getItem('user')
-        // .then(res => this.setState({
-        //     user: JSON.parse(res)
-        // }))
-        // .then(() => console.log(this.state))
     }
     render(){
         return(
@@ -60,12 +39,16 @@ export default class UserProfile extends React.Component {
                     </View>
                 </View>
                 <View style={styles.usersConfig}>
-
+                    <Text>Xu: {this.state.user.xu}</Text>
+                    <Text>Exp: {this.state.user.exp}</Text>
                 </View>
             </View>
         )
     }
 };
+
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

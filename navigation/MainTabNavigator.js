@@ -5,7 +5,6 @@ import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs';
 import ArticleScreen from '../screens/ArticleScreen';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import ListCategories from '../screens/ListCategories';
 import SettingsScreen from '../screens/SettingsScreen';
 import OriginalWebView from '../screens/OriginalWebView';
 import SearchScreen from '../screens/SearchScreen';
@@ -13,7 +12,9 @@ import {MultiBar, MultiBarToggle} from 'react-native-multibar';
 import {Icon} from 'react-native-elements';
 import UserProfile from '../screens/UserProfileScreen';
 import VideoScreen from '../screens/VideoScreen';
-
+import SignInScreen from '../screens/SignInScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
@@ -24,12 +25,12 @@ const HomeStack = createStackNavigator({
   Video: VideoScreen,
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <Text style={{color:'white'}}>Home</Text>
-  ),
-};
+// HomeStack.navigationOptions = {
+//   tabBarLabel: 'Home',
+//   tabBarIcon: ({ focused }) => (
+//     <Text style={{color:'white'}}>Home</Text>
+//   ),
+// };
 
 
 

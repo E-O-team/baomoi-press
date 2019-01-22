@@ -27,7 +27,7 @@ export default class SignInScreen extends React.Component {
                 password: this.state.password
             })
             .then((response) => {
-                let user = JSON.stringify(response.data)
+                let user = response.data
                 this.signInApp(user)
             })
             .catch((err) => {
@@ -43,9 +43,27 @@ export default class SignInScreen extends React.Component {
         }
     }
 
-    signInApp = async (user) => {
-        await AsyncStorage.setItem('user', user)
-        this.props.navigation.navigate('App')
+    signInApp = (user) => {
+        axios({
+            method: "GET",
+            url: 'https://baomoi.press/wp-json/wp/v2/current_user',
+            headers: {'Authorization': 'Bearer ' + user.token},
+        })
+        .then(res => {
+            let id = res.data.data.ID
+            // console.log(id);
+            return axios({
+                method: "GET",
+                url: "https://baomoi.press/wp-json/wp/v2/users/" + id,
+                headers: {'Authorization': 'Bearer ' + user.token},
+            })
+            .then(res => {
+                res.data.token = user.token
+                AsyncStorage.setItem('user', JSON.stringify(res.data))
+                this.props.navigation.navigate('App')
+            })
+        })
+        .catch(err => console.log(err))
     }
 
     render(){
@@ -59,7 +77,8 @@ export default class SignInScreen extends React.Component {
                         <FormInput containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({password: text})}/>
                     </View>
                     <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
-                    <Button buttonStyle={styles.button} title="SIGN IN" onPress={this.signIn}/>
+                    <Button buttonStyle={styles.button} title="Đăng Nhập" onPress={this.signIn}/>
+                    <Button buttonStyle={styles.button} title="Trở Về" onPress={() => this.props.navigation.navigate("App")}/>
                 </View>
                 <View style={{flex:1, justifyContent: "flex-end", marginBottom: 20}}>
                     <Button buttonStyle={styles.button} title="Sign Up" onPress={() => this.props.navigation.navigate("SignUp")}/>
