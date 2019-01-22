@@ -58,6 +58,12 @@ export default class HomeScreen extends React.Component {
     }
     fetchNews = (selectedCategory) => {
         console.log("page: " + this.state.page);
+        if(this.state.refreshing == true){
+            this.setState({
+                page: 1,
+                articles: [],
+            })
+        }
         // Home
         if(selectedCategory === "Home"){
             axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
@@ -71,7 +77,7 @@ export default class HomeScreen extends React.Component {
         }else{
             axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
             .then(res => this.setState({
-                articles: res.data,
+                articles: [...this.state.articles,...res.data],
                 refreshing: false,
             }))
             // .then(json => console.log(json))
@@ -106,6 +112,7 @@ export default class HomeScreen extends React.Component {
             selectedCategory: id,
             CategoryStyle: style.selectedCategory,
             page: 1,
+            articles: []
         }, () => {
             this.fetchNews(this.state.selectedCategory);
         })
