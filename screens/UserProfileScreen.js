@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, AsyncStorage, StyleSheet, Button } from 'react-native';
 import axios from 'axios';
 import { Avatar, Card } from 'react-native-elements';
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 export default class UserProfile extends React.Component {
     constructor() {
         super()
@@ -30,7 +31,7 @@ export default class UserProfile extends React.Component {
                             overlayContainerStyle={styles.avatar}
                             width={100}
                             rounded
-                            source={{uri: this.state.user.avatar_urls['96']}}
+                            source={{uri: this.state.user.avatar_urls['96'] || defaultImg}}
                         />
                     }
                     <View style={styles.name_email}>
