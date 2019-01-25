@@ -34,6 +34,9 @@ export default class Articles extends React.PureComponent {
             numberOfComments: json.length,
         }))
     }
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.numberOfComments !== this.state.numberOfComments
+    }
     render(){
         Comments = (props) => {
             return(

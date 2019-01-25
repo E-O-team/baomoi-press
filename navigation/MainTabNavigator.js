@@ -25,14 +25,12 @@ const HomeStack = createStackNavigator({
   Video: VideoScreen,
 });
 
-// HomeStack.navigationOptions = {
-//   tabBarLabel: 'Home',
-//   tabBarIcon: ({ focused }) => (
-//     <Text style={{color:'white'}}>Home</Text>
-//   ),
-// };
-
-
+HomeStack.navigationOptions = {
+  tabBarLabel: 'Home',
+  tabBarIcon: ({ focused }) => (
+    <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Home</Text>
+  ),
+};
 
 const VideoStack = createStackNavigator({
   Video: VideoScreen,
@@ -44,7 +42,7 @@ VideoStack.navigationOptions = {
           },
   tabBarLabel: 'Video',
   tabBarIcon: ({ focused }) => (
-    <Text style={{color:'white'}}>Video</Text>
+    <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Video</Text>
   ),
 };
 
@@ -92,7 +90,7 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'black',
+    backgroundColor: '#e9e9ef',
     elevation: 8,
   },
 };

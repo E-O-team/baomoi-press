@@ -14,6 +14,7 @@ import {
     TouchableHighlight,
     Dimensions,
     AsyncStorage,
+    ActivityIndicator,
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
@@ -56,6 +57,13 @@ export default class HomeScreen extends React.Component {
         this.fetchCategories()
     }
     fetchNews = (selectedCategory) => {
+        console.log("page: " + this.state.page);
+        if(this.state.refreshing == true){
+            this.setState({
+                page: 1,
+                articles: [],
+            })
+        }
         // Home
         if(selectedCategory === "Home"){
             axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
@@ -67,10 +75,9 @@ export default class HomeScreen extends React.Component {
             .catch(err => console.log(err))
         // Other categories
         }else{
-            fetch("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
-            .then(res => res.json())
-            .then(json => this.setState({
-                articles: json,
+            axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
+            .then(res => this.setState({
+                articles: [...this.state.articles,...res.data],
                 refreshing: false,
             }))
             // .then(json => console.log(json))
@@ -105,6 +112,7 @@ export default class HomeScreen extends React.Component {
             selectedCategory: id,
             CategoryStyle: style.selectedCategory,
             page: 1,
+            articles: []
         }, () => {
             this.fetchNews(this.state.selectedCategory);
         })
@@ -146,18 +154,18 @@ export default class HomeScreen extends React.Component {
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
-                <View>
-                    <FlatList
-                        onScrollBeginDrag={this.handleBeginDrag}
-                        onScrollEndDrag={this.handleEndDrag}
-                        data={this.state.articles}
-                        renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>
-                        }
-                        keyExtractor={item => item.id.toString()}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.handleRefresh}
-                    />
-                </View>
+                <FlatList
+                    onScrollBeginDrag={this.handleBeginDrag}
+                    onScrollEndDrag={this.handleEndDrag}
+                    data={this.state.articles}
+                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>}
+                    keyExtractor={item => item.id.toString()}
+                    refreshing={this.state.refreshing}
+                    ListFooterComponent={() => <ActivityIndicator size="large" animating />}
+                    onRefresh={this.handleRefresh}
+                    onEndReached={() => this.handleLoadMore()}
+                    onEndReachedThreshold={0.7}
+                />
           </View>
 
 
