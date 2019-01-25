@@ -1,52 +1,91 @@
 import React from 'react';
-import { Text, View, ScrollView, Dimensions, WebView, StyleSheet, TouchableHighlight, Platform, Share, Image, PixelRatio } from 'react-native';
+import { Text, View, AsyncStorage, ScrollView, Dimensions, WebView, StyleSheet, TouchableHighlight, Platform, Share, Image, PixelRatio } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
-import {Consumer, Provider} from '../context/context.js'
+import {Consumer, Provider} from '../context/context.js';
+import axios from 'axios';
 const { width } = Dimensions.get('window');
 
-
-const FACEBOOK_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAAYFBMVEUAAAAAQIAAWpwAX5kAX5gAX5gAX5gAXJwAXpgAWZ8AX5gAXaIAX5gAXpkAVaoAX5gAXJsAX5gAX5gAYJkAYJkAXpoAX5gAX5gAX5kAXpcAX5kAX5gAX5gAX5YAXpoAYJijtTrqAAAAIHRSTlMABFis4vv/JL0o4QvSegbnQPx8UHWwj4OUgo7Px061qCrcMv8AAAB0SURBVEjH7dK3DoAwDEVRqum9BwL//5dIscQEEjFiCPhubziTbVkc98dsx/V8UGnbIIQjXRvFQMZJCnScAR3nxQNcIqrqRqWHW8Qd6cY94oGER8STMVioZsQLLnEXw1mMr5OqFdGGS378wxgzZvwO5jiz2wFnjxABOufdfQAAAABJRU5ErkJggg==";
 export default class ArticleScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             Article: {},
+            currentCount : 0,
+            intervalId: undefined,
+            user: undefined,
         }
     }
-    componentWillMount() {
+    componentWillMount = async () => {
+
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
         })
+        this.setState({
+            user: JSON.parse(await AsyncStorage.getItem('user'))
+        })
+        if(this.props.navigation.getParam("currentCount", "ERR") === "ERR")
+        {
+        const value = await AsyncStorage.getItem('seconds')
+        if(value !== null) this.setState({currentCount: Number.parseInt(value)})
+        var intervalId = setInterval(this.timer, 1000)
+   // store intervalId in the state so it can be accessed later:
+        this.setState({intervalId: intervalId})
+        }
     }
+    timer = async () =>  {
+      // setState method is used to update the state
+       this.setState({ currentCount: this.state.currentCount + 1 })
+       if(this.state.currentCount >= 180)
+       {
+         this.setState({ currentCount: 0 })
+         if(this.state.user !== null){
+             axios({
+                 method: "GET",
+                 url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
+                 headers: {'Authorization': 'Bearer ' + this.state.user.token},
+             })
+         }
+
+       }
+
+    }
+
+
+    componentWillUnmount() {
+      // use intervalId from the state to clear the interval
+       clearInterval(this.state.intervalId)
+       AsyncStorage.setItem('seconds', this.state.currentCount.toString())
+    }
+
     onShare = () => {
-  Share.share({
-    ...Platform.select({
-      ios: {
-        message: 'Have a look on : ',
-        url: this.state.Article.link,
-      },
-      android: {
-        message: 'Have a look on : \n' + this.state.Article.link
-      }
-    }),
-    title: 'Wow, did you see that?'
-  }, {
-    ...Platform.select({
-      ios: {
-        // iOS only:
-        excludedActivityTypes: [
-          'com.apple.UIKit.activity.PostToTwitter'
-        ]
-      },
-      android: {
-        // Android only:
-        dialogTitle: 'Share : ' + this.state.Article.link
-      }
-    })
-  });
-}
+      Share.share({
+        ...Platform.select({
+          ios: {
+            message: 'Have a look on : ',
+            url: this.state.Article.link,
+          },
+          android: {
+            message: 'Have a look on : \n' + this.state.Article.link
+          }
+        }),
+        title: 'Wow, did you see that?'
+      }, {
+        ...Platform.select({
+          ios: {
+            // iOS only:
+            excludedActivityTypes: [
+              'com.apple.UIKit.activity.PostToTwitter'
+            ]
+          },
+          android: {
+            // Android only:
+            dialogTitle: 'Share : ' + this.state.Article.link
+          }
+        })
+      });
+    }
     render(){
         return(
         <Consumer>
@@ -75,8 +114,8 @@ export default class ArticleScreen extends React.Component {
             </TouchableHighlight>
 
 
-            <CommentList article={this.state.Article} ui={{textColor, backGround}}/>
-            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}}/>
+            <CommentList article={this.state.Article} ui={{textColor, backGround}} user={this.state.user}/>
+            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} currentCount={this.state.currentCount}/>
 
           </ScrollView>
         )}
@@ -103,11 +142,11 @@ export default class ArticleScreen extends React.Component {
       if (node.name == 'img') {
       const { src, height } = node.attribs;
       const imageHeight = height || 300;
-      const imageWidth = Dimensions.get('window');
+      const imageWidth = width - 20;
       return (
         <Image
           key={index}
-          style={{ width: imageWidth.width-20, height: imageHeight }}
+          style={{ width: imageWidth, height: imageHeight }}
           source={{ uri: src }}
           resizeMode='contain'/>
       );

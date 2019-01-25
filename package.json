@@ -22,11 +22,7 @@
     "react-native-htmlview": "^0.13.0",
     "react-native-multibar": "0.0.4",
     "react-navigation": "^2.18.3",
-<<<<<<< HEAD
-    "react-navigation-tabs": "^0.8.4"
-=======
     "react-navigation-tabs": "^0.4.0"
->>>>>>> master
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
