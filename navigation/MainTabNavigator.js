@@ -15,6 +15,8 @@ import VideoScreen from '../screens/VideoScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import CustomTabBarBottom from '../components/CustomTabBarBottom'
+
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
@@ -22,14 +24,20 @@ const HomeStack = createStackNavigator({
   Search: SearchScreen,
   Settings: SettingsScreen,
   UserProfile: UserProfile,
-  Video: VideoScreen,
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Home</Text>
-  ),
+HomeStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarLabel: 'Home',
+    tabBarIcon: ({ focused }) => (
+      <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Home</Text>
+    ),
+    tabBarVisible
+  }
 };
 
 const VideoStack = createStackNavigator({
@@ -44,6 +52,7 @@ VideoStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Video</Text>
   ),
+  tabBarVisible: true
 };
 
 
@@ -102,51 +111,7 @@ Home: HomeStack,
         screen: () => null,
         navigationOptions: ({navigation}) => ({
             tabBarIcon: () => (
-                <MultiBarToggle
-                    navigation={navigation}
-                    actionSize={30}
-                    routes={[
-                        {
-                            routeName: 'Home',
-                            color: '#FF8360',
-                            icon: (
-                                <Icon
-                                    name="fiber-new"
-                                    color="#333333"
-                                    size={20}
-                                />
-                            )
-                        },
-                        {
-                            routeName: 'Home',
-                            color: '#E8E288',
-                            icon: (
-                                <Icon
-                                    name="credit-card"
-                                    color="#333333"
-                                    size={20}
-                                />
-                            )
-                        },
-                        {
-                            routeName: 'Home',
-                            color: '#7DCE82',
-                            icon: (
-                                <Icon
-                                    name="share"
-                                    color="#333333"
-                                    size={20}
-                                />
-                            )
-                        },
-                    ]}
-                    icon={(
-                      <Image
-                      source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
-                      style={{ width: 70, height: 70, resizeMode:'contain'}}
-                      />
-                    )}
-                />
+                <CustomTabBarBottom />
             )
         }),
         params: {

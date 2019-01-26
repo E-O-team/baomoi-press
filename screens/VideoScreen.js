@@ -2,6 +2,8 @@ import React from 'react';
 import {Text, View, FlatList, ActivityIndicator} from 'react-native';
 import axios from 'axios';
 import Articles from '../components/Articles';
+import Header from '../components/Header.js';
+
 export default class VideoScreen extends React.Component{
   constructor(props){
     super(props)
@@ -9,12 +11,17 @@ export default class VideoScreen extends React.Component{
         articles: [],
         page: 1,
         refreshing: true,
+        y: 0,
+        isScrollDown: false,
 
     }
   }
-  static navigationOptions = {
-    title: 'Video',
-  };
+  static navigationOptions = ({navigation}) => {
+      return {
+          title: "Video",
+          header: <Header navigation={navigation}/>
+      }
+  }
   componentWillMount() {
       this.fetchVideos()
   }
@@ -34,10 +41,30 @@ export default class VideoScreen extends React.Component{
       }, () => this.fetchVideos())
   }
 
+  handleBeginDrag = (e) =>{
+    this.setState({y: e.nativeEvent.contentOffset.y})
+    if(this.state.y != 0){
+      if(this.state.isScrollDown) this.props.navigation.setParams({ visible: false })
+    }
+  }
+
+  handleEndDrag = (e) =>{
+    this.setState({y: e.nativeEvent.contentOffset.y})
+    if(e.nativeEvent.contentOffset.y <= this.state.y)
+    {
+      this.props.navigation.setParams({ visible: true })
+      this.setState({isScrollDown : false})
+    }else{
+      this.setState({isScrollDown: true})
+    }
+  }
+
   render(){
     return(
       <View>
           <FlatList
+              onScrollBeginDrag={this.handleBeginDrag}
+              onScrollEndDrag={this.handleEndDrag}
               data={this.state.articles}
               renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>}
               keyExtractor={item => item.id.toString()}

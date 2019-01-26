@@ -59,48 +59,57 @@ export default class CustomTabBarBottom extends React.Component {
   }
   render(){
     var blackscreen = (this.state.animating)?
-    <View style={styles.overlayscreen}>
-    </View> : <View></View>
+      <TouchableOpacity style={styles.overlayscreen} onPress={()=>{}}>
+      </TouchableOpacity>
+      : <View></View>
 
     var expandedView = (this.state.animating)?
     <View style={{zIndex: 1000, position:'absolute'}}>
         <View style={styles.closeButton}>
-          <View style={{borderColor:'#fff', borderWidth:2, width: 80, height:80, borderRadius: 80/2, bottom: 30, justifyContent:'center'}}>
+          <View style={{borderColor:'#fff', borderWidth:2, width: 80, height:80, borderRadius: 80/2, justifyContent:'center'}}>
             <Ionicons name={"ios-close"} size={45} color={"#fff"} style={styles.buttonIcon} onPress={()=>this.onCloseBtn()}/>
           </View>
           <Animated.View style={{     right:this.state.left,
                                        bottom:this.state.bottom,
                                        position:'absolute',
-                                      alignItems:'center'}}>
-            <View style={styles.IconView}>
-              <Ionicons name={"ios-paper"} size={20} color={"#fff"} style={styles.buttonIcon} />
-            </View>
-            <Text style={styles.iconText}>News</Text>
+                                      }}>
+            <TouchableOpacity onPress={()=>{}} style={{alignItems: 'center'}}>
+              <View style={styles.IconView}>
+                <Ionicons name={"ios-paper"} size={20} color={"#fff"} style={styles.buttonIcon} onPress={()=>{}} />
+              </View>
+              <Text style={styles.iconText}>News</Text>
+            </TouchableOpacity>
+
           </Animated.View>
 
           <Animated.View style={{left:this.state.left,
                                  bottom:this.state.bottom,
                                  position:'absolute',
-                                 alignItems:'center'}}>
-            <View style={styles.IconView}>
-              <Ionicons name={"ios-share"} size={20} color={"#fff"} style={styles.buttonIcon} />
-            </View>
-            <Text style={styles.iconText}>Share</Text>
+                                 }}>
+             <TouchableOpacity onPress={()=>{}} style={{alignItems: 'center'}}>
+               <View style={styles.IconView}>
+                 <Ionicons name={"ios-share"} size={20} color={"#fff"} style={styles.buttonIcon} onPress={()=>{}} />
+               </View>
+               <Text style={styles.iconText}>Share</Text>
+             </TouchableOpacity>
           </Animated.View>
 
           <Animated.View style={{     right:20,
                                      bottom:this.state.bottomCenter,
                                       position:'absolute',
-                                      alignItems:'center'}}>
-            <View style={styles.IconView}>
-                <Icon
-              name='credit-card'
-              color='#fff'
-              size={20}
-              style={styles.buttonIcon}
-               />
-            </View>
-            <Text style={styles.iconText}>Coin</Text>
+                                      }}>
+            <TouchableOpacity onPress={()=>{}} style={{alignItems: 'center'}}>
+              <View style={styles.IconView}>
+                  <Icon
+                name='credit-card'
+                color='#fff'
+                size={20}
+                style={styles.buttonIcon}
+                onPress={()=>{}}
+                 />
+              </View>
+              <Text style={styles.iconText}>Coin</Text>
+            </TouchableOpacity>
           </Animated.View>
 
         </View>
@@ -109,17 +118,14 @@ export default class CustomTabBarBottom extends React.Component {
       <View
       >
           <View style={styles.actionButton}>
-            <View style={{backgroundColor:'#CC0000', width: 80, height:80, borderRadius: 80/2, bottom: 31, justifyContent:'center'}}>
+            <View style={{backgroundColor:'#CC0000', width: 80, height:80, borderRadius: 80/2, justifyContent:'center'}}>
               <TouchableOpacity onPress={()=>this.onClickBtn()}>
                 <Image
                 source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
-                style={{ width: 70, height: 70, marginTop: 10, marginLeft: 5, resizeMode:'contain'}}
+                style={{ width: 70, height: 70, resizeMode:'contain'}}
                 />
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={{backgroundColor: "#fff", }}>
-            <BottomTabBar {...this.props } />
           </View>
           {blackscreen}
           {expandedView}
@@ -132,12 +138,8 @@ export default class CustomTabBarBottom extends React.Component {
 const styles = {
   actionButton: {
     justifyContent: 'center', alignItems: 'center',
-    top:0,
-    left: width/2 - 40,
-    right: 0,
     width: 80,
-    position: 'absolute',
-    zIndex: 998
+    zIndex: 998,
   },
   buttonIcon: {
     textAlign: "center",
@@ -146,19 +148,17 @@ const styles = {
     backgroundColor:'black',
     opacity: 0.5,
     width: width,
-    height:height-50,
+    height:height-40,
+    left: -width/2 + 40,
+    right: 0,
     bottom: 0,
     justifyContent:'center',
     zIndex:999,
     position:'absolute'
   },
   closeButton:{
-    top:0,
-    left: width/2 - 40,
-    right: 0,
     width: 80,
     position: 'absolute',
-    zIndex: 999,
   },
   IconView:{
     backgroundColor:'#CC0000',

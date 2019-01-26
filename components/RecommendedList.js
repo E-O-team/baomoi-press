@@ -21,13 +21,11 @@ export default class RecommendedList extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      firstTagArticle: [],
-      secondTagArticle: [],
       Articles : [],
     }
   }
   componentWillMount(){
-    this.fetch();
+    this.fetch()
   }
   fetch = () => {
 
@@ -41,7 +39,7 @@ export default class RecommendedList extends React.Component{
     fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[first_tag].toString())
     .then(res => res.json())
     .then(json => {
-      if(json.length > 1) this.setState({
+      if(json.length >= 1) this.setState({
         Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
     })
   })
@@ -49,11 +47,11 @@ export default class RecommendedList extends React.Component{
     .catch(err => console.log(err))
 
     var second_tag = Math.floor(Math.random() * tag_length);
-    while(second_tag == first_tag) second_tag = Math.floor(Math.random() * tag_length)
+    while(second_tag == first_tag && tag_length != 1) second_tag = Math.floor(Math.random() * tag_length)
     fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[second_tag].toString())
     .then(res => res.json())
     .then(json => {
-      if(json.length > 1) this.setState({
+      if(json.length >= 1) this.setState({
         Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
     })
   })
@@ -100,7 +98,7 @@ export default class RecommendedList extends React.Component{
                         onPress={() => {
                         this.props.navigation.push("Article", {
                             Article: item,
-                            currentCount: this.props.currentCount
+
                         })
 
                       }}

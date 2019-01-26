@@ -4,8 +4,9 @@ import HTMLView from 'react-native-htmlview';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
 import {Consumer, Provider} from '../context/context.js';
+import Video from 'react-native-video';
 import axios from 'axios';
-const { width } = Dimensions.get('window');
+const screenWidth = Dimensions.get('window').width;
 
 export default class ArticleScreen extends React.Component {
     constructor(props) {
@@ -17,11 +18,18 @@ export default class ArticleScreen extends React.Component {
             user: undefined,
         }
     }
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: "Article",
+            tabBarVisible: false
+        }
+    }
     componentWillMount = async () => {
 
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
         })
+
         this.setState({
             user: JSON.parse(await AsyncStorage.getItem('user'))
         })
@@ -100,13 +108,13 @@ export default class ArticleScreen extends React.Component {
               stylesheet={this.textStyle(textColor)}
               renderNode={this.renderNode}
               />
-              <TouchableHighlight style={{alignItems: 'center', marginBottom:30, marginTop:20}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
-                  OriginalUrl: this.state.Article.source_link
-              })}>
-                <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#cc0000'}}>
-                 <Text style={{color:'#ffffff',fontWeight:'800',}}>Link gốc</Text>
-                </View>
-              </TouchableHighlight>
+            <TouchableHighlight style={{alignItems: 'center', marginBottom:30, marginTop:20}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
+                OriginalUrl: this.state.Article.source_link
+            })}>
+              <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#cc0000'}}>
+               <Text style={{color:'#ffffff',fontWeight:'800',}}>Link gốc</Text>
+              </View>
+            </TouchableHighlight>
             <TouchableHighlight style={{alignItems: 'center'}} onPress={this.onShare}>
               <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#3b5998'}}>
                <Text style={{color:'#ffffff',fontWeight:'800',}}>Share</Text>
@@ -115,7 +123,7 @@ export default class ArticleScreen extends React.Component {
 
 
             <CommentList article={this.state.Article} ui={{textColor, backGround}} user={this.state.user}/>
-            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} currentCount={this.state.currentCount}/>
+            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} />
 
           </ScrollView>
         )}
@@ -139,10 +147,10 @@ export default class ArticleScreen extends React.Component {
        }
      }
     renderNode(node, index, siblings, parent, defaultRenderer) {
-      if (node.name == 'img') {
+      if (node.name === 'img') {
       const { src, height } = node.attribs;
-      const imageHeight = height || 300;
-      const imageWidth = width - 20;
+      const imageHeight = 300;
+      const imageWidth = screenWidth - 20;
       return (
         <Image
           key={index}
@@ -151,6 +159,17 @@ export default class ArticleScreen extends React.Component {
           resizeMode='contain'/>
       );
     }
+    if(node.name == 'p' && node.children.length != 0) {
+      const iframeNodes = node.children.filter((node) => node.name === 'iframe')
+      const sources = iframeNodes.map((node) => node.attribs.src);
+      if (iframeNodes.length != 0)
+        return (
+          <View>
+            <WebView source={{uri : sources[0]}} style={{width:screenWidth-20, height: 300}}/>
+          </View>
+        )
+    }
+
    }
 };
 
