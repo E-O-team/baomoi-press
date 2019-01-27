@@ -98,7 +98,7 @@ export default class RecommendedList extends React.Component{
                         onPress={() => {
                         this.props.navigation.push("Article", {
                             Article: item,
-
+                            currentCount: this.props.currentCount
                         })
 
                       }}

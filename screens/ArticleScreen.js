@@ -3,8 +3,9 @@ import { Text, View, AsyncStorage, ScrollView, Dimensions, WebView, StyleSheet, 
 import HTMLView from 'react-native-htmlview';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
+import AuthorSubscription from '../components/AuthorSubscription'
 import {Consumer, Provider} from '../context/context.js';
-import Video from 'react-native-video';
+import Moment from 'moment';
 import axios from 'axios';
 const screenWidth = Dimensions.get('window').width;
 
@@ -45,6 +46,7 @@ export default class ArticleScreen extends React.Component {
     timer = async () =>  {
       // setState method is used to update the state
        this.setState({ currentCount: this.state.currentCount + 1 })
+       console.log(this.state.currentCount)
        if(this.state.currentCount >= 180)
        {
          this.setState({ currentCount: 0 })
@@ -103,6 +105,10 @@ export default class ArticleScreen extends React.Component {
 
 
             <Text style={{fontSize: 26, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</Text>
+            <Text style={{color: '#696969', marginTop:10}}>Last Updated {Moment(this.state.Article.modified).utc().format('YYYY-MM-DD HH:mm:ss')}</Text>
+
+            <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
+
             <HTMLView
               value={this.state.Article.content.plaintext.replace(/\r?\n|\r/g, '')}
               stylesheet={this.textStyle(textColor)}
@@ -122,8 +128,8 @@ export default class ArticleScreen extends React.Component {
             </TouchableHighlight>
 
 
-            <CommentList article={this.state.Article} ui={{textColor, backGround}} user={this.state.user}/>
-            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} />
+            <CommentList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} user={this.state.user}/>
+            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} currentCount={this.state.currentCount}/>
 
           </ScrollView>
         )}

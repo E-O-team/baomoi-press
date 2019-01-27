@@ -46,7 +46,10 @@ export default class CommentList extends React.Component{
           },
           headers: {'Authorization': 'Bearer ' + this.props.user.token},
       })
-      .then(res => this.setState({text:''}))
+      .then(res => {
+        this.fetchCommentList()
+        this.setState({text: ''})
+      })
       .catch(err => console.log(err))
 
       axios({
@@ -63,15 +66,16 @@ export default class CommentList extends React.Component{
             {
               this.props.user &&
               <View style={{marginTop: 20}}>
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{flexDirection: 'row', justifyContent: 'center', alignItems:'center'}}>
                     <Avatar
                       size="small"
+                      rounded
                       source={{uri: this.props.user.avatar_urls['96']}}
                       activeOpacity={0.7}
                     />
-                    <Text style={{marginLeft: 5}}>{this.props.user.name}</Text>
+                    <Text style={{marginLeft: 5, color:'#696969'}}>{this.props.user.name}</Text>
                   </View>
-                  <View style={{borderColor:'#CCCCCC', borderWidth: 1, borderRadius: 5, marginTop: 10}}>
+                  <View style={{borderColor:'#CCCCCC', borderWidth: 2, borderRadius: 5, marginTop: 10, padding :10}}>
                     <TextInput
                     style={{height:60, alignItems:'center'}}
                     onChangeText={(text) => this.setState({text: text})}
@@ -81,9 +85,9 @@ export default class CommentList extends React.Component{
                     />
                   </View>
                   <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity style={{width:50, height: 20, backgroundColor:'#0080FF', borderRadius: 10, marginTop: 10, alignItems:'center'}}
+                    <TouchableOpacity style={{width:50, height: 30, backgroundColor:'#0080FF', borderRadius: 10, marginTop: 10, alignItems:'center', justifyContent:'center'}}
                       onPress={() => this.SubmitComment()}>
-                      <Text style={{color: 'white'}}>Post</Text>
+                      <Text style={{color: 'white', fontSize: 17}}>Post</Text>
                     </TouchableOpacity>
                   </View>
               </View>
@@ -166,7 +170,8 @@ const styles = StyleSheet.create({
     marginLeft:20
   },
   time:{
-    fontSize:11,
+    marginLeft: 5,
+    fontSize:10,
     color:"#808080",
   },
   name:{

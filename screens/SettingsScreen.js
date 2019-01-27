@@ -40,7 +40,7 @@ export default class SettingsScreen extends React.Component {
         </TouchableHighlight>
 
         <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={this.logOut}>
-          <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#4c0099'}}>
+          <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#006666'}}>
            <Text style={{color:'#ffffff',fontWeight:'800',}}>Log Out</Text>
           </View>
         </TouchableHighlight>
