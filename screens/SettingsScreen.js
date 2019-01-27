@@ -10,9 +10,11 @@ import {Provider, Consumer} from '../context/context.js'
 
 
 export default class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Setting',
-  };
+  static navigationOptions = ({navigation}) => {
+      return {
+          title: "Setting",
+      }
+  }
   logOut = async () => {
       AsyncStorage.clear()
       this.props.navigation.navigate("AuthLoadingScreen")

@@ -21,13 +21,11 @@ export default class RecommendedList extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      firstTagArticle: [],
-      secondTagArticle: [],
       Articles : [],
     }
   }
   componentWillMount(){
-    this.fetch();
+    this.fetch()
   }
   fetch = () => {
 
@@ -36,13 +34,12 @@ export default class RecommendedList extends React.Component{
 
     var tag_length = this.props.article.tags.length;
     var first_tag = Math.floor(Math.random() * tag_length);
-    console.log(first_tag)
 
 
     fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[first_tag].toString())
     .then(res => res.json())
     .then(json => {
-      if(json.length > 1) this.setState({
+      if(json.length >= 1) this.setState({
         Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
     })
   })
@@ -50,12 +47,11 @@ export default class RecommendedList extends React.Component{
     .catch(err => console.log(err))
 
     var second_tag = Math.floor(Math.random() * tag_length);
-    while(second_tag == first_tag) second_tag = Math.floor(Math.random() * tag_length)
-    console.log(second_tag)
+    while(second_tag == first_tag && tag_length != 1) second_tag = Math.floor(Math.random() * tag_length)
     fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[second_tag].toString())
     .then(res => res.json())
     .then(json => {
-      if(json.length > 1) this.setState({
+      if(json.length >= 1) this.setState({
         Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
     })
   })
@@ -64,12 +60,11 @@ export default class RecommendedList extends React.Component{
   }
 
     var prev_day = Moment().subtract(1, "days").toISOString();
-    console.log(prev_day);
 
     fetch("https://baomoi.press/wp-json/wp/v2/posts?per_page=30&orderby=date&order=asc&after="+ prev_day)
     .then(res => res.json())
     .then(json => {
-      console.log(this.state.Articles.length)
+
       while(this.state.Articles.length < 10){
 
         var is_duplicated = false;
@@ -100,9 +95,13 @@ export default class RecommendedList extends React.Component{
                     renderItem={({ item }) =>
                     <TouchableOpacity
                         activeOpacity={0.5}
-                        onPress={() => this.props.navigation.push("Article", {
-                            Article: item
-                        })}
+                        onPress={() => {
+                        this.props.navigation.push("Article", {
+                            Article: item,
+
+                        })
+
+                      }}
                     >
                         <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
                             <View style={{flex: 2}}>
