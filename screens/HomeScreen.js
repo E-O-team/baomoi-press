@@ -24,6 +24,8 @@ import {
 import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
+import {Consumer} from '../context/context.js';
+
 import axios from 'axios';
 
 var { width, height } = Dimensions.get('window');
@@ -138,7 +140,11 @@ export default class HomeScreen extends React.Component {
     render() {
         return(
             <View style={{flex: 1}}>
+            <Consumer>
+            {({textColor, backGround}) => (
+                <View>
                 <View style={{height: 37}}>
+
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
@@ -146,7 +152,8 @@ export default class HomeScreen extends React.Component {
                         renderItem={({item}) =>
                             <TouchableHighlight
                                 onPress={() => this.setCategory(item.id)}
-                                style={this.state.CategoryStyle}
+                                style={{backgroundColor: backGround,
+                                        padding: 10,}}
                                 underlayColor="white"
                                 activeOpacity={1}
                             >
@@ -155,7 +162,7 @@ export default class HomeScreen extends React.Component {
                                 <View>
                                   <Text style={{color: "red"}}>{item.name}</Text>
                                   <View style={{height: 1, backgroundColor: 'red'}}></View>
-                                </View> : <Text style={{color: "#696969"}}>{item.name}</Text>
+                                </View> : <Text style={{color: textColor}}>{item.name}</Text>
                               }
 
                             </TouchableHighlight>}
@@ -166,7 +173,7 @@ export default class HomeScreen extends React.Component {
                     onScrollBeginDrag={this.handleBeginDrag}
                     onScrollEndDrag={this.handleEndDrag}
                     data={this.state.articles}
-                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>}
+                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}}/>}
                     keyExtractor={item => item.id.toString()}
                     refreshing={this.state.refreshing}
                     ListFooterComponent={() => <ActivityIndicator size="large" animating />}
@@ -174,6 +181,13 @@ export default class HomeScreen extends React.Component {
                     onEndReached={() => this.handleLoadMore()}
                     onEndReachedThreshold={0.7}
                 />
+                </View>
+
+
+              )}
+              </Consumer>
+
+
           </View>
 
 
