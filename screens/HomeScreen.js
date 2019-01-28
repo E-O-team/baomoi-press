@@ -212,6 +212,3 @@ const style = StyleSheet.create({
         padding: 10,
     },
 })
-
-// onRefresh={this.handleRefresh}
-// renderItem={({item}) => <Button onPress={() => this.setCategory(item.id)} title={item.name}/>

@@ -16,7 +16,7 @@ import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import CustomTabBarBottom from '../components/CustomTabBarBottom'
-
+import UserProfileEdit from '../screens/UserProfileEditScreen';
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
   Article: ArticleScreen,
@@ -24,6 +24,7 @@ const HomeStack = createStackNavigator({
   Search: SearchScreen,
   Settings: SettingsScreen,
   UserProfile: UserProfile,
+  UserProfileEdit: UserProfileEdit,
 });
 const highlightTab = (tabName, focused) => {
 
