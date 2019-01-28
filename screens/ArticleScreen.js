@@ -46,7 +46,6 @@ export default class ArticleScreen extends React.Component {
     timer = async () =>  {
       // setState method is used to update the state
        this.setState({ currentCount: this.state.currentCount + 1 })
-       console.log(this.state.currentCount)
        if(this.state.currentCount >= 180)
        {
          this.setState({ currentCount: 0 })
