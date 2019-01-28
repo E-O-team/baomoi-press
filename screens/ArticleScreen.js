@@ -4,7 +4,6 @@ import HTMLView from 'react-native-htmlview';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
 import {Consumer, Provider} from '../context/context.js';
-import Video from 'react-native-video';
 import axios from 'axios';
 const screenWidth = Dimensions.get('window').width;
 

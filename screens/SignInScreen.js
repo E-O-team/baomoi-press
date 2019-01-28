@@ -51,7 +51,6 @@ export default class SignInScreen extends React.Component {
         })
         .then(res => {
             let id = res.data.data.ID
-            // console.log(id);
             return axios({
                 method: "GET",
                 url: "https://baomoi.press/wp-json/wp/v2/users/" + id,

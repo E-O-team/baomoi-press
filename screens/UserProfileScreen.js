@@ -30,6 +30,7 @@ export default class UserProfile extends React.Component {
                     {user.avatar_urls &&
                         <Avatar
                             overlayContainerStyle={styles.avatar}
+                            large
                             width={100}
                             rounded
                             source={{uri: user.avatar_urls['96'] || defaultImg}}
@@ -74,9 +75,16 @@ export default class UserProfile extends React.Component {
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Sở thích</Text>
-                            <Text style={{fontSize: 20, color: '#696969'}}>{user.mobile_number}</Text>
+                            <Text style={{fontSize: 20, color: '#696969'}}>{user.so_thich}</Text>
                         </View>
-                        <Button buttonStyle={styles.button} title="Chỉnh sửa"/>
+                        <Button
+                            style={{}}
+                            buttonStyle={styles.button}
+                            title="Chỉnh sửa"
+                            onPress={() => this.props.navigation.navigate("UserProfileEdit", {
+                                user: user,
+                            })}
+                        />
                     </ScrollView>
                 </View>
             </View>
@@ -146,5 +154,6 @@ const styles = StyleSheet.create({
     button:{
         marginTop: 10,
         backgroundColor: '#e12f28',
+        marginHorizontal: 10
     }
 })
