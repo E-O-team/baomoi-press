@@ -66,7 +66,7 @@ export default class CustomTabBarBottom extends React.Component {
     var expandedView = (this.state.animating)?
     <View style={{zIndex: 1000, position:'absolute'}}>
         <View style={styles.closeButton}>
-          <View style={{borderColor:'#fff', borderWidth:2, width: 80, height:80, borderRadius: 80/2, justifyContent:'center'}}>
+          <View style={{borderColor:'#fff', borderWidth:2, width: 70, height:70, borderRadius: 70/2, bottom: 10, justifyContent:'center'}}>
             <Ionicons name={"ios-close"} size={45} color={"#fff"} style={styles.buttonIcon} onPress={()=>this.onCloseBtn()}/>
           </View>
           <Animated.View style={{     right:this.state.left,
@@ -118,11 +118,11 @@ export default class CustomTabBarBottom extends React.Component {
       <View
       >
           <View style={styles.actionButton}>
-            <View style={{backgroundColor:'#CC0000', width: 80, height:80, borderRadius: 80/2, justifyContent:'center'}}>
+            <View style={{backgroundColor:'#CC0000', width: 70, height:70, borderRadius: 70/2, bottom:10,justifyContent:'center', alignItems:'center'}}>
               <TouchableOpacity onPress={()=>this.onClickBtn()}>
                 <Image
                 source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
-                style={{ width: 70, height: 70, resizeMode:'contain'}}
+                style={{ width: 60, height: 60, resizeMode:'contain'}}
                 />
               </TouchableOpacity>
             </View>
@@ -138,7 +138,7 @@ export default class CustomTabBarBottom extends React.Component {
 const styles = {
   actionButton: {
     justifyContent: 'center', alignItems: 'center',
-    width: 80,
+    width: 70,
     zIndex: 998,
   },
   buttonIcon: {
@@ -148,8 +148,8 @@ const styles = {
     backgroundColor:'black',
     opacity: 0.5,
     width: width,
-    height:height-40,
-    left: -width/2 + 40,
+    height:height-45,
+    left: -width/2+35,
     right: 0,
     bottom: 0,
     justifyContent:'center',
@@ -157,7 +157,7 @@ const styles = {
     position:'absolute'
   },
   closeButton:{
-    width: 80,
+    width: 70,
     position: 'absolute',
   },
   IconView:{

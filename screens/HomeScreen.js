@@ -115,6 +115,7 @@ export default class HomeScreen extends React.Component {
             articles: []
         }, () => {
             this.fetchNews(this.state.selectedCategory);
+            this.fetchCategories();
         })
 
     }
@@ -149,7 +150,14 @@ export default class HomeScreen extends React.Component {
                                 underlayColor="white"
                                 activeOpacity={1}
                             >
-                                <Text style={{color: "white"}}>{item.name}</Text>
+                              {
+                                (item.id === this.state.selectedCategory)?
+                                <View>
+                                  <Text style={{color: "red"}}>{item.name}</Text>
+                                  <View style={{height: 1, backgroundColor: 'red'}}></View>
+                                </View> : <Text style={{color: "#696969"}}>{item.name}</Text>
+                              }
+
                             </TouchableHighlight>}
                         keyExtractor={item => item.id.toString()}
                     />
@@ -175,7 +183,7 @@ export default class HomeScreen extends React.Component {
 
 const style = StyleSheet.create({
     categories:{
-        backgroundColor: '#e12f28',
+        backgroundColor: 'white',
         padding: 10,
     },
     featuredPost:{
@@ -186,10 +194,7 @@ const style = StyleSheet.create({
         fontSize: 30,
     },
     selectedCategory:{
-        backgroundColor: 'blue',
+        backgroundColor: 'white',
         padding: 10,
     },
 })
-
-// onRefresh={this.handleRefresh}
-// renderItem={({item}) => <Button onPress={() => this.setCategory(item.id)} title={item.name}/>

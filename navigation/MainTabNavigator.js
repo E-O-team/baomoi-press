@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, Text, View, Image, Animated } from 'react-native';
+import { Platform, Text, View, Image, Animated, StyleSheet } from 'react-native';
 import { createStackNavigator} from 'react-navigation';
 import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs';
 import ArticleScreen from '../screens/ArticleScreen';
@@ -26,7 +26,9 @@ const HomeStack = createStackNavigator({
   UserProfile: UserProfile,
   UserProfileEdit: UserProfileEdit,
 });
+const highlightTab = (tabName, focused) => {
 
+};
 HomeStack.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
@@ -34,28 +36,82 @@ HomeStack.navigationOptions = ({ navigation }) => {
   }
   return {
     tabBarLabel: 'Home',
-    tabBarIcon: ({ focused }) => (
-      <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Home</Text>
-    ),
+    tabBarIcon: ({ focused }) => {
+      var footerHeight;
+      if (focused) {
+        footerHeight = 1;
+      } else {
+        footerHeight = 0;
+      }
+
+      var styles = StyleSheet.create({
+        tab: {
+          flexGrow: 1,
+          alignItems: 'stretch',
+          justifyContent: 'center'
+        },
+        labelFooter: {
+          height: footerHeight,
+          backgroundColor: 'red'
+        }
+      });
+      return (
+        <View style={styles.tab}>
+          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Home</Text>
+          <View style={styles.labelFooter}/>
+        </View>
+      );
+    },
     tabBarVisible
   }
 };
 
 const VideoStack = createStackNavigator({
   Video: VideoScreen,
+  Article: ArticleScreen,
+  OriginalUrl: OriginalWebView,
+  Search: SearchScreen,
+  Settings: SettingsScreen,
+  UserProfile: UserProfile,
 });
 
-VideoStack.navigationOptions = {
-  headerStyle:{
-                backgroundColor: '#212121', // this will handle the cutOff at the top the screen
-          },
-  tabBarLabel: 'Video',
-  tabBarIcon: ({ focused }) => (
-    <Text style={{color:'black', fontSize: 17, fontWeight: "bold"}}>Video</Text>
-  ),
-  tabBarVisible: true
-};
 
+VideoStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarLabel: 'Video',
+    tabBarIcon: ({ focused }) => {
+      var footerHeight;
+      if (focused) {
+        footerHeight = 1;
+      } else {
+        footerHeight = 0;
+      }
+
+      var styles = StyleSheet.create({
+        tab: {
+          alignItems: 'stretch',
+          justifyContent: 'center',
+          flexGrow: 1,
+        },
+        labelFooter: {
+          height: footerHeight,
+          backgroundColor: 'red'
+        }
+      });
+      return (
+        <View style={styles.tab}>
+          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Video</Text>
+          <View style={styles.labelFooter}/>
+        </View>
+    )
+    },
+    tabBarVisible
+  }
+};
 
 
 
@@ -100,14 +156,16 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#e9e9ef',
+    backgroundColor: 'black',
+    height: 55,
     elevation: 8,
   },
 };
 //const TabBarComponent = (props) => (<BottomTabBar {...props} />);
 
+
 export default createBottomTabNavigator({
-Home: HomeStack,
+    Home: HomeStack,
     MultiBar: {
         screen: () => null,
         navigationOptions: ({navigation}) => ({
@@ -118,7 +176,7 @@ Home: HomeStack,
         params: {
             navigationDisabled: true
         }
-    },Video: VideoStack
+    }, Video: VideoStack
 
 }, {
   tabBarComponent: props =>
@@ -126,8 +184,8 @@ Home: HomeStack,
       {...props}
     />,
     tabBarOptions: {
-        showLabel: false,
-        activeTintColor: '#FF3333',
-        inactiveTintColor: '#586589',
-    }
+    showLabel: false,
+
+  },
+
 });
