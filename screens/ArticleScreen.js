@@ -1,13 +1,19 @@
 import React from 'react';
-import { Text, View, AsyncStorage, ScrollView, Dimensions, WebView, StyleSheet, TouchableHighlight, Platform, Share, Image, PixelRatio } from 'react-native';
+import { Text, View, AsyncStorage,Keyboard,ScrollView,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform, Share, Image, PixelRatio, Modal } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
-import AuthorSubscription from '../components/AuthorSubscription'
+import AuthorSubscription from '../components/AuthorSubscription';
+import CommentModal from '../components/CommentModal';
 import {Consumer, Provider} from '../context/context.js';
-import Moment from 'moment';
+import {Icon} from 'react-native-elements';
+import {SafeAreaView} from 'react-navigation';
+import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
+import { BaomoiText } from '../components/StyledText';
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+moment.locale('vi');
 
 export default class ArticleScreen extends React.Component {
     constructor(props) {
@@ -22,7 +28,41 @@ export default class ArticleScreen extends React.Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: "Article",
-            tabBarVisible: false
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround}) => (
+                  <SafeAreaView
+                      style={{
+                          flexDirection: "row",
+                          height: 50,
+                          backgroundColor: backGround,
+                          marginTop: 20,
+                          alignItems:'center'
+                          // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
+                      }}
+                      >
+                      <View style={{flex: 1, alignItems:'left'}}>
+                        <Icon
+                          name='chevron-left'
+                          size={35}
+                          color='#696969'
+                          onPress={()=>navigation.goBack()}
+                        />
+                      </View>
+                      <View style-={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                        <Icon
+                          name='dots-three-vertical'
+                          type='entypo'
+                          size={25}
+                          color='#696969'
+                          onPress={()=>navigation.navigate('Settings')}
+                        />
+                  </View>
+              </SafeAreaView>
+                )}
+            </Consumer>
+            )
         }
     }
     componentWillMount = async () => {
@@ -62,6 +102,7 @@ export default class ArticleScreen extends React.Component {
     }
 
 
+
     componentWillUnmount() {
       // use intervalId from the state to clear the interval
        clearInterval(this.state.intervalId)
@@ -97,64 +138,77 @@ export default class ArticleScreen extends React.Component {
     }
     render(){
         return(
-        <Consumer>
-        {({textColor, backGround}) => (
-          <ScrollView style={{ flex: 1 , backgroundColor: backGround, padding: 10}}>
+      <Consumer>
+        {({textColor, backGround, fontSizeRatio}) => (
+        <View style={{backgroundColor: backGround, flexDirection:'column', flex: 1}}>
+          <ScrollView style={{ height: this.state.height - 40 , backgroundColor: backGround, padding: 10, zIndex: 1}}>
 
 
 
-            <Text style={{fontSize: 26, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</Text>
-            <Text style={{color: '#696969', marginTop:10}}>Last Updated {Moment(this.state.Article.modified).utc().format('YYYY-MM-DD HH:mm:ss')}</Text>
+            <BaomoiText style={{fontSize: 28*fontSizeRatio, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</BaomoiText>
+            <BaomoiText style={{color: '#696969', marginTop:10, fontSize: 15*fontSizeRatio}}>Last Updated {moment(this.state.Article.modified).fromNow()}</BaomoiText>
 
             <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
 
             <HTMLView
               value={this.state.Article.content.plaintext.replace(/\r?\n|\r/g, '')}
-              stylesheet={this.textStyle(textColor)}
+              stylesheet={this.textStyle(textColor, fontSizeRatio)}
               renderNode={this.renderNode}
               />
-            <TouchableHighlight style={{alignItems: 'center', marginBottom:30, marginTop:20}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
-                OriginalUrl: this.state.Article.source_link
-            })}>
-              <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#cc0000'}}>
-               <Text style={{color:'#ffffff',fontWeight:'800',}}>Link gốc</Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight style={{alignItems: 'center'}} onPress={this.onShare}>
-              <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 150, height: 40,backgroundColor:'#3b5998'}}>
-               <Text style={{color:'#ffffff',fontWeight:'800',}}>Share</Text>
-              </View>
-            </TouchableHighlight>
+            <View style={{flexDirection: 'row', marginTop : 20}}>
+
+                  <View style={{alignItems: 'center', flex: 1}}>
+                    <TouchableHighlight style={{alignItems: 'center',justifyContent:'center', borderRadius:5, width: 100, height: 40,backgroundColor:'#cc0000'}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
+                        OriginalUrl: this.state.Article.source_link
+                    })}>
+                     <BaomoiText style={{color:'#ffffff',fontWeight:'800',fontSize: 18}}>Link gốc</BaomoiText>
+                    </TouchableHighlight>
+                  </View>
+
+                <View style={{alignItems: 'center', flex: 1}}>
+                  <TouchableHighlight style={{alignItems: 'center',justifyContent:'center', borderRadius:5, width: 100, height: 40,backgroundColor:'#3b5998'}} onPress={this.onShare}>
+                   <BaomoiText style={{color:'#ffffff',fontWeight:'800', fontSize: 18}}>Share</BaomoiText>
+                  </TouchableHighlight>
+                </View>
+            </View>
 
 
-            <CommentList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} user={this.state.user}/>
-            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround}} currentCount={this.state.currentCount}/>
+            <CommentList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
+            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
 
           </ScrollView>
+
+          <CommentModal article={this.state.Article} user={this.state.user} navigation={this.props.navigation}/>
+
+
+
+        </View>
         )}
-        </Consumer>
+      </Consumer>
 
         );
     }
-    textStyle = (myColor) => {
+    textStyle = (myColor, r) => {
        return {
          color: myColor,
          p: {
-           fontSize: 18,
+           fontSize: 18*r,
            lineHeight: 25,
            color: myColor,
+           fontFamily: 'baomoi-regular'
          },
          h3: {
            color: myColor,
-           fontSize: 28,
-           fontWeight: 'bold'
+           fontSize: 25*r,
+           fontWeight: 'bold',
+           fontFamily: 'baomoi-regular'
          },
        }
      }
     renderNode(node, index, siblings, parent, defaultRenderer) {
       if (node.name === 'img') {
       const { src, height } = node.attribs;
-      const imageHeight = 300;
+      const imageHeight = height ? Number.parseInt(height, 10) : 300;
       const imageWidth = screenWidth - 20;
       return (
         <Image
@@ -179,16 +233,5 @@ export default class ArticleScreen extends React.Component {
 };
 
 const styles = StyleSheet.create({
-  a: {
-    fontWeight: '300',
-    color: '#FF3366', // make links coloured pink
-  },
-  p: {
-    fontSize: 20,
-    lineHeight: 28,
-  },
-  instructions: {
-    marginTop: 20,
-    marginBottom: 20,
-  },
+
 });

@@ -23,6 +23,7 @@ const HomeStack = createStackNavigator({
   OriginalUrl: OriginalWebView,
   Search: SearchScreen,
   Settings: SettingsScreen,
+  SignIn: SignInScreen,
   UserProfile: UserProfile,
   UserProfileEdit: UserProfileEdit,
 });
@@ -73,6 +74,7 @@ const VideoStack = createStackNavigator({
   Search: SearchScreen,
   Settings: SettingsScreen,
   UserProfile: UserProfile,
+  UserProfileEdit: UserProfileEdit,
 });
 
 

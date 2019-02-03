@@ -1,4 +1,5 @@
 import React from 'react';
+import { BaomoiText } from './StyledText';
 import {
     Image,
     Platform,
@@ -17,7 +18,6 @@ export default class CommentList extends React.Component{
       super(props);
       this.state ={
         comments : [],
-        text : '',
       }
   }
   componentWillMount(){
@@ -33,68 +33,13 @@ export default class CommentList extends React.Component{
     // .then(json => console.log(json))
     .catch(err => console.log(err))
   }
-  SubmitComment = () => {
-
-    if(this.state.text.length > 3)
-    {
-      axios({
-          method: 'post',
-          url: 'https://baomoi.press/wp-json/wp/v2/comments',
-          data: {
-            post: this.props.article.id,
-            content: this.state.text
-          },
-          headers: {'Authorization': 'Bearer ' + this.props.user.token},
-      })
-      .then(res => {
-        this.fetchCommentList()
-        this.setState({text: ''})
-      })
-      .catch(err => console.log(err))
-
-      axios({
-          method: "GET",
-          url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
-          headers: {'Authorization': 'Bearer ' + this.props.user.token},
-      })
-    }
-  }
   render(){
     return(
         <View>
-            <Text style={{fontSize : 30, textAlign: 'center', marginTop: 20, color: this.props.ui.textColor}}>Comment</Text>
-            {
-              this.props.user &&
-              <View style={{marginTop: 20}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'center', alignItems:'center'}}>
-                    <Avatar
-                      size="small"
-                      rounded
-                      source={{uri: this.props.user.avatar_urls['96']}}
-                      activeOpacity={0.7}
-                    />
-                    <Text style={{marginLeft: 5, color:'#696969'}}>{this.props.user.name}</Text>
-                  </View>
-                  <View style={{borderColor:'#CCCCCC', borderWidth: 2, borderRadius: 5, marginTop: 10, padding :10}}>
-                    <TextInput
-                    style={{height:60, alignItems:'center'}}
-                    onChangeText={(text) => this.setState({text: text})}
-                    value={this.state.text}
-                    multiline={true}
-                    placeholder='Write a comment...'
-                    />
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity style={{width:50, height: 30, backgroundColor:'#0080FF', borderRadius: 10, marginTop: 10, alignItems:'center', justifyContent:'center'}}
-                      onPress={() => this.SubmitComment()}>
-                      <Text style={{color: 'white', fontSize: 17}}>Post</Text>
-                    </TouchableOpacity>
-                  </View>
-              </View>
-            }
+            <BaomoiText style={{fontSize : 30, textAlign: 'center', marginTop: 20, color: this.props.ui.textColor}}>Bình luận</BaomoiText>
 
             {
-                this.state.comments &&
+                (this.state.comments) ?
                  <FlatList
                       style={styles.root}
                       data={this.state.comments}
@@ -119,19 +64,19 @@ export default class CommentList extends React.Component{
                             </TouchableOpacity>
                             <View style={styles.content}>
                               <View style={styles.contentHeader}>
-                                <Text  style={{fontSize:16,
+                                <BaomoiText  style={{fontSize:16*this.props.ui.fontSizeRatio,
                                               fontWeight:"bold",
-                                              color:this.props.ui.textColor}}>{Notification.author_name}</Text>
-                                <Text style={styles.time}>
+                                              color:this.props.ui.textColor}}>{Notification.author_name}</BaomoiText>
+                                <BaomoiText style={[styles.time,{fontSize:11*this.props.ui.fontSizeRatio}]}>
                                   {Notification.date}
-                                </Text>
+                                </BaomoiText>
                               </View>
-                              <HTMLView value={Notification.content.rendered} stylesheet={{p:{color:this.props.ui.textColor}}}/>
+                              <HTMLView value={Notification.content.rendered} stylesheet={{p:{color:this.props.ui.textColor, fontSize: 15* this.props.ui.fontSizeRatio}}}/>
                             </View>
                           </View>
                         );
                       }}
-                    />
+                    /> : <BaomoiText style={{marginTop: 10, fontSize: 16*this.props.ui.fontSizeRatio}}> Hãy là người đầu tiên bình luận </BaomoiText>
                       }
         </View>
 
@@ -170,8 +115,6 @@ const styles = StyleSheet.create({
     marginLeft:20
   },
   time:{
-    marginLeft: 5,
-    fontSize:10,
     color:"#808080",
   },
   name:{

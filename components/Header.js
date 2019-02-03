@@ -15,6 +15,7 @@ import {
 import {
     SafeAreaView
 } from 'react-navigation';
+import {Consumer} from '../context/context.js';
 
 const {width} = Dimensions.get('window')
 
@@ -28,10 +29,14 @@ export default class Header extends React.Component {
     }
     render(){
         return(
+      <Consumer>
+      {({textColor, backGround}) => (
             <SafeAreaView
                 style={{
                     flexDirection: "row",
                     height: 50,
+                    backgroundColor: backGround,
+                    marginTop: 20
                     // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
                 }}
             >
@@ -68,6 +73,8 @@ export default class Header extends React.Component {
             />
           </View>
         </SafeAreaView>
+      )}
+      </Consumer>
         )
     }
 }

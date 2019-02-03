@@ -14,10 +14,11 @@ import {
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements';
 import HTMLView from 'react-native-htmlview';
+import {Consumer} from '../context/context.js'
 import {
     WebBrowser
 } from 'expo';
-import { MonoText } from './StyledText';
+import { BaomoiText } from './StyledText';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 export default class Articles extends React.PureComponent {
     constructor(props){
@@ -39,6 +40,7 @@ export default class Articles extends React.PureComponent {
     }
     render(){
         Comments = (props) => {
+<<<<<<< HEAD
             if(this.state.numberOfComments !== 0){
                 return(
                     <View style={{flexDirection: "row", justifyContent: 'flex-end'}}><Text>{this.state.numberOfComments} </Text><Icon name='comment' color='#696969'/></View>
@@ -46,6 +48,11 @@ export default class Articles extends React.PureComponent {
             }else{
                 return null;
             }
+=======
+            return(
+                <View style={{flexDirection: "row", justifyContent: 'flex-end', marginTop: 5}}><BaomoiText>{this.state.numberOfComments} </BaomoiText><Icon name='comment' color='#696969'/></View>
+            )
+>>>>>>> kien
         }
 
         // check to see if the post have more than 3 pic
@@ -72,11 +79,11 @@ export default class Articles extends React.PureComponent {
                                 />
                             </View>
                             <View style={{padding: 10}}>
-                                <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
+                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
 
-                        <Text style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</Text>
+                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                     </TouchableOpacity>
                 )
             }else{
@@ -166,6 +173,7 @@ export default class Articles extends React.PureComponent {
                                         Article: item
                                     })}
                                 >
+<<<<<<< HEAD
                                     <View style={{flex: 1, flexDirection: "row"}}>
                                         <View style={{flex: 2}}>
                                             <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
@@ -179,18 +187,54 @@ export default class Articles extends React.PureComponent {
                             </View>
                         )
                     }
+=======
+                                    <BaomoiText style={{fontSize: 22, fontWeight: '500',color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                    <BaomoiText numberOfLines={2} style={{fontSize: 20, color: '#696969', marginTop:10}} >{item.excerpt.plainexcerpt}</BaomoiText>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )
+                }else {
+                    // post with less than 3 pic
+                    return(
+                        <View>
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={() => this.props.navigation.navigate("Article", {
+                                    Article: item
+                                })}
+                            >
+                                <View style={{flex: 1, flexDirection: "row"}}>
+                                    <View style={{flex: 2}}>
+                                        <BaomoiText style={{fontSize: 20, fontWeight: '500', color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                    </View>
+                                    <Image
+                                        source={{uri :item.thumb || defaultImg}}
+                                        style={{height: 80, width: 180, flex: 1}}
+                                    />
+                                </View>
+
+                                <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
+                            </TouchableOpacity>
+                        </View>
+                    )
+>>>>>>> kien
                 }
 
             }
         }
         const item = this.props.item
         return(
-            <View style={{padding: 10, backgroundColor: "white"}}>
+          <Consumer>
+            {({textColor, backGround}) => (
+            <View style={{padding: 10, backgroundColor: backGround}}>
                     <Post item={item}/>
                     <Comments id={item.id}/>
                     <Text style={{color: '#696969'}}>VnExpress - 2 giờ trước</Text>
                 <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10 }} />
             </View>
+          )}
+          </Consumer>
         )
     }
 }

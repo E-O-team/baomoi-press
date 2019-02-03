@@ -20,11 +20,14 @@ export default class Header extends React.Component{
   }
   render(){
     return(
+      <Consumer>
+      {({textColor, backGround}) => (
         <View
           style={{
             flexDirection: "row",
             height: 50,
-            marginTop: Platform.OS == "ios" ? 20 : 0 // only for IOS to give StatusBar Space
+
+            marginTop: Platform.OS == "ios" ? 20 : 20 // only for IOS to give StatusBar Space
           }}
         >
           <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
@@ -55,6 +58,8 @@ export default class Header extends React.Component{
             />
           </View>
         </View>
+        )}
+      </Consumer>
     )
   }
 

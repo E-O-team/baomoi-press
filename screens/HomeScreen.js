@@ -24,6 +24,8 @@ import {
 import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
+import {Consumer} from '../context/context.js';
+
 import axios from 'axios';
 
 var { width, height } = Dimensions.get('window');
@@ -144,33 +146,56 @@ export default class HomeScreen extends React.Component {
 
     }
     handleBeginDrag = (e) =>{
-      this.setState({y: e.nativeEvent.contentOffset.y})
-      if(this.state.y != 0){
-        if(this.state.isScrollDown) this.props.navigation.setParams({ visible: false })
-      }
+      // this.setState({y: e.nativeEvent.contentOffset.y})
+      // if(this.state.y != 0){
+      //   if(this.state.isScrollDown) this.props.navigation.setParams({ visible: false })
+      // }
     }
     handleEndDrag = (e) =>{
+      // this.setState({y: e.nativeEvent.contentOffset.y})
+      // if(e.nativeEvent.contentOffset.y <= this.state.y)
+      // {
+      //   this.props.navigation.setParams({ visible: true })
+      //   this.setState({isScrollDown : false})
+      // }else{
+      //   this.setState({isScrollDown: true})
+      // }
+    }
+    handleOnScroll = (e) => {
       this.setState({y: e.nativeEvent.contentOffset.y})
-      if(e.nativeEvent.contentOffset.y <= this.state.y)
-      {
-        this.props.navigation.setParams({ visible: true })
-        this.setState({isScrollDown : false})
-      }else{
-        this.setState({isScrollDown: true})
-      }
+        if(this.state.y != 0){
+           if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
+             this.props.navigation.setParams({ visible: true })
+             this.setState({isScrollDown : false})
+           }
+           if(this.state.y < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
+
+             this.props.navigation.setParams({ visible: false })
+             this.setState({isScrollDown : true})
+           }
+
+
+       }
     }
     render() {
         return(
+
             <View style={{flex: 1}}>
+
                 <View style={{height: 37}}>
+
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         data={this.state.categories}
                         renderItem={({item}) =>
-                            <TouchableHighlight
+
+                        <Consumer>
+                        {({textColor, backGround}) => (
+                            <TouchableOpacity
                                 onPress={() => this.setCategory(item.id)}
-                                style={this.state.CategoryStyle}
+                                style={{backgroundColor: backGround,
+                                        padding: 10,}}
                                 underlayColor="white"
                                 activeOpacity={1}
                             >
@@ -179,13 +204,18 @@ export default class HomeScreen extends React.Component {
                                 <View>
                                   <Text style={{color: "red"}}>{item.name}</Text>
                                   <View style={{height: 1, backgroundColor: 'red'}}></View>
-                                </View> : <Text style={{color: "#696969"}}>{item.name}</Text>
+                                </View> : <Text style={{color: textColor}}>{item.name}</Text>
                               }
 
-                            </TouchableHighlight>}
+                            </TouchableOpacity>
+                          )}
+                          </Consumer>
+
+                        }
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
+<<<<<<< HEAD
 
                     <FlatList
                         onScrollBeginDrag={this.handleBeginDrag}
@@ -198,6 +228,29 @@ export default class HomeScreen extends React.Component {
                         onEndReached={() => this.handleLoadMore()}
                         onEndReachedThreshold={0.7}
                     />
+=======
+                <Consumer>
+                {({textColor, backGround}) => (
+                <FlatList
+                    onScrollBeginDrag={this.handleBeginDrag}
+                    onScrollEndDrag={this.handleEndDrag}
+                    onScroll={this.handleOnScroll}
+                    data={this.state.articles}
+                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}}/>}
+                    keyExtractor={item => item.id.toString()}
+                    refreshing={this.state.refreshing}
+                    ListFooterComponent={() => <ActivityIndicator size="large" animating />}
+                    onRefresh={this.handleRefresh}
+                    onEndReached={() => this.handleLoadMore()}
+                    onEndReachedThreshold={0.7}
+                />
+              )}
+              </Consumer>
+
+
+
+
+>>>>>>> kien
 
           </View>
 
