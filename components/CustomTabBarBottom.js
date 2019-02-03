@@ -8,7 +8,7 @@ import { LinearGradient } from "expo";
 import { Ionicons  } from '@expo/vector-icons';
 import {Icon} from 'react-native-elements';
 var { width, height } = Dimensions.get('window');
-height = Platform.OS == "ios" ? height-20 : height
+height = height-20
 
 export default class CustomTabBarBottom extends React.Component {
   constructor(props){
@@ -64,8 +64,7 @@ export default class CustomTabBarBottom extends React.Component {
       : <View></View>
 
     var expandedView = (this.state.animating)?
-    <View style={{zIndex: 1000, position:'absolute'}}>
-        <View style={styles.closeButton}>
+    <View style={{zIndex: 1000, position: 'absolute'}}>
           <View style={{borderColor:'#fff', borderWidth:2, width: 70, height:70, borderRadius: 70/2, bottom: 10, justifyContent:'center'}}>
             <Ionicons name={"ios-close"} size={45} color={"#fff"} style={styles.buttonIcon} onPress={()=>this.onCloseBtn()}/>
           </View>
@@ -112,7 +111,6 @@ export default class CustomTabBarBottom extends React.Component {
             </TouchableOpacity>
           </Animated.View>
 
-        </View>
     </View> : <View></View>
     return (
       <View
@@ -127,8 +125,8 @@ export default class CustomTabBarBottom extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-          {blackscreen}
           {expandedView}
+          {blackscreen}
       </View>
     );
   }
@@ -159,6 +157,7 @@ const styles = {
   closeButton:{
     width: 70,
     position: 'absolute',
+    bottom: 0
   },
   IconView:{
     backgroundColor:'#CC0000',

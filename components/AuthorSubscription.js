@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View, StyleSheet, AsyncStorage} from 'react-native';
+import {Text, View, StyleSheet, AsyncStorage, Image} from 'react-native';
+import { BaomoiText } from './StyledText';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
 
@@ -55,7 +56,7 @@ export default class AuthorSubscription extends React.Component{
        })
      }
     var icon = (this.state.isSubscribed)?
-    <View style={styles.IconViewCheck}>
+    <View style={[styles.IconView, {backgroundColor : 'red'}]}>
       <Icon
         name='user-check'
         type='feather'
@@ -63,8 +64,9 @@ export default class AuthorSubscription extends React.Component{
         size={20}
         onPress={() => this.onUnSubscribe()}
       />
+
     </View> :
-    <View style={styles.IconViewPlus}>
+    <View style={styles.IconView}>
       <Icon
         name='user-plus'
         type='feather'
@@ -76,7 +78,13 @@ export default class AuthorSubscription extends React.Component{
 
     return(
       <View style={styles.container}>
-        <Text style={styles.text}>{this.state.source.name}</Text>
+        <View style={{height: 30 , width: 30, borderRadius: 30/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
+          <Image
+          source={{uri: "https://" + this.state.source.name + "/favicon.ico"}}
+          style={{ height: 30 , width: 30, borderRadius: 30/2, resizeMode:'contain'}}
+          />
+        </View>
+        <BaomoiText style={styles.text}>{this.state.source.name}</BaomoiText>
         {icon}
 
       </View>
@@ -88,14 +96,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     marginBottom: 10,
+    alignItems: 'center'
   },
   text: {
     flex: 1,
     textAlign: 'left',
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginLeft: 5,
   },
-  IconViewPlus:{
+  IconView:{
     marginRight: 20,
     width: 30,
     height: 30,
@@ -104,14 +114,4 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 1,
   },
-  IconViewCheck:{
-    marginRight: 20,
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    borderRadius: 10,
-    borderColor: 'red',
-    borderWidth: 1,
-    backgroundColor: 'red'
-  }
 })

@@ -22,11 +22,11 @@ export default class SettingsScreen extends React.Component {
 
   render() {
     return(
-      <View>
+      <Consumer>
+          {({changeDay, changeNight, backGround}) => (
+      <View style={{backgroundColor: backGround, flex: 1}}>
                     <Text style={styles.header}>Setting </Text>
-    <Consumer>
-        {({changeDay, changeNight}) => (
-      <View>
+
         <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeDay}>
           <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#ff9933'}}>
            <Text style={{color:'#ffffff',fontWeight:'800',}}>Day mode</Text>
@@ -44,11 +44,12 @@ export default class SettingsScreen extends React.Component {
            <Text style={{color:'#ffffff',fontWeight:'800',}}>Log Out</Text>
           </View>
         </TouchableHighlight>
-      </View>
-        )}
-    </Consumer>
 
-  </View>
+
+
+     </View>
+    )}
+    </Consumer>
     )
   }
 }
@@ -56,5 +57,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize:30,
     textAlign:'center',
+    color: '#696969'
   }
 })

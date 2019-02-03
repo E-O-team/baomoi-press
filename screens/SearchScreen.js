@@ -13,6 +13,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import {Icon, SearchBar, Divider} from 'react-native-elements';
+import { BaomoiText } from '../components/StyledText';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 
@@ -36,7 +37,7 @@ export default class SearchScreen extends React.Component{
           style={{
             flexDirection: "row",
             height: 50,
-            marginTop: Platform.OS == "ios" ? 20 : 0 // only for IOS to give StatusBar Space
+            marginTop: Platform.OS == "ios" ? 20 : 20 // only for IOS to give StatusBar Space
           }}>
           <View style={{flex: 1, justifyContent:'center'}}>
             <Icon
@@ -92,7 +93,7 @@ export default class SearchScreen extends React.Component{
 
   render(){
     return(
-      <View style={{backgroundColor:'#e0e0e0'}}>
+      <View style={{backgroundColor:'#fff'}}>
         <View style={{marginTop: 20, padding: 10, backgroundColor:"white"}}>
           <ActivityIndicator
               animating = {this.state.animating}
@@ -111,17 +112,18 @@ export default class SearchScreen extends React.Component{
                       onPress={() => this.props.navigation.push("Article", {
                           Article: item
                       })}
+                      style={{backgroundColor:'white'}}
                   >
                       <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
                           <View style={{flex: 2}}>
-                            <Text style={{fontSize:18}}>{item.title.plaintitle}</Text>
+                            <BaomoiText style={{fontSize:18}}>{item.title.plaintitle}</BaomoiText>
                           </View>
                           <Image
                               source={{uri :item.thumb || defaultImg}}
                               style={{height: 80, width: 180, flex: 1}}
                           />
                       </View>
-                          <Text style={{fontSize:15, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</Text>
+                          <BaomoiText style={{fontSize:15, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</BaomoiText>
                           <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
                   </TouchableOpacity>
                   }

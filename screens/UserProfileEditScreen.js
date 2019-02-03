@@ -51,16 +51,19 @@ export default class UserProfileEdit extends React.Component {
                 <FormLabel>ngày sinh</FormLabel>
                 <FormInput placeholder={user.birth_date} onChangeText={(text) => this.setState({birth_date: text})}/>
                 <FormLabel>giới tính</FormLabel>
-                <FormInput placeholder={user.gender} onChangeText={(text) => this.setState({gender: text})}/>
+                <FormInput placeholder={user.gender[0]} onChangeText={(text) => this.setState({gender: text})}/>
                 <FormLabel>sở thích</FormLabel>
                 <FormInput placeholder={user.so_thich} onChangeText={(text) => this.setState({so_thich: text})}/>
                 <FormLabel>số điện thoại</FormLabel>
                 <FormInput placeholder={user.mobile_number} onChangeText={(text) => this.setState({mobile_number: text})}/>
+
                 <Button
                     buttonStyle={styles.button}
                     title="Lưu"
                     onPress={this.handleSubmit}
                 />
+
+                <Text style={{color: '#696969', marginHorizontal: 10, marginTop: 20}}>Lưu ý: bạn cần điền đầy đủ thông tin trước khi thực hiện bình luận bài viết</Text>
             </ScrollView>
         )
     }

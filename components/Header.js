@@ -35,7 +35,8 @@ export default class Header extends React.Component {
                 style={{
                     flexDirection: "row",
                     height: 50,
-                    backgroundColor: backGround
+                    backgroundColor: backGround,
+                    marginTop: 20
                     // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
                 }}
             >
