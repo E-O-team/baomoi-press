@@ -39,9 +39,13 @@ export default class Articles extends React.PureComponent {
     }
     render(){
         Comments = (props) => {
-            return(
-                <View style={{flexDirection: "row", justifyContent: 'flex-end', marginTop: 5}}><Text>{this.state.numberOfComments} </Text><Icon name='comment' color='#696969'/></View>
-            )
+            if(this.state.numberOfComments !== 0){
+                return(
+                    <View style={{flexDirection: "row", justifyContent: 'flex-end'}}><Text>{this.state.numberOfComments} </Text><Icon name='comment' color='#696969'/></View>
+                )
+            }else{
+                return null;
+            }
         }
 
         // check to see if the post have more than 3 pic
@@ -76,85 +80,107 @@ export default class Articles extends React.PureComponent {
                     </TouchableOpacity>
                 )
             }else{
-                if (item.content.images.length >= 3){
-                    // post with more than 3 pic
+                if(item.featured_post == "on"){
                     return(
-                        <View style={{flex: 1, flexDirection: 'column'}}>
-                            <View style={{flex: 2}}>
-                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                    <TouchableOpacity
-                                        activeOpacity={1}
-                                        onPress={() => this.props.navigation.navigate("Article", {
-                                            Article: item
-                                        })}
-                                    >
-                                        <Image
-                                            source={{uri: item.content.images[0]}}
-                                            style= {{height: 180, width: 340, marginLeft: 10}}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        activeOpacity={1}
-                                        onPress={() => this.props.navigation.navigate("Article", {
-                                            Article: item
-                                        })}
-                                    >
-                                        <Image
-                                            source={{uri: item.content.images[1]}}
-                                            style= {{height: 180, width: 340, marginLeft: 10}}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        activeOpacity={1}
-                                        onPress={() => this.props.navigation.navigate("Article", {
-                                            Article: item
-                                        })}
-                                    >
-                                        <Image
-                                            source={{uri: item.content.images[2]}}
-                                            style= {{height: 180, width: 340, marginLeft: 10}}
-                                        />
-                                    </TouchableOpacity>
-                                </ScrollView>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => this.props.navigation.navigate("Article", {
+                                Article: item
+                            })}
+                        >
+                            <Text style={{fontWeight: "bold"}}>Tin Nổi Bật </Text>
+                            <View style={{marginTop: 5}}>
+                                <Image
+                                    source={{uri: item.thumb}}
+                                    style= {{height: 180, width: 340, marginLeft: 10}}
+                                />
+                                <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
+                                <Text style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</Text>
                             </View>
-                            <View style={{flex: 1}}>
+                        </TouchableOpacity>
+                    )
+                }else{
+                    if (item.content.images.length >= 3){
+                        // post with more than 3 pic
+                        return(
+                            <View style={{flex: 1, flexDirection: 'column'}}>
+                                <View style={{flex: 2}}>
+                                    <View style={{flexDirection: "row"}}>
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            onPress={() => this.props.navigation.navigate("Article", {
+                                                Article: item
+                                            })}
+                                            style={{flex: 1}}
+                                        >
+                                            <Image
+                                                source={{uri: item.content.images[0]}}
+                                                style= {{height: 80, marginLeft: 5,}}
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            onPress={() => this.props.navigation.navigate("Article", {
+                                                Article: item
+                                            })}
+                                            style={{flex: 1}}
+                                        >
+                                            <Image
+                                                source={{uri: item.content.images[1]}}
+                                                style= {{height: 80, marginLeft: 5}}
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            activeOpacity={1}
+                                            onPress={() => this.props.navigation.navigate("Article", {
+                                                Article: item
+                                            })}
+                                            style={{flex: 1}}
+                                        >
+                                            <Image
+                                                source={{uri: item.content.images[2]}}
+                                                style= {{height: 80, marginLeft: 5}}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={{flex: 1}}>
+                                    <TouchableOpacity
+                                        activeOpacity={0.5}
+                                        onPress={() => this.props.navigation.navigate("Article", {
+                                            Article: item
+                                        })}
+                                    >
+                                        <Text style={{fontSize: 22, fontWeight: '500'}}>{item.title.plaintitle}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        )
+                    }else {
+                        // post with less than 3 pic
+                        return(
+                            <View>
                                 <TouchableOpacity
                                     activeOpacity={0.5}
                                     onPress={() => this.props.navigation.navigate("Article", {
                                         Article: item
                                     })}
                                 >
-                                    <Text style={{fontSize: 22, fontWeight: '500'}}>{item.title.plaintitle}</Text>
-                                    <Text numberOfLines={2} style={{fontSize: 20, color: '#696969', marginTop:10}} >{item.excerpt.plainexcerpt}</Text>
+                                    <View style={{flex: 1, flexDirection: "row"}}>
+                                        <View style={{flex: 2}}>
+                                            <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
+                                        </View>
+                                        <Image
+                                            source={{uri :item.thumb || defaultImg}}
+                                            style={{height: 80, flex: 1, marginLeft: 5}}
+                                        />
+                                    </View>
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    )
-                }else {
-                    // post with less than 3 pic
-                    return(
-                        <View>
-                            <TouchableOpacity
-                                activeOpacity={0.5}
-                                onPress={() => this.props.navigation.navigate("Article", {
-                                    Article: item
-                                })}
-                            >
-                                <View style={{flex: 1, flexDirection: "row"}}>
-                                    <View style={{flex: 2}}>
-                                        <Text style={{fontSize: 20, fontWeight: '500'}}>{item.title.plaintitle}</Text>
-                                    </View>
-                                    <Image
-                                        source={{uri :item.thumb || defaultImg}}
-                                        style={{height: 80, width: 180, flex: 1}}
-                                    />
-                                </View>
-
-                                <Text style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )
+                        )
+                    }
                 }
+
             }
         }
         const item = this.props.item
@@ -162,7 +188,8 @@ export default class Articles extends React.PureComponent {
             <View style={{padding: 10, backgroundColor: "white"}}>
                     <Post item={item}/>
                     <Comments id={item.id}/>
-                <Divider style={{ backgroundColor: '#e0e0e0' }} />
+                    <Text style={{color: '#696969'}}>VnExpress - 2 giờ trước</Text>
+                <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10 }} />
             </View>
         )
     }

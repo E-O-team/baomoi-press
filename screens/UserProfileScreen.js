@@ -3,7 +3,7 @@ import { Text, View, AsyncStorage, StyleSheet, TouchableOpacity, Picker, ScrollV
 import axios from 'axios';
 import { Avatar, Card, Icon, Button } from 'react-native-elements';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-export default class UserProfile extends React.Component {
+export default class UserProfile extends React.PureComponent {
     constructor() {
         super()
         this.state={
@@ -16,12 +16,24 @@ export default class UserProfile extends React.Component {
             if(user){
                 this.setState({
                     user: JSON.parse(user)
+                }, () => {
+                    axios({
+                        method: "GET",
+                        url: "https://baomoi.press/wp-json/wp/v2/users/" + this.state.user.id,
+                        headers: {'Authorization': 'Bearer ' + this.state.user.token},
+                    })
+                    .then((res) => this.setState({
+                        user: res.data
+                    }))
+                    .catch(err => console.log(err))
+
                 })
             }else{
                 this.props.navigation.navigate("Auth")
             }
         })
     }
+
     render(){
         const {user} = this.state
         return(

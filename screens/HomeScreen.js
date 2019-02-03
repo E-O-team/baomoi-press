@@ -66,13 +66,37 @@ export default class HomeScreen extends React.Component {
         }
         // Home
         if(selectedCategory === "Home"){
-            axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
-            .then(res => this.setState({
-                articles: [...this.state.articles,...res.data],
-                refreshing: false,
-            }))
-            // .then(json => console.log(json))
-            .catch(err => console.log(err))
+            // axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on")
+            // .then(res => {
+            //     this.setState({
+            //         articles: [...this.state.articles, res.data[0]]
+            //     })
+            //     return axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+            // })
+            // .then(res => this.setState({
+            //     articles: [...this.state.articles,...res.data],
+            //     refreshing: false,
+            // }))
+            // .catch(err => console.log(err))
+            if(this.state.page == 1){
+                axios.all([
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on"),
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+                ])
+                .then(axios.spread((featuredPostRes, articlesRes) => {
+                    this.setState({
+                        articles: [...this.state.articles, featuredPostRes.data[0], ...articlesRes.data],
+                        refreshing: false,
+                    })
+                }))
+                .catch(err => console.log(err))
+            }else{
+                axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+                .then(res => this.setState({
+                    articles: [...this.state.articles, ...res.data],
+                }))
+            }
+
         // Other categories
         }else{
             axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
@@ -162,18 +186,19 @@ export default class HomeScreen extends React.Component {
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
-                <FlatList
-                    onScrollBeginDrag={this.handleBeginDrag}
-                    onScrollEndDrag={this.handleEndDrag}
-                    data={this.state.articles}
-                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>}
-                    keyExtractor={item => item.id.toString()}
-                    refreshing={this.state.refreshing}
-                    ListFooterComponent={() => <ActivityIndicator size="large" animating />}
-                    onRefresh={this.handleRefresh}
-                    onEndReached={() => this.handleLoadMore()}
-                    onEndReachedThreshold={0.7}
-                />
+
+                    <FlatList
+                        onScrollBeginDrag={this.handleBeginDrag}
+                        onScrollEndDrag={this.handleEndDrag}
+                        data={this.state.articles}
+                        renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>}
+                        keyExtractor={item => item.id.toString()}
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.handleRefresh}
+                        onEndReached={() => this.handleLoadMore()}
+                        onEndReachedThreshold={0.7}
+                    />
+
           </View>
 
 
