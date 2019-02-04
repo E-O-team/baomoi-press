@@ -6,6 +6,7 @@ import {
     TouchableHighlight,
     AsyncStorage,
 } from 'react-native';
+import { Slider } from 'react-native-elements';
 import {
     Provider,
     Consumer
@@ -13,19 +14,13 @@ import {
 
 
 export default class SettingsScreen extends React.Component {
-<<<<<<< HEAD
-    static navigationOptions = ({
-        navigation
-    }) => {
-        return {
-            title: "Cài Đặt",
-        }
+  constructor(){
+    super()
+    this.state={
+      value : 1
     }
-    logOut = async () => {
-        AsyncStorage.clear()
-        this.props.navigation.navigate("AuthLoadingScreen")
-    }
-=======
+  }
+
   static navigationOptions = ({navigation}) => {
       return {
           title: "Setting",
@@ -38,75 +33,53 @@ export default class SettingsScreen extends React.Component {
 
   render() {
     return(
-      <Consumer>
-          {({changeDay, changeNight, backGround}) => (
-      <View style={{backgroundColor: backGround, flex: 1}}>
-                    <Text style={styles.header}>Setting </Text>
+            <Consumer>
+                {({changeDay, changeNight, backGround, changeRatio}) => (
+                    <View style={{backgroundColor: backGround, flex: 1}}>
+                                  <Text style={styles.header}>Setting </Text>
 
-        <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeDay}>
-          <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#ff9933'}}>
-           <Text style={{color:'#ffffff',fontWeight:'800',}}>Day mode</Text>
-          </View>
-        </TouchableHighlight>
->>>>>>> kien
-
-    render() {
-        return (
-            <View>
-                <Text style={styles.header}>Setting</Text>
-                <Consumer>
-                    {({changeDay, changeNight}) => (
-                        <View>
-                            <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeDay}>
-                                <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#ff9933'}}>
-                                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Day mode</Text>
-                                </View>
-                            </TouchableHighlight>
-
-<<<<<<< HEAD
-                            <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeNight}>
-                                <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#4c0099'}}>
-                                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Night mode</Text>
-                                </View>
-                            </TouchableHighlight>
-
-                            <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={this.logOut}>
-                                <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#006666'}}>
-                                    <Text style={{color:'#ffffff',fontWeight:'800',}}>Log Out</Text>
-                                </View>
-                            </TouchableHighlight>
+                      <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeDay}>
+                        <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#ff9933'}}>
+                         <Text style={{color:'#ffffff',fontWeight:'800',}}>Day mode</Text>
                         </View>
-                    )}
-                </Consumer>
-            </View>
+                      </TouchableHighlight>
+                      <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeNight}>
+                          <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#4c0099'}}>
+                              <Text style={{color:'#ffffff',fontWeight:'800',}}>Night mode</Text>
+                          </View>
+                      </TouchableHighlight>
+
+
+                      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+                        <Text style={{fontSize: 20, color: '#696969'}}>Text Scale</Text>
+                        <Slider
+                          value={this.state.value}
+                          onValueChange={value => {
+                            this.setState({value: value})
+                            changeRatio(value)
+                          }}
+                          minimumValue={0.5}
+                          maximumValue={1.5}
+                        />
+
+                      </View>
+
+                      <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={this.logOut}>
+                          <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#006666'}}>
+                              <Text style={{color:'#ffffff',fontWeight:'800',}}>Log Out</Text>
+                          </View>
+                      </TouchableHighlight>
+                  </View>
+              )}
+          </Consumer>
         )
     }
 }
-const styles = StyleSheet.create({
-    header: {
-        fontSize: 30,
-        textAlign: 'center',
-    }
-=======
-        <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={this.logOut}>
-          <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#006666'}}>
-           <Text style={{color:'#ffffff',fontWeight:'800',}}>Log Out</Text>
-          </View>
-        </TouchableHighlight>
 
-
-
-     </View>
-    )}
-    </Consumer>
-    )
-  }
-}
 const styles = StyleSheet.create({
   header: {
     fontSize:30,
     textAlign:'center',
     color: '#696969'
   }
->>>>>>> kien
 })

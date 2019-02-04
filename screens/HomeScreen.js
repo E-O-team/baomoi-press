@@ -215,20 +215,7 @@ export default class HomeScreen extends React.Component {
                         keyExtractor={item => item.id.toString()}
                     />
                 </View>
-<<<<<<< HEAD
 
-                    <FlatList
-                        onScrollBeginDrag={this.handleBeginDrag}
-                        onScrollEndDrag={this.handleEndDrag}
-                        data={this.state.articles}
-                        renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation}/>}
-                        keyExtractor={item => item.id.toString()}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.handleRefresh}
-                        onEndReached={() => this.handleLoadMore()}
-                        onEndReachedThreshold={0.7}
-                    />
-=======
                 <Consumer>
                 {({textColor, backGround}) => (
                 <FlatList
@@ -246,11 +233,6 @@ export default class HomeScreen extends React.Component {
                 />
               )}
               </Consumer>
-
-
-
-
->>>>>>> kien
 
           </View>
 

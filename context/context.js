@@ -34,7 +34,8 @@ class Provider extends React.Component {
           backGround: this.state.backGround,
           fontSizeRatio: this.state.fontSizeRatio,
           changeDay: this.changeDay,
-          changeNight: this.changeNight, }}
+          changeNight: this.changeNight,
+          changeRatio: this.changeRatio}}
       >
         {this.props.children}
       </Context.Provider>

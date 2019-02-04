@@ -92,31 +92,27 @@ export default class RecommendedList extends React.Component{
         <Consumer>
           {({textColor, backGround, fontSizeRatio}) => (
             <View>
-              <BaomoiText style={{fontSize: 30* fontSizeRatio, textAlign: 'center',color:textColor}}>Bài viết đề xuất</BaomoiText>
+              <BaomoiText style={{fontSize: 30* this.props.ui.fontSizeRatio, textAlign: 'center',color:this.props.ui.textColor}}>Bài viết đề xuất</BaomoiText>
               {this.state.Articles && <FlatList
                     data={this.state.Articles}
                     renderItem={({ item }) =>
                     <TouchableOpacity
                         activeOpacity={0.5}
-                        onPress={() => {
-                        this.props.navigation.push("Article", {
+                        onPress={() => this.props.navigation.push("Article", {
                             Article: item,
                             currentCount: this.props.currentCount
-                        })
-
-                      }}
+                        })}
                     >
-                        <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                        <View style={{flex: 1, flexDirection: "row"}}>
                             <View style={{flex: 2}}>
-                              <BaomoiText style={{fontSize:18* fontSizeRatio, color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 18*this.props.ui.fontSizeRatio, fontWeight: '500',color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                             <Image
                                 source={{uri :item.thumb || defaultImg}}
-                                style={{height: 80, width: 180, flex: 1}}
+                                style={{height: 80, flex: 1, width: 180}}
                             />
                         </View>
-                            <BaomoiText style={{fontSize:15*fontSizeRatio, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</BaomoiText>
-                            <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
+                        <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10, marginBottom: 10 }} />
                     </TouchableOpacity>
                     }
                     keyExtractor={(item, index) => index.toString()}
