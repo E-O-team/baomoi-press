@@ -10,20 +10,16 @@ class Provider extends React.Component {
     }
     constructor() {
     super()
-    this.changeDay = this.changeDay.bind(this)
-    this.changeNight = this.changeNight.bind(this)
-    this.changeRatio = this.changeRatio.bind(this)
     }
-    changeDay() {
-    // setting timeout to mimic an async login
+    changeDay = () => {
       this.setState({  textColor: 'black',
         backGround: 'white', })
       }
-    changeNight() {
+    changeNight = () => {
       this.setState({ textColor: 'white',
       backGround: '#404040', })
       }
-    changeRatio(r) {
+    changeRatio = (r) => {
       this.setState({fontSizeRatio : r})
     }
 
