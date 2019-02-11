@@ -18,7 +18,6 @@ export default class SettingsScreen extends React.Component {
   constructor(){
     super()
     this.state={
-      value : 2,
       nightMode: true,
     }
   }
@@ -26,7 +25,14 @@ export default class SettingsScreen extends React.Component {
   static navigationOptions = ({navigation}) => {
       return {
           title: "Setting",
-      }
+          headerStyle: {
+              backgroundColor: '#696969',
+              },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          }
   }
   logOut = async () => {
       AsyncStorage.clear()
@@ -39,9 +45,11 @@ export default class SettingsScreen extends React.Component {
   }
 
   render() {
+
+
     return(
         <Consumer>
-            {({changeDay, changeNight, backGround, changeRatio, nightMode, switchMode}) => (
+            {({changeDay, changeNight, backGround, changeRatio, fontSizeRatio, nightMode, switchMode}) => (
                 <View style={{backgroundColor: backGround, flex: 1}}>
                     <Text style={styles.header}>Setting </Text>
 
@@ -63,15 +71,22 @@ export default class SettingsScreen extends React.Component {
                     <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
                         <Text style={{fontSize: 20, color: '#696969'}}>Cỡ chữ</Text>
                         <Slider
-                            value={this.state.value}
+                            value={fontSizeRatio}
                             onValueChange={value => {
-                                this.setState({value: value})
                                 changeRatio(value)
                             }}
-                            step={1}
-                            minimumValue={1}
-                            maximumValue={3}
+                            step={0.2}
+                            minimumValue={0.8}
+                            maximumValue={1.2}
+                            minimumTrackTintColor='#696969'
                         />
+                        {
+                          fontSizeRatio == 1 ?
+                          <Text style={{fontSize: 18, color: '#696969'}}>Medium</Text> :
+                          fontSizeRatio == 0.8 ?
+                          <Text style={{fontSize: 18, color: '#696969'}}>Small</Text> :
+                          <Text style={{fontSize: 18, color: '#696969'}}>Large</Text>
+                        }
 
                     </View>
                 </View>
@@ -87,5 +102,9 @@ const styles = StyleSheet.create({
         textAlign:'center',
         color: '#696969'
     },
+    slider: {
+      backgroundColor: 'blue',
+
+    }
 
 })

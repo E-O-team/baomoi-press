@@ -49,27 +49,19 @@ export default class Header extends React.Component {
             />
           </View>
           <View
-              style={{ flex:2 }}
+              style={{ flex:3, alignItems: 'center' }}
           >
               <Image
               source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
-              style={{ height: 35 ,marginLeft:73,marginTop:5, resizeMode:'contain', }}
+              style={{ height: 50 , width: 50,marginTop:5, resizeMode:'contain' }}
               />
           </View>
-          <View style={{flex: 1, alignItems:'flex-end', justifyContent:'center'}}>
+          <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
             <Icon
               name='search'
               size={22}
               color='#696969'
               onPress={()=>this.props.navigation.navigate("Search")}
-            />
-          </View>
-          <View style={{flex: 1, alignItems:'flex-end', marginRight: 10, justifyContent:'center'}}>
-            <Icon
-                onPress={() => this.props.navigation.navigate("Settings")}
-                name='settings'
-                size={22}
-                color='#696969'
             />
           </View>
         </SafeAreaView>

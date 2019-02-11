@@ -57,6 +57,7 @@ export default class Articles extends React.PureComponent {
         // check to see if the post have more than 3 pic
         Post = (prop) => {
             const item = prop.item
+            const ui = prop.ui
             if(this.props.video == true){
                 // post with video format
                 return(
@@ -78,7 +79,7 @@ export default class Articles extends React.PureComponent {
                                 />
                             </View>
                             <View style={{padding: 10}}>
-                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
 
@@ -94,13 +95,17 @@ export default class Articles extends React.PureComponent {
                                 Article: item
                             })}
                         >
-                            <BaomoiText style={{fontWeight: "bold"}}>Tin Nổi Bật </BaomoiText>
+                            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                              <View style={{backgroundColor: 'red', width: 10, height:10, borderRadius: 5}}>
+                              </View>
+                              <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor}}>Tin Nổi Bật </BaomoiText>
+                            </View>
                             <View style={{marginTop: 5}}>
                                 <Image
                                     source={{uri: item.thumb}}
                                     style= {{height: 180, width: 340, marginLeft: 10}}
                                 />
-                                <BaomoiText style={{fontSize: 24, fontWeight: '500', color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 24, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                 <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                             </View>
                         </TouchableOpacity>
@@ -157,7 +162,7 @@ export default class Articles extends React.PureComponent {
                                             Article: item
                                         })}
                                     >
-                                        <BaomoiText style={{fontSize: 22, fontWeight: '500', color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                        <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -174,7 +179,7 @@ export default class Articles extends React.PureComponent {
                                 >
                                     <View style={{flex: 1, flexDirection: "row"}}>
                                         <View style={{flex: 2}}>
-                                            <BaomoiText style={{fontSize: 22, fontWeight: '500',color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                            <BaomoiText style={{fontSize: 22, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                         </View>
                                         <Image
                                             source={{uri :item.thumb || defaultImg}}
@@ -194,7 +199,7 @@ export default class Articles extends React.PureComponent {
           <Consumer>
             {({textColor, backGround}) => (
             <View style={{padding: 10, backgroundColor: backGround}}>
-                    <Post item={item}/>
+                    <Post item={item} ui={{textColor}}/>
                     <Comments id={item.id}/>
                     <Text style={{color: '#696969'}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
                 <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10 }} />

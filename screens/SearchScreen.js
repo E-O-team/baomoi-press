@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {Icon, SearchBar, Divider} from 'react-native-elements';
 import { BaomoiText } from '../components/StyledText';
+import {Consumer} from '../context/context.js';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 
@@ -33,39 +34,44 @@ export default class SearchScreen extends React.Component{
     return{
       title: "Search",
       header: (
-        <View
-          style={{
-            flexDirection: "row",
-            height: 50,
-            marginTop: Platform.OS == "ios" ? 20 : 20 // only for IOS to give StatusBar Space
-          }}>
-          <View style={{flex: 1, justifyContent:'center'}}>
-            <Icon
-              name='chevron-left'
-              size={35}
-              color='#696969'
-              onPress={()=>navigation.goBack()}
-            />
-          </View>
-          <View style={{flex: 4, justifyContent:'center'}}>
-            <TextInput
-            style={{height:50}}
-            onChangeText={(text) => params.ChangeText(text)}
-            value={params.text}
-            underlineColorAndroid='transparent'
-            onSubmitEditing={() => params.onSubmit(params.text)}
-            placeholder='Search Articles'
-            />
-          </View>
-          <View style={{flex: 1, justifyContent:'center'}}>
-            <Icon
-              name='clear'
-              size={22}
-              color='#696969'
-              onPress={()=>params.clear()}
-            />
-          </View>
-        </View>
+        <Consumer>
+          {({textColor, backGround}) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  height: 50,
+                  backgroundColor: backGround,
+                  marginTop: Platform.OS == "ios" ? 20 : 20 // only for IOS to give StatusBar Space
+                }}>
+                <View style={{flex: 1, justifyContent:'center'}}>
+                  <Icon
+                    name='chevron-left'
+                    size={35}
+                    color='#696969'
+                    onPress={()=>navigation.goBack()}
+                  />
+                </View>
+                <View style={{flex: 4, justifyContent:'center'}}>
+                  <TextInput
+                  style={{height:50}}
+                  onChangeText={(text) => params.ChangeText(text)}
+                  value={params.text}
+                  underlineColorAndroid='transparent'
+                  onSubmitEditing={() => params.onSubmit(params.text)}
+                  placeholder='Search Articles'
+                  />
+                </View>
+                <View style={{flex: 1, justifyContent:'center'}}>
+                  <Icon
+                    name='clear'
+                    size={22}
+                    color='#696969'
+                    onPress={()=>params.clear()}
+                  />
+                </View>
+              </View>
+            )}
+        </Consumer>
       )
 
     }
@@ -93,44 +99,49 @@ export default class SearchScreen extends React.Component{
 
   render(){
     return(
-      <View style={{backgroundColor:'#fff'}}>
-        <View style={{marginTop: 20, padding: 10, backgroundColor:"white"}}>
-          <ActivityIndicator
-              animating = {this.state.animating}
-              color = '#696969'
-              size = "large"
-              style = {{flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        }}/>
+      <Consumer>
+        {({textColor, backGround, fontSizeRatio}) => (
+            <View style={{backgroundColor:backGround}}>
+              <ActivityIndicator
+                  animating = {this.state.animating}
+                  color = '#696969'
+                  size = "large"
+                  style = {{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 20
+                            }}/>
 
-            <FlatList
-                  data={this.state.results}
-                  renderItem={({ item }) =>
-                  <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => this.props.navigation.push("Article", {
-                          Article: item
-                      })}
-                      style={{backgroundColor:'white'}}
-                  >
-                      <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
-                          <View style={{flex: 2}}>
-                            <BaomoiText style={{fontSize:18}}>{item.title.plaintitle}</BaomoiText>
-                          </View>
-                          <Image
-                              source={{uri :item.thumb || defaultImg}}
-                              style={{height: 80, width: 180, flex: 1}}
-                          />
-                      </View>
-                          <BaomoiText style={{fontSize:15, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</BaomoiText>
-                          <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
-                  </TouchableOpacity>
-                  }
-                  keyExtractor={(item, index) => index.toString()}
-              />
-        </View>
-      </View>
+
+                  <FlatList
+                        data={this.state.results}
+                        style={{backgroundColor: backGround}}
+                        renderItem={({ item }) =>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => this.props.navigation.push("Article", {
+                                Article: item
+                            })}
+                            style={{backgroundColor:backGround}}
+                        >
+                            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                                <View style={{flex: 2}}>
+                                  <BaomoiText style={{fontSize:18*fontSizeRatio, color:textColor}}>{item.title.plaintitle}</BaomoiText>
+                                </View>
+                                <Image
+                                    source={{uri :item.thumb || defaultImg}}
+                                    style={{height: 80, width: 180, flex: 1}}
+                                />
+                            </View>
+                                <BaomoiText style={{fontSize:15*fontSizeRatio, color: '#696969', marginTop: 10}} numberOfLines={2}>{item.excerpt.plainexcerpt}</BaomoiText>
+                                <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10 }} />
+                        </TouchableOpacity>
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+              </View>
+          )}
+        </Consumer>
     )
   }
 

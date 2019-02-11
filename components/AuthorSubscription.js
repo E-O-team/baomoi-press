@@ -3,6 +3,8 @@ import {Text, View, StyleSheet, AsyncStorage, Image} from 'react-native';
 import { BaomoiText } from './StyledText';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
+import {Consumer} from '../context/context.js'
+
 
 export default class AuthorSubscription extends React.Component{
   constructor(props) {
@@ -84,7 +86,11 @@ export default class AuthorSubscription extends React.Component{
           style={{ height: 30 , width: 30, borderRadius: 30/2, resizeMode:'contain'}}
           />
         </View>
-        <BaomoiText style={styles.text}>{this.state.source.name}</BaomoiText>
+        <Consumer>
+          {({textColor}) => (
+          <BaomoiText style={[styles.text,{color: textColor}]}>{this.state.source.name}</BaomoiText>
+          )}
+        </Consumer>  
         {icon}
 
       </View>

@@ -152,7 +152,7 @@ export default class CommentModal extends React.Component{
 
                 <View style={{flexDirection: 'row'}}>
                   <BaomoiText style={{color: 'white', flex : 3, fontSize: 20}}> Sign In to Comment</BaomoiText>
-                  <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                  <View style={{flex: 1,  alignItems: 'flex-end'}}>
                     <TouchableOpacity onPress={() => this.setState({registerVisible: false})}>
                       <Icon
                       name='clear'
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     borderColor:'#CCCCCC',
     borderWidth: 2,
     borderRadius: 5,
-    width: 150,
+    marginRight : 10,
     height: 30,
     justifyContent: 'center',
     alignItems: 'center'

@@ -96,24 +96,28 @@ export default class RecommendedList extends React.Component{
               {this.state.Articles && <FlatList
                     data={this.state.Articles}
                     renderItem={({ item }) =>
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={() => this.props.navigation.push("Article", {
-                            Article: item,
-                            currentCount: this.props.currentCount
-                        })}
-                    >
-                        <View style={{flex: 1, flexDirection: "row"}}>
-                            <View style={{flex: 2}}>
-                                <BaomoiText style={{fontSize: 18*this.props.ui.fontSizeRatio, fontWeight: '500',color: this.props.ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                    <Consumer>
+                      {({textColor, fontSizeRatio}) => (
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => this.props.navigation.push("Article", {
+                                Article: item,
+                                currentCount: this.props.currentCount
+                            })}
+                        >
+                            <View style={{flex: 1, flexDirection: "row"}}>
+                                <View style={{flex: 2}}>
+                                    <BaomoiText style={{fontSize: 18*fontSizeRatio, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                </View>
+                                <Image
+                                    source={{uri :item.thumb || defaultImg}}
+                                    style={{height: 80, flex: 1, width: 180}}
+                                />
                             </View>
-                            <Image
-                                source={{uri :item.thumb || defaultImg}}
-                                style={{height: 80, flex: 1, width: 180}}
-                            />
-                        </View>
-                        <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10, marginBottom: 10 }} />
-                    </TouchableOpacity>
+                            <Divider style={{ backgroundColor: '#e0e0e0', marginTop:10, marginBottom: 10 }} />
+                        </TouchableOpacity>
+                      )}
+                    </Consumer>
                     }
                     keyExtractor={(item, index) => index.toString()}
                 />

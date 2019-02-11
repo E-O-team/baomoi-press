@@ -71,6 +71,7 @@ export default class ArticleScreen extends React.Component {
             Article: this.props.navigation.getParam("Article", "ERR"),
         })
 
+
         this.setState({
             user: JSON.parse(await AsyncStorage.getItem('user'))
         })
@@ -151,7 +152,7 @@ export default class ArticleScreen extends React.Component {
             <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
 
             <HTMLView
-              value={this.state.Article.content.plaintext.replace(/\r?\n|\r/g, '')}
+              value={`<div>${this.state.Article.content.plaintext.replace(/\r?\n|\r/g, "")}</div>`}
               stylesheet={this.textStyle(textColor, fontSizeRatio)}
               renderNode={this.renderNode}
               />
@@ -190,20 +191,29 @@ export default class ArticleScreen extends React.Component {
     }
     textStyle = (myColor, r) => {
        return {
-         color: myColor,
-         p: {
-           fontSize: 18*r,
-           lineHeight: 25,
-           color: myColor,
-           fontFamily: 'baomoi-regular'
-         },
-         h3: {
-           color: myColor,
-           fontSize: 25*r,
-           fontWeight: 'bold',
-           fontFamily: 'baomoi-regular'
-         },
-       }
+          div:{
+            color: myColor,
+            fontFamily: 'baomoi-regular',
+            fontSize: 15*r,
+          },
+           p: {
+             fontSize: 18*r,
+             lineHeight: 22,
+             color: myColor,
+             fontFamily: 'baomoi-regular',
+             marginBottom: 15,
+           },
+           h3: {
+             color: myColor,
+             fontSize: 24*r,
+             fontWeight: 'bold',
+             fontFamily: 'baomoi-regular'
+           },
+           a: {
+              fontWeight: '300',
+              color: '#FF3366', // make links coloured pink
+            },
+         }
      }
     renderNode(node, index, siblings, parent, defaultRenderer) {
       if (node.name === 'img') {
