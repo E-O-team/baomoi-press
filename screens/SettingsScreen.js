@@ -55,7 +55,10 @@ export default class SettingsScreen extends React.Component {
                     }}>
                         <Text style={{fontSize: 20}}>Chế độ ban đêm</Text>
                         <Switch
-                            onValueChange={switchMode}
+                            onValueChange={() => {
+                                switchMode()
+                                this.props.navigation.navigate("AuthLoadingScreen")
+                            }}
                             value={nightMode}
                         />
                     </View>
