@@ -5,6 +5,7 @@ import {
     View,
     TouchableHighlight,
     AsyncStorage,
+    Switch
 } from 'react-native';
 import { Slider } from 'react-native-elements';
 import {
@@ -18,6 +19,7 @@ export default class SettingsScreen extends React.Component {
     super()
     this.state={
       value : 2,
+      nightMode: true,
     }
   }
 
@@ -30,25 +32,33 @@ export default class SettingsScreen extends React.Component {
       AsyncStorage.clear()
       this.props.navigation.navigate("AuthLoadingScreen")
   }
+  handleSwitch = () => {
+      this.setState({
+          nightMode: !this.state.nightMode,
+      })
+  }
 
   render() {
     return(
         <Consumer>
-            {({changeDay, changeNight, backGround, changeRatio}) => (
+            {({changeDay, changeNight, backGround, changeRatio, nightMode, switchMode}) => (
                 <View style={{backgroundColor: backGround, flex: 1}}>
                     <Text style={styles.header}>Setting </Text>
 
-                    <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeDay}>
-                        <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#ff9933'}}>
-                            <Text style={{color:'#ffffff',fontWeight:'800',}}>Day mode</Text>
-                        </View>
-                    </TouchableHighlight>
-
-                    <TouchableHighlight style={{alignItems: 'center', marginTop : 30}} onPress={changeNight}>
-                        <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#4c0099'}}>
-                            <Text style={{color:'#ffffff',fontWeight:'800',}}>Night mode</Text>
-                        </View>
-                    </TouchableHighlight>
+                    <View style={{
+                        justifyContent: "space-between",
+                        padding: 10,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        height: 55,
+                        backgroundColor: backGround
+                    }}>
+                        <Text style={{fontSize: 20}}>Chế độ ban đêm</Text>
+                        <Switch
+                            onValueChange={switchMode}
+                            value={nightMode}
+                        />
+                    </View>
 
                     <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
                         <Text style={{fontSize: 20, color: '#696969'}}>Cỡ chữ</Text>
@@ -64,11 +74,6 @@ export default class SettingsScreen extends React.Component {
                         />
 
                     </View>
-                    <TouchableHighlight style={{alignItems: 'center'}} onPress={this.logOut}>
-                        <View style={{alignItems: 'center',justifyContent:'center', borderRadius:30, width: 100, height: 50,backgroundColor:'#006666'}}>
-                            <Text style={{color:'#ffffff',fontWeight:'800',}}>Log Out</Text>
-                        </View>
-                    </TouchableHighlight>
                 </View>
           )}
         </Consumer>
@@ -77,9 +82,10 @@ export default class SettingsScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize:30,
-    textAlign:'center',
-    color: '#696969'
-  }
+    header: {
+        fontSize:30,
+        textAlign:'center',
+        color: '#696969'
+    },
+
 })

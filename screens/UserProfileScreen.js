@@ -34,6 +34,11 @@ export default class UserProfile extends React.PureComponent {
         })
     }
 
+    logOut = async () => {
+        AsyncStorage.clear()
+        this.props.navigation.navigate("AuthLoadingScreen")
+    }
+
     render(){
         const {user} = this.state
         return(
@@ -96,6 +101,12 @@ export default class UserProfile extends React.PureComponent {
                             onPress={() => this.props.navigation.navigate("UserProfileEdit", {
                                 user: user,
                             })}
+                        />
+                        <Button
+                            style={{}}
+                            buttonStyle={styles.button}
+                            title="Đăng Xuất"
+                            onPress={this.logOut}
                         />
                     </ScrollView>
                 </View>

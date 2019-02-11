@@ -17,7 +17,6 @@ export default class AuthLoadingScreen extends React.Component {
   _bootstrapAsync = async () => {
     let user = await AsyncStorage.getItem('user');
     if(user){
-        console.log("user signed in");
         user = JSON.parse(user)
         axios({
             method: "POST",
@@ -27,7 +26,6 @@ export default class AuthLoadingScreen extends React.Component {
         .then(() => this.props.navigation.navigate("App"))
         .catch(err => this.props.navigation.navigate("Auth"))
     }else{
-        console.log("not signed in");
         this.props.navigation.navigate("App")
     }
     // This will switch to the App screen or Auth screen and this loading
