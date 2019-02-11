@@ -25,7 +25,7 @@ export default class AuthLoadingScreen extends React.Component {
             headers: {'Authorization': 'Bearer ' + user.token},
         })
         .then(() => this.props.navigation.navigate("App"))
-        .catch(err => console.log(err))
+        .catch(err => this.props.navigation.navigate("Auth"))
     }else{
         console.log("not signed in");
         this.props.navigation.navigate("App")

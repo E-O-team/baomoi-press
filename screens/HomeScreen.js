@@ -179,64 +179,61 @@ export default class HomeScreen extends React.Component {
     }
     render() {
         return(
+            <Consumer>
+                {({textColor, backGround}) => (
+                    <View style={{flex: 1, backgroundColor: backGround}}>
+                        <View style={{height: 37}}>
+                            <FlatList
+                                showsHorizontalScrollIndicator={false}
+                                horizontal={true}
+                                data={this.state.categories}
+                                renderItem={({item}) =>
+                                <Consumer>
+                                {({textColor, backGround}) => (
+                                    <TouchableOpacity
+                                        onPress={() => this.setCategory(item.id)}
+                                        style={{backgroundColor: backGround,
+                                                padding: 10,}}
+                                        underlayColor="white"
+                                        activeOpacity={1}
+                                    >
+                                      {
+                                        (item.id === this.state.selectedCategory)?
+                                        <View>
+                                          <Text style={{color: "red"}}>{item.name}</Text>
+                                          <View style={{height: 1, backgroundColor: 'red'}}></View>
+                                        </View> : <Text style={{color: textColor}}>{item.name}</Text>
+                                      }
 
-            <View style={{flex: 1}}>
+                                    </TouchableOpacity>
+                                  )}
+                                  </Consumer>
 
-                <View style={{height: 37}}>
-
-                    <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={this.state.categories}
-                        renderItem={({item}) =>
+                                }
+                                keyExtractor={item => item.id.toString()}
+                            />
+                        </View>
 
                         <Consumer>
                         {({textColor, backGround}) => (
-                            <TouchableOpacity
-                                onPress={() => this.setCategory(item.id)}
-                                style={{backgroundColor: backGround,
-                                        padding: 10,}}
-                                underlayColor="white"
-                                activeOpacity={1}
-                            >
-                              {
-                                (item.id === this.state.selectedCategory)?
-                                <View>
-                                  <Text style={{color: "red"}}>{item.name}</Text>
-                                  <View style={{height: 1, backgroundColor: 'red'}}></View>
-                                </View> : <Text style={{color: textColor}}>{item.name}</Text>
-                              }
-
-                            </TouchableOpacity>
-                          )}
-                          </Consumer>
-
-                        }
-                        keyExtractor={item => item.id.toString()}
-                    />
-                </View>
-
-                <Consumer>
-                {({textColor, backGround}) => (
-                <FlatList
-                    onScrollBeginDrag={this.handleBeginDrag}
-                    onScrollEndDrag={this.handleEndDrag}
-                    onScroll={this.handleOnScroll}
-                    data={this.state.articles}
-                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}}/>}
-                    keyExtractor={item => item.id.toString()}
-                    refreshing={this.state.refreshing}
-                    ListFooterComponent={() => <ActivityIndicator size="large" animating />}
-                    onRefresh={this.handleRefresh}
-                    onEndReached={() => this.handleLoadMore()}
-                    onEndReachedThreshold={0.7}
-                />
-              )}
-              </Consumer>
-
-          </View>
-
-
+                        <FlatList
+                            onScrollBeginDrag={this.handleBeginDrag}
+                            onScrollEndDrag={this.handleEndDrag}
+                            onScroll={this.handleOnScroll}
+                            data={this.state.articles}
+                            renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}}/>}
+                            keyExtractor={item => item.id.toString()}
+                            refreshing={this.state.refreshing}
+                            ListFooterComponent={() => <ActivityIndicator size="large" animating />}
+                            onRefresh={this.handleRefresh}
+                            onEndReached={() => this.handleLoadMore()}
+                            onEndReachedThreshold={0.7}
+                        />
+                      )}
+                      </Consumer>
+                  </View>
+                )}
+            </Consumer>
         )
     }
 }

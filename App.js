@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import {Provider, Consumer} from './context/context.js'
@@ -21,8 +21,8 @@ export default class App extends React.Component {
       return (
         <Provider>
             <View style={styles.container}>
-              {Platform.OS === 'ios' && <StatusBar />}
-              <AppNavigator />
+                {Platform.OS === 'ios' && <StatusBar />}
+                <AppNavigator />
             </View>
         </Provider>
       );
