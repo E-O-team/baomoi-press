@@ -7,6 +7,7 @@ import { View, Text, Dimensions, Platform, Animated, Easing, Image, Button, Touc
 import { LinearGradient } from "expo";
 import { Ionicons  } from '@expo/vector-icons';
 import {Icon} from 'react-native-elements';
+import logo from '../assets/images/logo-256x256.png';
 var { width, height } = Dimensions.get('window');
 height = height-20
 
@@ -116,11 +117,11 @@ export default class CustomTabBarBottom extends React.Component {
       <View
       >
           <View style={styles.actionButton}>
-            <View style={{backgroundColor:'#CC0000', width: 70, height:70, borderRadius: 70/2, bottom:10,justifyContent:'center', alignItems:'center'}}>
+            <View style={{backgroundColor:'#e0272e', width: 70, height:70, borderRadius: 70/2, bottom:10,justifyContent:'center', alignItems:'center'}}>
               <TouchableOpacity onPress={()=>this.onClickBtn()}>
                 <Image
-                source={{uri: "https://baomoi.press/wp-content/uploads/2017/08/logo.png"}}
-                style={{ width: 60, height: 60, resizeMode:'contain'}}
+                source={logo}
+                style={{ width: 60, height: 60, resizeMode:'contain', borderRadius: 70/2}}
                 />
               </TouchableOpacity>
             </View>
