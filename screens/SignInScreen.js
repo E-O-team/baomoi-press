@@ -80,8 +80,7 @@ export default class SignInScreen extends React.Component {
                     <Button buttonStyle={styles.button} title="Trở Về" onPress={() => this.props.navigation.navigate("App")}/>
                 </View>
                 <View style={{flex:1, justifyContent: "flex-end", marginBottom: 20}}>
-                    <Button buttonStyle={styles.button} title="Sign Up" onPress={() => this.props.navigation.navigate("SignUp")}/>
-                    <Button buttonStyle={{margin: 5}} title="Forgot Password" onPress={() => this.props.navigation.navigate("ForgotPassword")}/>
+                    <Button buttonStyle={styles.button} title="Đăng Kí" onPress={() => this.props.navigation.navigate("SignUp")}/>
                 </View>
             </View>
         )

@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View,Keyboard,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform,Image,Modal } from 'react-native';
 import { BaomoiText } from '../components/StyledText';
 import {Icon} from 'react-native-elements';
+import axios from 'axios';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 

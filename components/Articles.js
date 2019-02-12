@@ -54,7 +54,6 @@ export default class Articles extends React.PureComponent {
 
         }
 
-        // check to see if the post have more than 3 pic
         Post = (prop) => {
             const item = prop.item
             const ui = prop.ui
@@ -68,7 +67,7 @@ export default class Articles extends React.PureComponent {
                         })}
                     >
                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
-                            <View>
+                            <View style={{alignItems: 'center'}}>
                                 <Tile
                                     imageSrc={{uri :item.thumb || defaultImg}}
                                     icon={{ name: 'play-circle', type: 'font-awesome', color: "white", size: 45 }}
@@ -78,7 +77,7 @@ export default class Articles extends React.PureComponent {
                                     })}
                                 />
                             </View>
-                            <View style={{padding: 10}}>
+                            <View>
                                 <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
@@ -96,9 +95,8 @@ export default class Articles extends React.PureComponent {
                             })}
                         >
                             <View style={{flexDirection: 'row', alignItems:'center'}}>
-                              <View style={{backgroundColor: 'red', width: 10, height:10, borderRadius: 5}}>
-                              </View>
-                              <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor}}>Tin Nổi Bật </BaomoiText>
+                                <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
+                                <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor}}>Tin Nổi Bật</BaomoiText>
                             </View>
                             <View style={{marginTop: 5}}>
                                 <Image
