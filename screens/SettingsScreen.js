@@ -24,7 +24,7 @@ export default class SettingsScreen extends React.Component {
 
   static navigationOptions = ({navigation}) => {
       return {
-          title: "Setting",
+          title: "Cài Đặt",
           headerStyle: {
               backgroundColor: '#696969',
               },
@@ -49,10 +49,8 @@ export default class SettingsScreen extends React.Component {
 
     return(
         <Consumer>
-            {({changeDay, changeNight, backGround, changeRatio, fontSizeRatio, nightMode, switchMode}) => (
+            {({changeDay, changeNight, backGround, changeRatio, fontSizeRatio, nightMode, switchMode, textColor}) => (
                 <View style={{backgroundColor: backGround, flex: 1}}>
-                    <Text style={styles.header}>Setting </Text>
-
                     <View style={{
                         justifyContent: "space-between",
                         padding: 10,
@@ -61,15 +59,15 @@ export default class SettingsScreen extends React.Component {
                         height: 55,
                         backgroundColor: backGround
                     }}>
-                        <Text style={{fontSize: 20}}>Chế độ ban đêm</Text>
+                        <Text style={{fontSize: 20, color: textColor}}>Chế độ ban đêm</Text>
                         <Switch
                             onValueChange={switchMode}
                             value={nightMode}
                         />
                     </View>
 
-                    <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
-                        <Text style={{fontSize: 20, color: '#696969'}}>Cỡ chữ</Text>
+                    <View style={{ alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+                        <Text style={{fontSize: 20, color: textColor}}>Cỡ chữ</Text>
                         <Slider
                             value={fontSizeRatio}
                             onValueChange={value => {
@@ -82,10 +80,10 @@ export default class SettingsScreen extends React.Component {
                         />
                         {
                           fontSizeRatio == 1 ?
-                          <Text style={{fontSize: 18, color: '#696969'}}>Medium</Text> :
+                          <Text style={{fontSize: 18, color: textColor}}>Medium</Text> :
                           fontSizeRatio == 0.8 ?
-                          <Text style={{fontSize: 18, color: '#696969'}}>Small</Text> :
-                          <Text style={{fontSize: 18, color: '#696969'}}>Large</Text>
+                          <Text style={{fontSize: 18, color: textColor}}>Small</Text> :
+                          <Text style={{fontSize: 18, color: textColor}}>Large</Text>
                         }
 
                     </View>

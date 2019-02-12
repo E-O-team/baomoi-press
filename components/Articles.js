@@ -61,7 +61,7 @@ export default class Articles extends React.PureComponent {
                 // post with video format
                 return(
                     <TouchableOpacity
-                        activeOpacity={0.5}
+                        activeOpacity={1}
                         onPress={() => this.props.navigation.navigate("Article", {
                             Article: item
                         })}
@@ -69,6 +69,7 @@ export default class Articles extends React.PureComponent {
                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
                             <View style={{alignItems: 'center'}}>
                                 <Tile
+                                    activeOpacity={1}
                                     imageSrc={{uri :item.thumb || defaultImg}}
                                     icon={{ name: 'play-circle', type: 'font-awesome', color: "white", size: 45 }}
                                     featured
@@ -94,9 +95,17 @@ export default class Articles extends React.PureComponent {
                                 Article: item
                             })}
                         >
-                            <View style={{flexDirection: 'row', alignItems:'center'}}>
-                                <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
-                                <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor}}>Tin Nổi Bật</BaomoiText>
+                            <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
+                                <View style={{flexDirection: 'row', alignItems:'center'}}>
+                                    <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
+                                    <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor}}>Tin Nổi Bật</BaomoiText>
+                                </View>
+                                <Icon
+                                    size={30}
+                                    name='angle-right'
+                                    type='font-awesome'
+                                    color='#696969'
+                                />
                             </View>
                             <View style={{marginTop: 5}}>
                                 <Image
