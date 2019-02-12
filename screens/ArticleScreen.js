@@ -42,7 +42,7 @@ export default class ArticleScreen extends React.Component {
                           // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
                       }}
                       >
-                      <View style={{flex: 1, alignItems:'left'}}>
+                      <View style={{flex: 1, alignItems:'flex-start'}}>
                         <Icon
                           name='chevron-left'
                           size={35}
@@ -50,7 +50,7 @@ export default class ArticleScreen extends React.Component {
                           onPress={()=>navigation.goBack()}
                         />
                       </View>
-                      <View style-={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                      <View style={{flex:1, alignItems: 'flex-end', justifyContent: 'center'}}>
                         <Icon
                           name='dots-three-vertical'
                           type='entypo'
@@ -152,7 +152,15 @@ export default class ArticleScreen extends React.Component {
             <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
 
             <HTMLView
-              value={`<div>${this.state.Article.content.plaintext.replace(/\r?\n|\r/g, "")}</div>`}
+              addLineBreaks={false}
+              textComponentProps={{ style: {
+                fontSize: 18*fontSizeRatio,
+                lineHeight: 22,
+                color: textColor,
+                fontFamily: 'baomoi-regular',
+                marginBottom: 15,
+        }}}
+              value={this.state.Article.content.plaintext.replace(/(\r\n|\n|\r)/gm, '')}
               stylesheet={this.textStyle(textColor, fontSizeRatio)}
               renderNode={this.renderNode}
               />
@@ -197,6 +205,13 @@ export default class ArticleScreen extends React.Component {
             fontSize: 15*r,
           },
            p: {
+             fontSize: 18*r,
+             lineHeight: 22,
+             color: myColor,
+             fontFamily: 'baomoi-regular',
+             marginBottom: 15,
+           },
+           text:{
              fontSize: 18*r,
              lineHeight: 22,
              color: myColor,

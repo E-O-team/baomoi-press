@@ -101,7 +101,7 @@ export default class SearchScreen extends React.Component{
     return(
       <Consumer>
         {({textColor, backGround, fontSizeRatio}) => (
-            <View style={{backgroundColor:backGround, padding: 10,}}>
+            <View style={{ padding: 10,}}>
               <ActivityIndicator
                   animating = {this.state.animating}
                   color = '#696969'
@@ -109,7 +109,6 @@ export default class SearchScreen extends React.Component{
                   style = {{
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: 20,
                             marginBottom: 20,
                             backgroundColor: backGround
                             }}/>
@@ -124,9 +123,9 @@ export default class SearchScreen extends React.Component{
                             onPress={() => this.props.navigation.push("Article", {
                                 Article: item
                             })}
-                            style={{backgroundColor:backGround}}
+                            style={{backgroundColor:backGround, padding: 10}}
                         >
-                            <View style={{flex: 1, flexDirection: "row", marginTop: 20, backgroundColor:backGround}}>
+                            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
                                 <View style={{flex: 2}}>
                                   <BaomoiText style={{fontSize:18*fontSizeRatio, color:textColor}}>{item.title.plaintitle}</BaomoiText>
                                 </View>

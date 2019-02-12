@@ -112,7 +112,7 @@ export default class Articles extends React.PureComponent {
                                     source={{uri: item.thumb}}
                                     style= {{height: 180, width: 340, marginLeft: 10}}
                                 />
-                                <BaomoiText style={{fontSize: 24, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                 <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                             </View>
                         </TouchableOpacity>
@@ -169,7 +169,7 @@ export default class Articles extends React.PureComponent {
                                             Article: item
                                         })}
                                     >
-                                        <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                        <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -186,7 +186,7 @@ export default class Articles extends React.PureComponent {
                                 >
                                     <View style={{flex: 1, flexDirection: "row"}}>
                                         <View style={{flex: 2}}>
-                                            <BaomoiText style={{fontSize: 22, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                            <BaomoiText style={{fontSize: 20, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                         </View>
                                         <Image
                                             source={{uri :item.thumb || defaultImg}}

@@ -108,7 +108,7 @@ export default class CommentModal extends React.Component{
                  <TouchableOpacity style={{
                    backgroundColor:'black',
                    opacity: 0.7,
-                   height: screenHeight - 40 - this.state.keyboardHeight}}
+                   height: screenHeight - 60 - this.state.keyboardHeight}}
                    onPress={() => this.setModalVisible(!this.state.modalVisible)}>
 
                  </TouchableOpacity>
