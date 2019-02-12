@@ -71,9 +71,9 @@ export default class SignInScreen extends React.Component {
                 <View style={{flex: 1}}>
                     <View styles={styles.form}>
                         <FormLabel>User Name</FormLabel>
-                        <FormInput containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({username: text})}/>
+                        <FormInput textContentType="username" containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({username: text})}/>
                         <FormLabel>Password</FormLabel>
-                        <FormInput containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({password: text})}/>
+                        <FormInput textContentType="password" secureTextEntry={true} containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({password: text})}/>
                     </View>
                     <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
                     <Button buttonStyle={styles.button} title="Đăng Nhập" onPress={this.signIn}/>

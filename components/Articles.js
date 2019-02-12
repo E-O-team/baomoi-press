@@ -109,7 +109,7 @@ export default class Articles extends React.PureComponent {
                             </View>
                             <View style={{marginTop: 5}}>
                                 <Image
-                                    source={{uri: item.thumb}}
+                                    source={{uri: item.thumb || defaultImg}}
                                     style= {{height: 180, width: 340, marginLeft: 10}}
                                 />
                                 <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
@@ -132,7 +132,7 @@ export default class Articles extends React.PureComponent {
                                             style={{flex: 1}}
                                         >
                                             <Image
-                                                source={{uri: item.content.images[0]}}
+                                                source={{uri: item.content.images[0] || defaultImg}}
                                                 style= {{height: 80, marginLeft: 5,}}
                                             />
                                         </TouchableOpacity>
@@ -144,7 +144,7 @@ export default class Articles extends React.PureComponent {
                                             style={{flex: 1}}
                                         >
                                             <Image
-                                                source={{uri: item.content.images[1]}}
+                                                source={{uri: item.content.images[1] || defaultImg}}
                                                 style= {{height: 80, marginLeft: 5}}
                                             />
                                         </TouchableOpacity>
@@ -156,7 +156,7 @@ export default class Articles extends React.PureComponent {
                                             style={{flex: 1}}
                                         >
                                             <Image
-                                                source={{uri: item.content.images[2]}}
+                                                source={{uri: item.content.images[2] || defaultImg}}
                                                 style= {{height: 80, marginLeft: 5}}
                                             />
                                         </TouchableOpacity>
