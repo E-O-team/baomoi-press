@@ -101,7 +101,7 @@ export default class SearchScreen extends React.Component{
     return(
       <Consumer>
         {({textColor, backGround, fontSizeRatio}) => (
-            <View>
+            <View style={{backgroundColor:backGround, padding: 10,}}>
               <ActivityIndicator
                   animating = {this.state.animating}
                   color = '#696969'
