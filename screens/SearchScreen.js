@@ -101,7 +101,7 @@ export default class SearchScreen extends React.Component{
     return(
       <Consumer>
         {({textColor, backGround, fontSizeRatio}) => (
-            <View style={{backgroundColor:backGround}}>
+            <View>
               <ActivityIndicator
                   animating = {this.state.animating}
                   color = '#696969'
@@ -109,7 +109,9 @@ export default class SearchScreen extends React.Component{
                   style = {{
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: 20
+                            marginTop: 20,
+                            marginBottom: 20,
+                            backgroundColor: backGround
                             }}/>
 
 
@@ -124,7 +126,7 @@ export default class SearchScreen extends React.Component{
                             })}
                             style={{backgroundColor:backGround}}
                         >
-                            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                            <View style={{flex: 1, flexDirection: "row", marginTop: 20, backgroundColor:backGround}}>
                                 <View style={{flex: 2}}>
                                   <BaomoiText style={{fontSize:18*fontSizeRatio, color:textColor}}>{item.title.plaintitle}</BaomoiText>
                                 </View>

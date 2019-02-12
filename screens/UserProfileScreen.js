@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, AsyncStorage, StyleSheet, TouchableOpacity, Picker, ScrollView } from 'react-native';
 import axios from 'axios';
 import { Avatar, Card, Icon, Button } from 'react-native-elements';
+import {Consumer} from '../context/context.js'
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 export default class UserProfile extends React.PureComponent {
     constructor() {
