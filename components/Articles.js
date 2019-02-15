@@ -10,6 +10,7 @@ import {
     View,
     FlatList,
     SafeAreaView,
+    Dimensions
 } from 'react-native';
 
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements';
@@ -21,7 +22,7 @@ import {
 import { BaomoiText } from './StyledText';
 import moment from 'moment/min/moment-with-locales'
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
-
+var { width, height } = Dimensions.get('window');
 moment.locale('vi');
 
 export default class Articles extends React.PureComponent {
@@ -29,7 +30,6 @@ export default class Articles extends React.PureComponent {
         super(props);
         this.state={
             numberOfComments: 'loading',
-            featured_post: undefined,
         }
     }
     componentDidMount() {
@@ -40,7 +40,13 @@ export default class Articles extends React.PureComponent {
         }))
     }
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.numberOfComments !== this.state.numberOfComments
+        if(this.state.numberOfComments !== nextState.numberOfComments){
+            return true
+        }
+        if(this.props.item !== nextProps.item){
+            return true
+        }
+        return false
     }
     render(){
         Comments = (props) => {
@@ -57,6 +63,7 @@ export default class Articles extends React.PureComponent {
         Post = (prop) => {
             const item = prop.item
             const ui = prop.ui
+            const index = prop.index
             if(this.props.video == true){
                 // post with video format
                 return(
@@ -88,40 +95,48 @@ export default class Articles extends React.PureComponent {
                 )
             }else{
                 if(item.featured_post == "on"){
-                    return(
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={() => this.props.navigation.navigate("Article", {
-                                Article: item
-                            })}
-                        >
-                            <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
-                                <View style={{flexDirection: 'row', alignItems:'center'}}>
-                                    <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
-                                    <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor}}>Tin Nổi Bật</BaomoiText>
+                    if(index === 0){
+                        return(
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={() => this.props.navigation.navigate("Article", {
+                                    Article: item
+                                })}
+                            >
+                                <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10}}>
+                                    <View style={{flexDirection: 'row', alignItems:'center'}}>
+                                        <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
+                                        <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>Tiêu Điểm</BaomoiText>
+                                    </View>
+                                    <Icon
+                                        size={30}
+                                        name='angle-right'
+                                        type='font-awesome'
+                                        color='#696969'
+                                    />
                                 </View>
-                                <Icon
-                                    size={30}
-                                    name='angle-right'
-                                    type='font-awesome'
-                                    color='#696969'
-                                />
-                            </View>
-                            <View style={{marginTop: 5}}>
-                                <Image
-                                    source={{uri: item.thumb || defaultImg}}
-                                    style= {{height: 180, width: 340, marginLeft: 10}}
-                                />
-                                <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
-                                <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
-                            </View>
-                        </TouchableOpacity>
-                    )
+                                <View style={{marginTop: 5}}>
+                                    <Image
+                                        source={{uri: item.thumb || defaultImg}}
+                                        style= {{height: 180, width: width}}
+                                    />
+                                    <View style={{padding: 10}}>
+                                        <Text style={{color: '#696969'}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
+                                        <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }else{
+                        // return null after first render of featured post
+                        return null
+                    }
                 }else{
                     if (item.content.images.length >= 3){
                         // post with more than 3 pic
                         return(
-                            <View style={{flex: 1, flexDirection: 'column'}}>
+                            <View style={{flex: 1, flexDirection: 'column', padding: 10}}>
                                 <View style={{flex: 2}}>
                                     <View style={{flexDirection: "row"}}>
                                         <TouchableOpacity
@@ -169,6 +184,7 @@ export default class Articles extends React.PureComponent {
                                             Article: item
                                         })}
                                     >
+                                        <Text style={{color: '#696969', marginTop: 5}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
                                         <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                     </TouchableOpacity>
                                 </View>
@@ -177,7 +193,7 @@ export default class Articles extends React.PureComponent {
                     }else {
                         // post with less than 3 pic
                         return(
-                            <View>
+                            <View style={{padding: 10}}>
                                 <TouchableOpacity
                                     activeOpacity={0.5}
                                     onPress={() => this.props.navigation.navigate("Article", {
@@ -186,6 +202,7 @@ export default class Articles extends React.PureComponent {
                                 >
                                     <View style={{flex: 1, flexDirection: "row"}}>
                                         <View style={{flex: 2}}>
+                                            <Text style={{color: '#696969'}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
                                             <BaomoiText style={{fontSize: 20, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                         </View>
                                         <Image
@@ -202,13 +219,13 @@ export default class Articles extends React.PureComponent {
             }
         }
         const item = this.props.item
+        const index = this.props.index
         return(
           <Consumer>
             {({textColor, backGround}) => (
-            <View style={{padding: 10, backgroundColor: backGround}}>
-                    <Post item={item} ui={{textColor}}/>
+            <View style={{backgroundColor: backGround}}>
+                    <Post item={item} ui={{textColor}} index={index}/>
                     <Comments id={item.id}/>
-                    <Text style={{color: '#696969'}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
                 <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10 }} />
             </View>
           )}

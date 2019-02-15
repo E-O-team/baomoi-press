@@ -20,12 +20,22 @@ export default class SignUpScreen extends React.Component {
         }
     }
     handleSubmit = () => {
-        console.log(this.state);
-        axios.post("https://baomoi.press/wp-json/wp/v2/users", {
+        // const data = new FormData()
+        // data.append("email", this.state.email)
+        // data.append("username", this.state.username)
+        // data.append("password", this.state.password)
+        const data = {
             email: this.state.email,
             username: this.state.username,
             password: this.state.password,
+        }
+        axios({
+            method: "POST",
+            url: 'https://baomoi.press/wp-json/wp/v2/users/register',
+            data: data
         })
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
     }
     render(){
         return(
@@ -48,6 +58,7 @@ export default class SignUpScreen extends React.Component {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
+        backgroundColor: "white",
         justifyContent: 'center',
     },
     button:{

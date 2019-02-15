@@ -13,10 +13,12 @@ export default class UserProfile extends React.PureComponent {
     }
     componentWillMount() {
         AsyncStorage.getItem('user')
-        .then(user => {
-            if(user){
+        .then(res => {
+            if(res){
+                const user = JSON.parse(res)
                 this.setState({
-                    user: JSON.parse(user)
+                    user: user,
+                    token: user.token
                 }, () => {
                     axios({
                         method: "GET",
@@ -101,6 +103,7 @@ export default class UserProfile extends React.PureComponent {
                             title="Chỉnh sửa"
                             onPress={() => this.props.navigation.navigate("UserProfileEdit", {
                                 user: user,
+                                token: this.state.token
                             })}
                         />
                         <Button

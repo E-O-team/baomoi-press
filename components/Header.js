@@ -42,9 +42,10 @@ export default class Header extends React.Component {
             >
           <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
             <Icon
-              name='person'
+              name='menu'
               size={22}
               color='#696969'
+              type="material-community"
               onPress={() => this.props.navigation.navigate("UserProfile")}
             />
           </View>

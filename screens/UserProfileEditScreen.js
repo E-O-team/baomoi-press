@@ -12,12 +12,14 @@ export default class UserProfileEdit extends React.Component {
     }
     componentWillMount() {
         const user = this.props.navigation.getParam("user", null)
+        const token = this.props.navigation.getParam("token", null)
         this.setState({
             user: user,
             birth_date: user.birth_date,
             gender: user.gender,
             so_thich: user.so_thich,
             mobile_number: user.mobile_number,
+            token: token,
         })
     }
 
@@ -30,7 +32,7 @@ export default class UserProfileEdit extends React.Component {
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/wp/v2/update_user_info',
-            headers: {'Authorization': 'Bearer ' + this.state.user.token},
+            headers: {'Authorization': 'Bearer ' + this.state.token},
             data: data
         })
         .then(res => {

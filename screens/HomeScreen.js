@@ -25,9 +25,10 @@ import Articles from '../components/Articles';
 import Header from '../components/Header.js';
 import { MonoText } from '../components/StyledText';
 import {Consumer} from '../context/context.js';
-
+import { BaomoiText } from '../components/StyledText';
 import axios from 'axios';
-
+import moment from 'moment/min/moment-with-locales'
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 
 
@@ -44,7 +45,6 @@ export default class HomeScreen extends React.Component {
             page: 1,
             y: 0,
             isScrollDown: false,
-            CategoryStyle: style.categories
 
         }
     }
@@ -68,18 +68,6 @@ export default class HomeScreen extends React.Component {
         }
         // Home
         if(selectedCategory === "Home"){
-            // axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on")
-            // .then(res => {
-            //     this.setState({
-            //         articles: [...this.state.articles, res.data[0]]
-            //     })
-            //     return axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
-            // })
-            // .then(res => this.setState({
-            //     articles: [...this.state.articles,...res.data],
-            //     refreshing: false,
-            // }))
-            // .catch(err => console.log(err))
             if(this.state.page == 1){
                 axios.all([
                     axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on"),
@@ -186,6 +174,7 @@ export default class HomeScreen extends React.Component {
                             <FlatList
                                 showsHorizontalScrollIndicator={false}
                                 horizontal={true}
+                                keyExtractor={item => item.id.toString()}
                                 data={this.state.categories}
                                 renderItem={({item}) =>
                                 <Consumer>
@@ -213,22 +202,20 @@ export default class HomeScreen extends React.Component {
                                 keyExtractor={item => item.id.toString()}
                             />
                         </View>
-
                         <Consumer>
                         {({textColor, backGround}) => (
-                        <FlatList
-                            onScrollBeginDrag={this.handleBeginDrag}
-                            onScrollEndDrag={this.handleEndDrag}
-                            onScroll={this.handleOnScroll}
-                            data={this.state.articles}
-                            renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}}/>}
-                            keyExtractor={item => item.id.toString()}
-                            refreshing={this.state.refreshing}
-                            ListFooterComponent={() => <ActivityIndicator size="large" animating />}
-                            onRefresh={this.handleRefresh}
-                            onEndReached={() => this.handleLoadMore()}
-                            onEndReachedThreshold={0.7}
-                        />
+                            <FlatList
+                                onScrollBeginDrag={this.handleBeginDrag}
+                                onScrollEndDrag={this.handleEndDrag}
+                                onScroll={this.handleOnScroll}
+                                data={this.state.articles}
+                                renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
+                                keyExtractor={item => item.id.toString()}
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.handleRefresh}
+                                onEndReached={() => this.handleLoadMore()}
+                                onEndReachedThreshold={0.7}
+                            />
                       )}
                       </Consumer>
                   </View>
