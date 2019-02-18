@@ -1,5 +1,4 @@
 import React from 'react';
-// import Articles from './Articles';
 import {
     Image,
     Platform,
@@ -21,11 +20,11 @@ import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements
 import {
     WebBrowser
 } from 'expo';
-import Articles from '../components/Articles';
-import Header from '../components/Header.js';
-import { MonoText } from '../components/StyledText';
-import {Consumer} from '../context/context.js';
-import { BaomoiText } from '../components/StyledText';
+import Articles from '../../components/Articles';
+import Header from '../../components/Header.js';
+import { MonoText } from '../../components/StyledText';
+import {Consumer} from '../../context/context.js';
+import { BaomoiText } from '../../components/StyledText';
 import axios from 'axios';
 import moment from 'moment/min/moment-with-locales'
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
@@ -131,24 +130,8 @@ export default class HomeScreen extends React.Component {
             this.fetchNews(this.state.selectedCategory);
             this.fetchCategories();
         })
+    }
 
-    }
-    handleBeginDrag = (e) =>{
-      // this.setState({y: e.nativeEvent.contentOffset.y})
-      // if(this.state.y != 0){
-      //   if(this.state.isScrollDown) this.props.navigation.setParams({ visible: false })
-      // }
-    }
-    handleEndDrag = (e) =>{
-      // this.setState({y: e.nativeEvent.contentOffset.y})
-      // if(e.nativeEvent.contentOffset.y <= this.state.y)
-      // {
-      //   this.props.navigation.setParams({ visible: true })
-      //   this.setState({isScrollDown : false})
-      // }else{
-      //   this.setState({isScrollDown: true})
-      // }
-    }
     handleOnScroll = (e) => {
       this.setState({y: e.nativeEvent.contentOffset.y})
         if(this.state.y != 0){
@@ -170,38 +153,9 @@ export default class HomeScreen extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{flex: 1, backgroundColor: backGround}}>
-                        <View style={{height: 37}}>
-                            <FlatList
-                                showsHorizontalScrollIndicator={false}
-                                horizontal={true}
-                                keyExtractor={item => item.id.toString()}
-                                data={this.state.categories}
-                                renderItem={({item}) =>
-                                <Consumer>
-                                {({textColor, backGround}) => (
-                                    <TouchableOpacity
-                                        onPress={() => this.setCategory(item.id)}
-                                        style={{backgroundColor: backGround,
-                                                padding: 10,}}
-                                        underlayColor="white"
-                                        activeOpacity={1}
-                                    >
-                                      {
-                                        (item.id === this.state.selectedCategory)?
-                                        <View>
-                                          <Text style={{color: "red"}}>{item.name}</Text>
-                                          <View style={{height: 1, backgroundColor: 'red'}}></View>
-                                        </View> : <Text style={{color: textColor}}>{item.name}</Text>
-                                      }
 
-                                    </TouchableOpacity>
-                                  )}
-                                  </Consumer>
 
-                                }
-                                keyExtractor={item => item.id.toString()}
-                            />
-                        </View>
+
                         <Consumer>
                         {({textColor, backGround}) => (
                             <FlatList
@@ -242,3 +196,36 @@ const style = StyleSheet.create({
         padding: 10,
     },
 })
+
+// <View style={{height: 37}}>
+//     <FlatList
+//         showsHorizontalScrollIndicator={false}
+//         horizontal={true}
+//         keyExtractor={item => item.id.toString()}
+//         data={this.state.categories}
+//         renderItem={({item}) =>
+//         <Consumer>
+//         {({textColor, backGround}) => (
+//             <TouchableOpacity
+//                 onPress={() => this.setCategory(item.id)}
+//                 style={{backgroundColor: backGround,
+//                         padding: 10,}}
+//                 underlayColor="white"
+//                 activeOpacity={1}
+//             >
+//               {
+//                 (item.id === this.state.selectedCategory)?
+//                 <View>
+//                   <Text style={{color: "red"}}>{item.name}</Text>
+//                   <View style={{height: 1, backgroundColor: 'red'}}></View>
+//                 </View> : <Text style={{color: textColor}}>{item.name}</Text>
+//               }
+//
+//             </TouchableOpacity>
+//           )}
+//           </Consumer>
+//
+//         }
+//         keyExtractor={item => item.id.toString()}
+//     />
+// </View>

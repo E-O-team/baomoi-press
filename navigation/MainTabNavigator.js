@@ -4,7 +4,7 @@ import { createStackNavigator} from 'react-navigation';
 import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs';
 import ArticleScreen from '../screens/ArticleScreen';
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import OriginalWebView from '../screens/OriginalWebView';
 import SearchScreen from '../screens/SearchScreen';
@@ -17,8 +17,9 @@ import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import CustomTabBarBottom from '../components/CustomTabBarBottom'
 import UserProfileEdit from '../screens/UserProfileEditScreen';
+import HomeTabNavigator from './HomeTabNavigator';
 const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+  Home: HomeTabNavigator,
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
   Search: SearchScreen,

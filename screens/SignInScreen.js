@@ -34,6 +34,7 @@ export default class SignInScreen extends React.Component {
             })
             .then((response) => {
                 let user = response.data
+                console.log(user);
                 this.signInApp(user)
             })
             .catch((err) => {
