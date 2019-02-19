@@ -58,4 +58,18 @@ class Provider extends React.Component {
   }
 }
 const Consumer = Context.Consumer
-export { Provider, Consumer }
+const themes = {
+    light: {
+        textColor: 'black',
+        backGround: 'white',
+    },
+    dark: {
+        textColor: 'white',
+        backGround: 'black',
+    },
+};
+const ThemeContext = React.createContext(
+  themes.light // default value
+);
+
+export { Provider, Consumer, ThemeContext }

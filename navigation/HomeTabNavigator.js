@@ -16,8 +16,12 @@ import TalksScreen from '../screens/HomeScreen/Talks';
 import TechnologyScreen from '../screens/HomeScreen/Technology';
 import TravelScreen from '../screens/HomeScreen/Travel';
 import WorldScreen from '../screens/HomeScreen/World';
+import {ThemeContext, Provider, Consumer} from '../context/context.js';
 import Header from '../components/Header.js';
-
+import {
+    StyleSheet,
+} from 'react-native';
+console.log(Consumer);
 export default createMaterialTopTabNavigator({
     Home: {
         screen: HomeScreen,
@@ -29,7 +33,9 @@ export default createMaterialTopTabNavigator({
         screen: BeautyScreen,
         navigationOptions:{
             tabBarLabel: "Đẹp",
-        }
+            params: 123
+        },
+
     },
     BusinessScreen: {
         screen: BusinessScreen,
@@ -115,34 +121,26 @@ export default createMaterialTopTabNavigator({
             tabBarLabel: "Thế giới",
         }
     },
-    // Craft: {
-    //     screen: HomeScreen,
-    //     navigationOptions:{
-    //         tabBarLabel: "Khéo tay",
-    //     }
-    // },
-    // Security: {
-    //     screen: HomeScreen,
-    //     navigationOptions:{
-    //         tabBarLabel: "An ninh trật tự",
-    //     }
-    // },
-    // Mystery: {
-    //     screen: HomeScreen,
-    //     navigationOptions:{
-    //         tabBarLabel: "Bí Ẩn",
-    //     }
-    // },
-    // Hot: {
-    //     screen: HomeScreen,
-    //     navigationOptions:{
-    //         tabBarLabel: "Ảnh Nóng",
-    //     }
-    // }
 },{
     lazy: true,
     tabBarOptions: {
-     scrollEnabled: true,
-   },
+        scrollEnabled: true,
+        activeTintColor: "red",
+        inactiveTintColor: "black",
+        style: {
+            backgroundColor: "white",
+        },
+        indicatorStyle: {
+            backgroundColor: "red",
+        },
+        labelStyle: {
+            fontSize: 12,
+        },
+        tabStyle:{
+            width: 100,
+            height: 40,
+            padding: 0
+        }
+    },
 }
 )

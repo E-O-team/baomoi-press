@@ -46,7 +46,7 @@ export default class Header extends React.Component {
               size={22}
               color='#696969'
               type="material-community"
-              onPress={() => this.props.navigation.navigate("UserProfile")}
+              onPress={() => this.props.navigation.openDrawer()}
             />
           </View>
           <View

@@ -52,7 +52,7 @@ export default class Articles extends React.PureComponent {
         Comments = (props) => {
             if(this.state.numberOfComments !== 0){
                 return(
-                  <View style={{flexDirection: "row", justifyContent: 'flex-end', marginTop: 5}}><BaomoiText>{this.state.numberOfComments} </BaomoiText><Icon name='comment' color='#696969'/></View>
+                  <View style={{flexDirection: "row"}}><BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText><Icon name='comment' color='#696969' size={15}/></View>
                 )
             }else{
                 return null;
@@ -121,9 +121,12 @@ export default class Articles extends React.PureComponent {
                                         style= {{height: 180, width: width}}
                                     />
                                     <View style={{padding: 10}}>
-                                        <Text style={{color: '#696969'}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
+                                        <View style={{flexDirection: "row", alignItems:'center'}}>
+                                            <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                            <Comments id={item.id}/>
+                                        </View>
                                         <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
-                                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
+                                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}}>{item.excerpt.plainexcerpt}</BaomoiText>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -148,7 +151,7 @@ export default class Articles extends React.PureComponent {
                                         >
                                             <Image
                                                 source={{uri: item.content.images[0] || defaultImg}}
-                                                style= {{height: 80, marginLeft: 5,}}
+                                                style= {{height: 90, marginLeft: 5, borderRadius: 5}}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -160,7 +163,7 @@ export default class Articles extends React.PureComponent {
                                         >
                                             <Image
                                                 source={{uri: item.content.images[1] || defaultImg}}
-                                                style= {{height: 80, marginLeft: 5}}
+                                                style= {{height: 90, marginLeft: 5, borderRadius: 5}}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -172,7 +175,7 @@ export default class Articles extends React.PureComponent {
                                         >
                                             <Image
                                                 source={{uri: item.content.images[2] || defaultImg}}
-                                                style= {{height: 80, marginLeft: 5}}
+                                                style= {{height: 90, marginLeft: 5, borderRadius: 5}}
                                             />
                                         </TouchableOpacity>
                                     </View>
@@ -184,8 +187,11 @@ export default class Articles extends React.PureComponent {
                                             Article: item
                                         })}
                                     >
-                                        <Text style={{color: '#696969', marginTop: 5}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
-                                        <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                    <View style={{flexDirection: "row", alignItems:'center'}}>
+                                        <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                        <Comments id={item.id}/>
+                                    </View>
+                                        <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -200,14 +206,17 @@ export default class Articles extends React.PureComponent {
                                         Article: item
                                     })}
                                 >
-                                    <View style={{flex: 1, flexDirection: "row"}}>
+                                    <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
                                         <View style={{flex: 2}}>
-                                            <Text style={{color: '#696969'}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</Text>
+                                            <View style={{flexDirection: "row", alignItems:'center'}}>
+                                                <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                <Comments id={item.id}/>
+                                            </View>
                                             <BaomoiText style={{fontSize: 20, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                         </View>
                                         <Image
                                             source={{uri :item.thumb || defaultImg}}
-                                            style={{height: 80, flex: 1, marginLeft: 5}}
+                                            style={{height: 90, flex: 1, marginLeft: 5, borderRadius: 5}}
                                         />
                                     </View>
                                 </TouchableOpacity>
@@ -225,7 +234,7 @@ export default class Articles extends React.PureComponent {
             {({textColor, backGround}) => (
             <View style={{backgroundColor: backGround}}>
                     <Post item={item} ui={{textColor}} index={index}/>
-                    <Comments id={item.id}/>
+
                 <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10 }} />
             </View>
           )}

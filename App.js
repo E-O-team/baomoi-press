@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
-import {Provider, Consumer} from './context/context.js'
+import { Provider } from './context/context.js'
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,

@@ -22,10 +22,10 @@ import DrawerNavigator from './DrawerNavigator';
 import Header from '../components/Header.js';
 const HomeStack = createStackNavigator({
   Home: {
-      screen: DrawerNavigator,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation}/>,
-      }),
+      screen: HomeTabNavigator,
+      // navigationOptions: ({ navigation }) => ({
+      //   header: <Header navigation={navigation}/>,
+      // }),
   },
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
