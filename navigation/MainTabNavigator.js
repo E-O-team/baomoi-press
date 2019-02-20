@@ -20,110 +20,8 @@ import UserProfileEdit from '../screens/UserProfileEditScreen';
 import HomeTabNavigator from './HomeTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import Header from '../components/Header.js';
-const HomeStack = createStackNavigator({
-  Home: {
-      screen: DrawerNavigator,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation}/>,
-      }),
-  },
-  Article: ArticleScreen,
-  OriginalUrl: OriginalWebView,
-  Search: SearchScreen,
-  Settings: SettingsScreen,
-  SignIn: SignInScreen,
-  UserProfile: UserProfile,
-  UserProfileEdit: UserProfileEdit,
-},{
-
-});
-const highlightTab = (tabName, focused) => {
-
-};
-HomeStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = true;
-  if (navigation.state.index > 0) {
-    tabBarVisible = false;
-  }
-  return {
-    tabBarLabel: 'Home',
-    tabBarIcon: ({ focused }) => {
-      var footerHeight;
-      if (focused) {
-        footerHeight = 1;
-      } else {
-        footerHeight = 0;
-      }
-
-      var styles = StyleSheet.create({
-        tab: {
-          flexGrow: 1,
-          alignItems: 'stretch',
-          justifyContent: 'center'
-        },
-        labelFooter: {
-          height: footerHeight,
-          backgroundColor: 'red'
-        }
-      });
-      return (
-        <View style={styles.tab}>
-          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Home</Text>
-          <View style={styles.labelFooter}/>
-        </View>
-      );
-    },
-    tabBarVisible
-  }
-};
-
-const VideoStack = createStackNavigator({
-  Video: VideoScreen,
-  Article: ArticleScreen,
-  OriginalUrl: OriginalWebView,
-  Search: SearchScreen,
-  Settings: SettingsScreen,
-  UserProfile: UserProfile,
-  UserProfileEdit: UserProfileEdit,
-});
-
-
-VideoStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = true;
-  if (navigation.state.index > 0) {
-    tabBarVisible = false;
-  }
-  return {
-    tabBarLabel: 'Video',
-    tabBarIcon: ({ focused }) => {
-      var footerHeight;
-      if (focused) {
-        footerHeight = 1;
-      } else {
-        footerHeight = 0;
-      }
-
-      var styles = StyleSheet.create({
-        tab: {
-          alignItems: 'stretch',
-          justifyContent: 'center',
-          flexGrow: 1,
-        },
-        labelFooter: {
-          height: footerHeight,
-          backgroundColor: 'red'
-        }
-      });
-      return (
-        <View style={styles.tab}>
-          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Video</Text>
-          <View style={styles.labelFooter}/>
-        </View>
-    )
-    },
-    tabBarVisible
-  }
-};
+import HomeStack from './HomeStack'
+import VideoStack from './VideoStack'
 
 
 
@@ -173,11 +71,12 @@ const styles = {
     elevation: 8,
   },
 };
-//const TabBarComponent = (props) => (<BottomTabBar {...props} />);
 
 
 export default createBottomTabNavigator({
-    Home: HomeStack,
+    Home: {
+        screen: HomeStack,
+    },
     MultiBar: {
         screen: () => null,
         navigationOptions: ({navigation}) => ({
@@ -188,7 +87,10 @@ export default createBottomTabNavigator({
         params: {
             navigationDisabled: true
         }
-    }, Video: VideoStack
+    },
+    Video: {
+        screen: VideoStack,
+    }
 
 }, {
   tabBarComponent: props =>
@@ -200,4 +102,5 @@ export default createBottomTabNavigator({
 
   },
 
-});
+}
+);
