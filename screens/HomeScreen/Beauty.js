@@ -34,7 +34,7 @@ export default class BeautyScreen extends React.PureComponent {
 
     componentWillMount() {
         this.fetchNews(this.state.selectedCategory)
-        console.log(this.props.navigation.state);
+        console.log(this.props.navigation.getParam('id'));
     }
 
     fetchNews = (selectedCategory) => {

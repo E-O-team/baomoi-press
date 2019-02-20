@@ -33,8 +33,8 @@ export default createMaterialTopTabNavigator({
         screen: BeautyScreen,
         navigationOptions:{
             tabBarLabel: "Đẹp",
-            params: 123
         },
+        params: {id: 123}
 
     },
     BusinessScreen: {

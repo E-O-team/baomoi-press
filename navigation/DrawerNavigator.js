@@ -5,7 +5,7 @@ import MainTabNavigator from './MainTabNavigator';
 import Header from '../components/Header.js';
 export default createDrawerNavigator({
     Home: {
-        screen: HomeTabNavigator,
+        screen: MainTabNavigator,
     }
 },{
     contentComponent: SideBar
