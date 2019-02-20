@@ -34,7 +34,18 @@ export default createMaterialTopTabNavigator({
         navigationOptions:{
             tabBarLabel: "Đẹp",
         },
-        params: {id: 123}
+        params: {
+            categories: [
+                {
+                    name: "Thời trang",
+                    id: 144,
+                },
+                {
+                    name: "Làm đẹp",
+                    id: 143,
+                },
+            ]
+        }
 
     },
     BusinessScreen: {

@@ -37,7 +37,7 @@ export default class SiderBar extends React.Component {
                     })
                     .then((res) => this.setState({
                         user: res.data
-                    }, () => console.log(this.state.user)))
+                    }))
                     .catch(err => console.log(err))
 
                 })
@@ -57,8 +57,8 @@ export default class SiderBar extends React.Component {
         return(
             <Consumer>
                 {({textColor, backGround}) => (
-                    <SafeAreaView style={{backgroundColor: backGround, flex: 1, padding: 5}}>
-                        <View style={{flexDirection: "row", backgroundColor: '#e12f28', height: 70}}>
+                    <View style={{backgroundColor: backGround, flex: 1, padding: 5}}>
+                        <View style={{flexDirection: "row", backgroundColor: '#e12f28', margin: -5, height: 90, alignItems: "flex-end"}}>
                             {user.avatar_urls &&
                                 <Avatar
                                     overlayContainerStyle={styles.avatar}
@@ -69,7 +69,7 @@ export default class SiderBar extends React.Component {
                             }
                             <Text style={{color: "white", fontSize: 20,}}>{user.name}</Text>
                         </View>
-                    </SafeAreaView>
+                    </View>
                 )}
             </Consumer>
         )

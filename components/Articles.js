@@ -25,7 +25,7 @@ const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_
 var { width, height } = Dimensions.get('window');
 moment.locale('vi');
 
-export default class Articles extends React.PureComponent {
+export default class Articles extends React.Component {
     constructor(props){
         super(props);
         this.state={
