@@ -3,10 +3,13 @@ import HomeTabNavigator from './HomeTabNavigator';
 import SideBar from '../components/SideBar';
 import MainTabNavigator from './MainTabNavigator';
 import Header from '../components/Header.js';
+import { Dimensions } from 'react-native';
+const {width} = Dimensions.get("window")
 export default createDrawerNavigator({
     Home: {
         screen: MainTabNavigator,
     }
 },{
-    contentComponent: SideBar
+    contentComponent: SideBar,
+    drawerWidth: width
 })

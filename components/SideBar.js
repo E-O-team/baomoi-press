@@ -8,7 +8,7 @@ import {
     View,
     SafeAreaView,
     ActivityIndicator,
-    AsyncStorage
+    AsyncStorage,
 } from 'react-native';
 import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button } from 'react-native-elements';
@@ -58,16 +58,26 @@ export default class SiderBar extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{backgroundColor: backGround, flex: 1, padding: 5}}>
-                        <View style={{flexDirection: "row", backgroundColor: '#e12f28', margin: -5, height: 90, alignItems: "flex-end"}}>
-                            {user.avatar_urls &&
-                                <Avatar
-                                    overlayContainerStyle={styles.avatar}
-                                    medium
-                                    rounded
-                                    source={{uri: user.avatar_urls['96'] || defaultImg}}
-                                />
-                            }
-                            <Text style={{color: "white", fontSize: 20,}}>{user.name}</Text>
+                        <View style={{flexDirection: "row", backgroundColor: '#e12f28', margin: -5, height: 90, alignItems: "flex-end", justifyContent: 'space-between', paddingBottom: 5, paddingLeft: 5,}}>
+                            <View style={{flexDirection: "row"}}>
+                                {user.avatar_urls &&
+                                    <Avatar
+                                        overlayContainerStyle={styles.avatar}
+                                        medium
+                                        rounded
+                                        source={{uri: user.avatar_urls['96'] || defaultImg}}
+                                    />
+                                }
+                                <Text style={{color: "white", fontSize: 20,}}>{user.name}</Text>
+                            </View>
+                            <Icon
+                                name='close'
+                                type='evilicon'
+                                size={30}
+                                color="white"
+                                onPress={() => this.props.navigation.closeDrawer()}
+                                underlayColor="#e12f28"
+                            />
                         </View>
                     </View>
                 )}

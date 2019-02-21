@@ -19,11 +19,12 @@ import Header from '../../components/Header';
 import axios from 'axios';
 import {Consumer} from '../../context/context.js';
 import Articles from '../../components/Articles';
-export default class BeautyScreen extends React.PureComponent {
+export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)
+        const categories = this.props.navigation.getParam('categories')
         this.state = {
-            selectedCategory: 144,
+            selectedCategory: categories[0].id,
             categories: categories,
             styles: styles,
             refreshing: true,
@@ -34,7 +35,6 @@ export default class BeautyScreen extends React.PureComponent {
 
     componentWillMount() {
         this.fetchNews(this.state.selectedCategory)
-        console.log(this.props.navigation.getParam('categories'));
     }
 
     fetchNews = (selectedCategory) => {
@@ -98,7 +98,7 @@ export default class BeautyScreen extends React.PureComponent {
                                 showsHorizontalScrollIndicator={false}
                                 horizontal={true}
                                 keyExtractor={item => item.id.toString()}
-                                data={categories}
+                                data={this.state.categories}
                                 extraData={this.state.selectedCategory}
                                 renderItem={({item}) =>
                                 <Consumer>
@@ -133,6 +133,7 @@ export default class BeautyScreen extends React.PureComponent {
                             onScrollEndDrag={this.handleEndDrag}
                             onScroll={this.handleOnScroll}
                             data={this.state.articles}
+                            extraData={this.state.articles}
                             renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
                             keyExtractor={item => item.id.toString()}
                             refreshing={this.state.refreshing}
@@ -146,14 +147,3 @@ export default class BeautyScreen extends React.PureComponent {
         )
     }
 }
-
-const categories = [
-    {
-        name: "Thời trang",
-        id: 144,
-    },
-    {
-        name: "Làm đẹp",
-        id: 143,
-    },
-]
