@@ -23,9 +23,9 @@ import Header from '../components/Header.js';
 const HomeStack = createStackNavigator({
   Home: {
       screen: HomeTabNavigator,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation}/>,
-      }),
+      // navigationOptions: ({ navigation }) => ({
+      //   header: <Header navigation={navigation}/>,
+      // }),
   },
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
@@ -51,10 +51,8 @@ HomeStack.navigationOptions = ({ navigation }) => {
       var footerHeight;
       if (focused) {
         footerHeight = 1;
-        opacity = 1;
       } else {
         footerHeight = 0;
-        opacity = 0.7;
       }
 
       var styles = StyleSheet.create({
@@ -70,7 +68,7 @@ HomeStack.navigationOptions = ({ navigation }) => {
       });
       return (
         <View style={styles.tab}>
-          <Text style={{color: 'white', opacity: opacity, fontSize: 20, fontWeight: "bold"}}>Home</Text>
+          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Home</Text>
           <View style={styles.labelFooter}/>
         </View>
       );
@@ -98,14 +96,11 @@ VideoStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarLabel: 'Video',
     tabBarIcon: ({ focused }) => {
-      var footerHeight, opacity;
-
+      var footerHeight;
       if (focused) {
         footerHeight = 1;
-        opacity = 1;
       } else {
         footerHeight = 0;
-        opacity = 0.7;
       }
 
       var styles = StyleSheet.create({
@@ -121,7 +116,7 @@ VideoStack.navigationOptions = ({ navigation }) => {
       });
       return (
         <View style={styles.tab}>
-          <Text style={{color: 'white', opacity: opacity, fontSize: 20, fontWeight: "bold"}}>Video</Text>
+          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Video</Text>
           <View style={styles.labelFooter}/>
         </View>
     )
