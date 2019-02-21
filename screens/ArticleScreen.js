@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, AsyncStorage,Keyboard,ScrollView,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform, Share, Image, PixelRatio, Modal } from 'react-native';
+import { Text, View, Linking, AsyncStorage,Keyboard,ScrollView,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform, Share, Image, PixelRatio, Modal } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
 import AuthorSubscription from '../components/AuthorSubscription';
 import CommentModal from '../components/CommentModal';
+import HyperText from '../components/HyperText'
 import {Consumer, Provider} from '../context/context.js';
 import {Icon} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
@@ -23,6 +24,7 @@ export default class ArticleScreen extends React.Component {
             currentCount : 0,
             intervalId: undefined,
             user: undefined,
+            comments: []
         }
     }
     static navigationOptions = ({navigation}) => {
@@ -38,7 +40,9 @@ export default class ArticleScreen extends React.Component {
                           height: 50,
                           backgroundColor: backGround,
                           marginTop: 20,
-                          alignItems:'center'
+                          alignItems:'center',
+                          borderBottomWidth: 1,
+                          borderBottomColor: '#C6C3BC'
                           // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
                       }}
                       >
@@ -58,7 +62,7 @@ export default class ArticleScreen extends React.Component {
                           color='#696969'
                           onPress={()=>navigation.navigate('Settings')}
                         />
-                  </View>
+                      </View>
               </SafeAreaView>
                 )}
             </Consumer>
@@ -137,57 +141,90 @@ export default class ArticleScreen extends React.Component {
         })
       });
     }
+
+    fetchComment = () => {
+      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id)
+      .then(res => res.json())
+      .then(json => this.setState({
+          comments: json,
+      }))
+      // .then(json => console.log(json))
+      .catch(err => console.log(err))
+    }
+
     render(){
         return(
       <Consumer>
         {({textColor, backGround, fontSizeRatio}) => (
         <View style={{backgroundColor: backGround, flexDirection:'column', flex: 1}}>
-          <ScrollView style={{ height: this.state.height - 40 , backgroundColor: backGround, padding: 10, zIndex: 1}}>
+          <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround, padding: 10, zIndex: 1}}>
 
 
 
-            <BaomoiText style={{fontSize: 28*fontSizeRatio, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</BaomoiText>
-            <BaomoiText style={{color: '#696969', marginTop:10, fontSize: 15*fontSizeRatio}}>Last Updated {moment(this.state.Article.modified).fromNow()}</BaomoiText>
+            <BaomoiText style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</BaomoiText>
+            <BaomoiText style={{color: '#696969', marginTop:10, fontSize: 15*fontSizeRatio}}>Cập nhật {moment(this.state.Article.modified).fromNow()}</BaomoiText>
 
             <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
 
-            <HTMLView
-              addLineBreaks={false}
-              textComponentProps={{ style: {
-                fontSize: 18*fontSizeRatio,
-                lineHeight: 22,
-                color: textColor,
-                fontFamily: 'baomoi-regular',
-                marginBottom: 15,
-        }}}
-              value={this.state.Article.content.plaintext.replace(/(\r\n|\n|\r)/gm, '')}
-              stylesheet={this.textStyle(textColor, fontSizeRatio)}
-              renderNode={this.renderNode}
-              />
+            {
+              (this.state.Article.format === 'video')?
+              <HyperText>
+              {this.state.Article.content.plaintext}
+              </HyperText> :
+              <HTMLView
+                addLineBreak={false}
+                textComponentProps={{ style: {
+                  fontSize: 18*fontSizeRatio,
+                  lineHeight: 20,
+                  color: textColor,
+                  fontFamily: 'baomoi-regular',
+
+                }}}
+                value={this.state.Article.content.plaintext}
+                stylesheet={this.textStyle(textColor, fontSizeRatio)}
+                renderNode={this.renderNode}
+                />
+            }
+
             <View style={{flexDirection: 'row', marginTop : 20}}>
 
-                  <View style={{alignItems: 'center', flex: 1}}>
-                    <TouchableHighlight style={{alignItems: 'center',justifyContent:'center', borderRadius:5, width: 100, height: 40,backgroundColor:'#cc0000'}} onPress={() => this.props.navigation.navigate("OriginalUrl", {
-                        OriginalUrl: this.state.Article.source_link
-                    })}>
-                     <BaomoiText style={{color:'#ffffff',fontWeight:'800',fontSize: 18}}>Link gốc</BaomoiText>
-                    </TouchableHighlight>
-                  </View>
+                  <TouchableOpacity style={{alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#cc0000'}}
+                                    onPress={() => Linking.openURL(this.state.Article.source_link)}>
+                      <Icon
+                        name='share-2'
+                        type='feather'
+                        color='white'
+                        size={30}
+                      />
+                      <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>LINK GỐC</BaomoiText>
+                  </TouchableOpacity>
 
-                <View style={{alignItems: 'center', flex: 1}}>
-                  <TouchableHighlight style={{alignItems: 'center',justifyContent:'center', borderRadius:5, width: 100, height: 40,backgroundColor:'#3b5998'}} onPress={this.onShare}>
-                   <BaomoiText style={{color:'#ffffff',fontWeight:'800', fontSize: 18}}>Share</BaomoiText>
-                  </TouchableHighlight>
-                </View>
+                  <TouchableOpacity style={{alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#3b5998'}}
+                                    onPress={this.onShare}>
+                      <View style={{borderColor: 'white', backgroundColor: '#3b5998', width:30 , height: 30, borderRadius: 15, borderWidth: 1,
+                                    alignItems:'center', justifyContent:'center'}}>
+                          <Icon
+                            name='sc-facebook'
+                            type='evilicon'
+                            color='white'
+                            size={30}
+
+                          />
+                      </View>
+                      <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>CHIA SẺ</BaomoiText>
+                  </TouchableOpacity>
+
+
             </View>
 
 
-            <CommentList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
+
             <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
+            <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
 
           </ScrollView>
 
-          <CommentModal article={this.state.Article} user={this.state.user} navigation={this.props.navigation}/>
+          <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} navigation={this.props.navigation}/>
 
 
 
@@ -199,52 +236,71 @@ export default class ArticleScreen extends React.Component {
     }
     textStyle = (myColor, r) => {
        return {
-          div:{
-            color: myColor,
-            fontFamily: 'baomoi-regular',
-            fontSize: 15*r,
-          },
+         flexDirection: 'row',
+         flexWrap: 'wrap',
+         alignItems: 'flex-start',
+         flex: 1,
            p: {
              fontSize: 18*r,
-             lineHeight: 22,
+             lineHeight: 20,
              color: myColor,
              fontFamily: 'baomoi-regular',
-             marginBottom: 15,
-           },
-           text:{
-             fontSize: 18*r,
-             lineHeight: 22,
-             color: myColor,
-             fontFamily: 'baomoi-regular',
-             marginBottom: 15,
            },
            h3: {
+             marginTop: 10,
              color: myColor,
-             fontSize: 24*r,
+             fontSize: 22*r,
              fontWeight: 'bold',
              fontFamily: 'baomoi-regular'
            },
            a: {
               fontWeight: '300',
+              fontSize: 18*r,
               color: '#FF3366', // make links coloured pink
             },
+            em: {
+              fontSize: 18*r,
+              fontWeight: '300',
+              fontStyle: 'italic'
+            },
+            li:{
+            		fontSize:18*r,
+            	},
+            ol:{
+            		fontSize:18*r,
+            	},
+            ul:{
+          		fontSize:18*r,
+          	},
+            blockquote:{
+
+              marginLeft: 50
+            }
          }
      }
     renderNode(node, index, siblings, parent, defaultRenderer) {
       if (node.name === 'img') {
       const { src, height } = node.attribs;
-      const imageHeight = height ? Number.parseInt(height, 10) : 300;
-      const imageWidth = screenWidth - 20;
-      return (
-        <Image
-          key={index}
-          style={{ width: imageWidth, height: imageHeight }}
-          source={{ uri: src }}
-          resizeMode='contain'/>
-      );
+      Image.getSize(src, (w, h) => {
+        if( h < w )
+          h = 300
+        const imageWidth = screenWidth - 20;
+        return (
+          <View>
+            <Image
+              key={index}
+              style={{ width: imageWidth, height: h }}
+              source={{ uri: src }}
+              resizeMode='contain'/>
+          </View>
+        );
+
+      })
+
     }
     if(node.name == 'p' && node.children.length != 0) {
       const iframeNodes = node.children.filter((node) => node.name === 'iframe')
+      const imageNodes = node.children.filter((node) => node.name === 'img')
       const sources = iframeNodes.map((node) => node.attribs.src);
       if (iframeNodes.length != 0)
         return (
@@ -252,6 +308,17 @@ export default class ArticleScreen extends React.Component {
             <WebView source={{uri : sources[0]}} style={{width:screenWidth-20, height: 300}}/>
           </View>
         )
+      if (imageNodes.length != 0)
+            return(
+              <View>
+              <Image
+                style={{ width: screenWidth-20, height: 300, marginBottom: 10 }}
+                source={{ uri: imageNodes[0].attribs.src }}
+                resizeMode='contain'/>
+              </View>
+            )
+
+
     }
 
    }

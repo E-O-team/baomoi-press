@@ -13,37 +13,26 @@ import {
 import {Avatar} from 'react-native-elements';
 import HTMLView from 'react-native-htmlview';
 import axios from 'axios';
+import moment from 'moment/min/moment-with-locales'
+moment.locale('vi');
 export default class CommentList extends React.Component{
   constructor(props){
       super(props);
-      this.state ={
-        comments : [],
-      }
-  }
-  componentWillMount(){
-    this.fetchCommentList()
 
   }
-  fetchCommentList = () => {
-    fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.article.id)
-    .then(res => res.json())
-    .then(json => this.setState({
-        comments: json,
-    }))
-    // .then(json => console.log(json))
-    .catch(err => console.log(err))
-  }
+
   render(){
     return(
         <View>
-            <BaomoiText style={{fontSize : 30, textAlign: 'center', marginTop: 20, color: this.props.ui.textColor}}>Bình luận</BaomoiText>
+
 
             {
-                (this.state.comments) ?
+            (this.props.comments.length != 0) ?
+              <View>
+                <BaomoiText style={{fontSize : 25, marginTop: 20, color: this.props.ui.textColor}}>Bình luận mới nhất</BaomoiText>
                  <FlatList
                       style={styles.root}
-                      data={this.state.comments}
-                      extraData={this.state}
+                      data={this.props.comments}
                       ItemSeparatorComponent={() => {
                         return (
                           <View style={styles.separator}/>
@@ -66,9 +55,9 @@ export default class CommentList extends React.Component{
                               <View style={styles.contentHeader}>
                                 <BaomoiText  style={{fontSize:16*this.props.ui.fontSizeRatio,
                                               fontWeight:"bold",
-                                              color:this.props.ui.textColor}}>{Notification.author_name}</BaomoiText>
+                                              color:this.props.ui.textColor}}>{Notification.author_name} </BaomoiText>
                                 <BaomoiText style={[styles.time,{fontSize:11*this.props.ui.fontSizeRatio}]}>
-                                  {Notification.date}
+                                  {moment(Notification.date).fromNow()}
                                 </BaomoiText>
                               </View>
                               <HTMLView value={Notification.content.rendered} stylesheet={{p:{color:this.props.ui.textColor, fontSize: 15* this.props.ui.fontSizeRatio}}}/>
@@ -76,7 +65,8 @@ export default class CommentList extends React.Component{
                           </View>
                         );
                       }}
-                    /> : <BaomoiText style={{marginTop: 10, fontSize: 16*this.props.ui.fontSizeRatio}}> Hãy là người đầu tiên bình luận </BaomoiText>
+                    />
+                  </View> : <View></View>
                       }
         </View>
 
@@ -101,8 +91,8 @@ const styles = StyleSheet.create({
   },
   contentHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6
+    marginBottom: 6,
+    alignItems: 'center'
   },
   separator: {
     height: 1,
@@ -116,9 +106,16 @@ const styles = StyleSheet.create({
   },
   time:{
     color:"#808080",
+    marginLeft: 5,
   },
   name:{
     fontSize:16,
     fontWeight:"bold",
   },
+  dot:{
+    width:1,
+    height:1,
+    backgroundColor: '#696969',
+    marginLeft: 5,
+  }
 });

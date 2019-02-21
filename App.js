@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
+import { Platform, AsyncStorage, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import {Provider, Consumer} from './context/context.js'
@@ -9,6 +9,7 @@ export default class App extends React.Component {
   };
 
   render() {
+    const menu = 123
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -42,7 +43,7 @@ export default class App extends React.Component {
         // to remove this if you are not using it in your app
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         'baomoi-regular': require('./assets/fonts/baomoi-regular-2.0.1.ttf'),
-      }),
+      })
     ]);
   };
 

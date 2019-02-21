@@ -79,11 +79,11 @@ export default class Articles extends React.PureComponent {
                                 />
                             </View>
                             <View>
-                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 19, fontWeight: '400', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
 
-                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
+                        <BaomoiText style={{fontSize:16, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                     </TouchableOpacity>
                 )
             }else{
@@ -109,10 +109,10 @@ export default class Articles extends React.PureComponent {
                             </View>
                             <View style={{marginTop: 5}}>
                                 <Image
-                                    source={{uri: item.thumb}}
+                                    source={{uri: item.thumb || defaultImg}}
                                     style= {{height: 180, width: 340, marginLeft: 10}}
                                 />
-                                <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 22, fontWeight: '400', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                 <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                             </View>
                         </TouchableOpacity>
@@ -169,7 +169,7 @@ export default class Articles extends React.PureComponent {
                                             Article: item
                                         })}
                                     >
-                                        <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                        <BaomoiText style={{fontSize: 19, fontWeight: '400', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -186,7 +186,7 @@ export default class Articles extends React.PureComponent {
                                 >
                                     <View style={{flex: 1, flexDirection: "row"}}>
                                         <View style={{flex: 2}}>
-                                            <BaomoiText style={{fontSize: 20, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                            <BaomoiText style={{fontSize: 19, fontWeight: '400',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                                         </View>
                                         <Image
                                             source={{uri :item.thumb || defaultImg}}

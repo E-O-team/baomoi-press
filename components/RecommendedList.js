@@ -40,7 +40,7 @@ export default class RecommendedList extends React.Component{
     fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[first_tag].toString())
     .then(res => res.json())
     .then(json => {
-      if(json.length >= 1) this.setState({
+      if(json.length > 1) this.setState({
         Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
     })
   })
@@ -49,15 +49,16 @@ export default class RecommendedList extends React.Component{
 
     var second_tag = Math.floor(Math.random() * tag_length);
     while(second_tag == first_tag && tag_length != 1) second_tag = Math.floor(Math.random() * tag_length)
-    fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[second_tag].toString())
-    .then(res => res.json())
-    .then(json => {
-      if(json.length >= 1) this.setState({
-        Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
-    })
-  })
-    // .then(json => console.log(json))
-    .catch(err => console.log(err))
+    if(tag_length > 1)
+      fetch("https://baomoi.press/wp-json/wp/v2/posts?tags="+ this.props.article.tags[second_tag].toString())
+      .then(res => res.json())
+      .then(json => {
+        if(json.length > 1) this.setState({
+          Articles: this.state.Articles.concat(json[Math.floor(Math.random() * json.length)]),
+      })
+     })
+      // .then(json => console.log(json))
+      .catch(err => console.log(err))
   }
 
     var prev_day = Moment().subtract(1, "days").toISOString();
@@ -107,7 +108,7 @@ export default class RecommendedList extends React.Component{
                         >
                             <View style={{flex: 1, flexDirection: "row"}}>
                                 <View style={{flex: 2}}>
-                                    <BaomoiText style={{fontSize: 18*fontSizeRatio, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                    <BaomoiText style={{fontSize: 18*fontSizeRatio, fontWeight: '400',color: textColor}}>{item.title.plaintitle}</BaomoiText>
                                 </View>
                                 <Image
                                     source={{uri :item.thumb || defaultImg}}
