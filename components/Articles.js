@@ -21,6 +21,7 @@ import {
 } from 'expo';
 import { BaomoiText } from './StyledText';
 import moment from 'moment/min/moment-with-locales'
+import spinner from '../assets/images/spinner.gif';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 moment.locale('vi');
@@ -29,7 +30,7 @@ export default class Articles extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            numberOfComments: 'loading',
+            numberOfComments: 0
         }
     }
     componentDidMount() {
@@ -119,6 +120,8 @@ export default class Articles extends React.Component {
                                     <Image
                                         source={{uri: item.thumb || defaultImg}}
                                         style= {{height: 180, width: width}}
+                                        loadingIndicatorSource={spinner}
+
                                     />
                                     <View style={{padding: 10}}>
                                         <View style={{flexDirection: "row", alignItems:'center'}}>
@@ -152,6 +155,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[0] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+                                                loadingIndicatorSource={spinner}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -164,6 +168,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[1] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+                                                loadingIndicatorSource={spinner}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -176,6 +181,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[2] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+                                                loadingIndicatorSource={spinner}
                                             />
                                         </TouchableOpacity>
                                     </View>

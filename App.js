@@ -20,8 +20,8 @@ export default class App extends React.Component {
     } else {
       return (
         <Provider>
-            <View style={styles.container}>
-                {Platform.OS === 'ios' && <StatusBar />}
+            <View style={{flex: 1, backgroundColor: "white"}}>
+                {Platform.OS === 'ios' && <StatusBar backgroundColor="white" />}
                 <AppNavigator />
             </View>
         </Provider>
@@ -56,10 +56,3 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
