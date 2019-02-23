@@ -29,7 +29,7 @@ export default class Articles extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            numberOfComments: 'loading',
+            numberOfComments: 0
         }
     }
     componentDidMount() {
@@ -74,31 +74,30 @@ export default class Articles extends React.Component {
                         })}
                     >
                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
-                            <View style={{alignItems: 'center', justifyContent:'center'}}>
-                                <Image
-                                  key={index}
-                                  style={{ width: width, height: width * 9/16}}
-                                  source={{ uri: item.thumb || defaultImg }}
-                                  resizeMode='cover'/>
-                                <View style={{position:'absolute'}}>
-                                  <Icon
-                                      size={80}
-                                      name='play-circle'
-                                      type='font-awesome'
-                                      color='#C0C0C0'
-                                  />
-                                </View>
+                              <View style={{alignItems: 'center', justifyContent:'center'}}>
+                                  <Image
+                                    key={index}
+                                    style={{ width: width, height: width * 9/16}}
+                                    source={{ uri: item.thumb || defaultImg }}
+                                    resizeMode='cover'/>
+                                  <View style={{position:'absolute'}}>
+                                    <Icon
+                                        size={80}
+                                        name='play-circle'
+                                        type='font-awesome'
+                                        color='#C0C0C0'
+                                    />
+                                  </View>
 
 
-                            </View>
+                              </View>
                             <View>
-                              <BaomoiText style={{fontSize:19, color: ui.textColor, marginTop:10, fontWeight: '400'}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
 
+                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                     </TouchableOpacity>
-
-
                 )
             }else{
                 if(item.featured_post == "on"){
@@ -126,6 +125,8 @@ export default class Articles extends React.Component {
                                     <Image
                                         source={{uri: item.thumb || defaultImg}}
                                         style= {{height: 180, width: width}}
+
+
                                     />
                                     <View style={{padding: 10}}>
                                         <View style={{flexDirection: "row", alignItems:'center'}}>
@@ -159,6 +160,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[0] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -171,6 +173,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[1] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -183,6 +186,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[2] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+                                              
                                             />
                                         </TouchableOpacity>
                                     </View>
