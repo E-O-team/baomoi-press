@@ -53,7 +53,10 @@ export default class Articles extends React.Component {
         Comments = (props) => {
             if(this.state.numberOfComments !== 0){
                 return(
-                  <View style={{flexDirection: "row"}}><BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText><Icon name='comments-o' type="font-awesome" color='#696969' size={15}/></View>
+                  <View style={{flexDirection: "row", alignItems: "center"}}>
+                      <BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText>
+                      <Icon containerStyle={{marginTop: -2}} name='comments-o' type="font-awesome" color='#696969' size={20}/>
+                  </View>
                 )
             }else{
                 return null;
