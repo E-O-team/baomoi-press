@@ -13,6 +13,7 @@ export default class AuthLoadingScreen extends React.Component {
     this._bootstrapAsync();
   }
 
+
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
     let user = await AsyncStorage.getItem('user');
@@ -37,7 +38,6 @@ export default class AuthLoadingScreen extends React.Component {
     return (
       <View style={styles.container}>
         <ActivityIndicator />
-        <StatusBar barStyle="default" />
       </View>
     );
   }
@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+
     }
 })

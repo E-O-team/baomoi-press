@@ -34,7 +34,6 @@ export default class SignInScreen extends React.Component {
             })
             .then((response) => {
                 let user = response.data
-                console.log(user);
                 this.signInApp(user)
             })
             .catch((err) => {
@@ -75,11 +74,14 @@ export default class SignInScreen extends React.Component {
     render(){
         return(
             <SafeAreaView style={styles.container}>
-                <View style={{flex: 1}}>
-                    <Image
-                        source={logo}
-                        style={{ width: 150, height: 150, resizeMode:'contain', alignSelf: 'center', marginTop: 10 }}
-                    />
+                <View>
+                    <View style={{width: 150, height: 150, alignSelf: "center"}}>
+                        <Image
+                            source={logo}
+                            style={{ width: 150, height: 150, alignSelf: 'center' }}
+                            resizeMode="contain"
+                        />
+                    </View>
                     <View styles={styles.form}>
                         <FormLabel>User Name</FormLabel>
                         <FormInput textContentType="username" containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({username: text})}/>
@@ -88,11 +90,11 @@ export default class SignInScreen extends React.Component {
                     </View>
                     <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
                     <View>
-                    <Button buttonStyle={styles.button} title="Đăng Nhập" loading={this.state.loading} onPress={this.signIn}/>
-                    <Button buttonStyle={styles.button} title="Trở Về" onPress={() => this.props.navigation.navigate("App")}/>
+                        <Button buttonStyle={styles.button} title="Đăng Nhập" loading={this.state.loading} onPress={this.signIn}/>
+                        <Button buttonStyle={styles.button} title="Trở Về" onPress={() => this.props.navigation.navigate("App")}/>
                     </View>
                 </View>
-                <View style={{flex:1, justifyContent: "flex-end", marginBottom: 20}}>
+                <View style={{justifyContent: "flex-end", marginBottom: 20}}>
                     <Button buttonStyle={styles.button} title="Đăng Kí" onPress={() => this.props.navigation.navigate("SignUp")}/>
                 </View>
             </SafeAreaView>
@@ -103,19 +105,14 @@ export default class SignInScreen extends React.Component {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        justifyContent: "space-between"
     },
     formInputContainerStyle:{
         paddingHorizontal: 10
-    },
-    form:{
-        padding: 300
     },
     button:{
         backgroundColor: "#e12f28",
         margin: 5
     },
-    label:{
-        color: "black"
-    }
 })

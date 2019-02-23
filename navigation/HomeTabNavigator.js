@@ -374,6 +374,24 @@ export default createMaterialTopTabNavigator({
         }
     },
 },{
+    order: [
+        "Home",
+        "NewsScreen",
+        "WorldScreen",
+        "LawsScreen",
+        "InternetScreen",
+        "TechnologyScreen",
+        "TravelScreen",
+        "BeautyScreen",
+        "EntertainmentScreen",
+        "BusinessScreen",
+        "HacksScreen",
+        "HealthScreen",
+        "SportScreen",
+        "CarsScreen",
+        "TalksScreen",
+        "DecodeScreen",
+    ],
     lazy: true,
     tabBarOptions: {
         scrollEnabled: true,

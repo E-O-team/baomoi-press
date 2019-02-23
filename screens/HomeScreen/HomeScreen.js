@@ -37,10 +37,6 @@ export default class HomeScreen extends React.Component {
         this.state = {
             refreshing: true,
             articles: [],
-            categories: [],
-            selectedCategory: 'Home',
-            loading: false,
-            CategoryStyle: style.categories,
             page: 1,
             y: 0,
             isScrollDown: false,
@@ -66,15 +62,14 @@ export default class HomeScreen extends React.Component {
             })
         }
         // Home
-        if(selectedCategory === "Home"){
             if(this.state.page == 1){
                 axios.all([
                     axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on"),
-                    axios.get("https://baomoi.press/wp-json/wp/v2/posts/336223")
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts/page=" + this.state.page)
                 ])
                 .then(axios.spread((featuredPostRes, articlesRes) => {
                     this.setState({
-                        articles: [...this.state.articles, featuredPostRes.data[0], ...this.state.articles.concat(articlesRes.data)],
+                        articles: [...this.state.articles, featuredPostRes.data[0], ...articlesRes.data],
                         refreshing: false,
                     })
                 }))
@@ -85,27 +80,8 @@ export default class HomeScreen extends React.Component {
                     articles: [...this.state.articles, ...res.data],
                 }))
             }
-
-        // Other categories
-        }else{
-            axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
-            .then(res => this.setState({
-                articles: [...this.state.articles,...res.data],
-                refreshing: false,
-            }))
-            // .then(json => console.log(json))
-            .catch(err => console.log(err))
-        }
     }
 
-    fetchCategories = () => {
-        fetch("https://baomoi.press/wp-json/wp/v2/categories")
-        .then(res => res.json())
-        .then(json => this.setState({
-            categories: [{name: "Home", id:"Home", key:"HOME"},...json],
-        }))
-        .catch(err => console.log(err))
-    }
     handleRefresh = () => {
         this.setState({
                 refreshing: true
@@ -155,9 +131,8 @@ export default class HomeScreen extends React.Component {
 
 
                             <FlatList
-                                onScrollBeginDrag={this.handleBeginDrag}
-                                onScrollEndDrag={this.handleEndDrag}
                                 onScroll={this.handleOnScroll}
+                                initialNumToRender={5}
                                 data={this.state.articles}
                                 extraData={this.state.articles}
                                 renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
@@ -165,7 +140,8 @@ export default class HomeScreen extends React.Component {
                                 refreshing={this.state.refreshing}
                                 onRefresh={this.handleRefresh}
                                 onEndReached={() => this.handleLoadMore()}
-                                onEndReachedThreshold={0.7}
+                                onEndReachedThreshold={0.5}
+                                scrollEventThrottle={16}
                             />
                   </View>
                 )}

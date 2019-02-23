@@ -21,6 +21,7 @@ import {
 } from 'expo';
 import { BaomoiText } from './StyledText';
 import moment from 'moment/min/moment-with-locales'
+import spinner from '../assets/images/spinner.gif';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 moment.locale('vi');
@@ -52,7 +53,10 @@ export default class Articles extends React.Component {
         Comments = (props) => {
             if(this.state.numberOfComments !== 0){
                 return(
-                  <View style={{flexDirection: "row"}}><BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText><Icon name='comment' color='#696969' size={15}/></View>
+                  <View style={{flexDirection: "row", alignItems: "center"}}>
+                      <BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText>
+                      <Icon containerStyle={{marginTop: -2}} name='comments-o' type="font-awesome" color='#696969' size={20}/>
+                  </View>
                 )
             }else{
                 return null;
@@ -92,11 +96,14 @@ export default class Articles extends React.Component {
 
                               </View>
                             <View>
-                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
+                                    <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                    <Comments id={item.id}/>
+                                </View>
+                                <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
+                            <Divider style={{ backgroundColor: '#e0e0e0', height: 1, marginTop: 5}} />
                         </View>
-
-                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                     </TouchableOpacity>
                 )
             }else{
@@ -125,7 +132,7 @@ export default class Articles extends React.Component {
                                     <Image
                                         source={{uri: item.thumb || defaultImg}}
                                         style= {{height: 180, width: width}}
-
+                                        loadingIndicatorSource={spinner}
 
                                     />
                                     <View style={{padding: 10}}>
@@ -160,7 +167,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[0] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
-
+                                                loadingIndicatorSource={spinner}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -173,7 +180,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[1] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
-
+                                                loadingIndicatorSource={spinner}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -186,7 +193,7 @@ export default class Articles extends React.Component {
                                             <Image
                                                 source={{uri: item.content.images[2] || defaultImg}}
                                                 style= {{height: 90, marginLeft: 5, borderRadius: 5}}
-                                              
+                                                loadingIndicatorSource={spinner}
                                             />
                                         </TouchableOpacity>
                                     </View>

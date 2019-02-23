@@ -20,6 +20,8 @@ import UserProfileEdit from '../screens/UserProfileEditScreen';
 import HomeTabNavigator from './HomeTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 import Header from '../components/Header.js';
+import FollowingScreen from '../screens/FollowingScreen';
+import SourceScreen from '../screens/SourceScreen';
 const HomeStack = createStackNavigator({
   Home: {
       screen: HomeTabNavigator,
@@ -34,8 +36,10 @@ const HomeStack = createStackNavigator({
   SignIn: SignInScreen,
   UserProfile: UserProfile,
   UserProfileEdit: UserProfileEdit,
+  Following: FollowingScreen,
+  Source: SourceScreen,
 },{
-
+    headerMode: "float"
 });
 const highlightTab = (tabName, focused) => {
 
@@ -80,7 +84,12 @@ HomeStack.navigationOptions = ({ navigation }) => {
 };
 
 const VideoStack = createStackNavigator({
-  Video: VideoScreen,
+  Video: {
+      screen: VideoScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header navigation={navigation}/>,
+      }),
+  },
   Article: ArticleScreen,
   OriginalUrl: OriginalWebView,
   Search: SearchScreen,

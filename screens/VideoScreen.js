@@ -18,12 +18,12 @@ export default class VideoScreen extends React.Component{
 
     }
   }
-  static navigationOptions = ({navigation}) => {
-      return {
-          title: "Video",
-          header: <Header navigation={navigation}/>
-      }
-  }
+  // static navigationOptions = ({navigation}) => {
+  //     return {
+  //         title: "Video",
+  //         header: <Header navigation={navigation}/>
+  //     }
+  // }
   componentWillMount() {
       this.fetchVideos()
   }
@@ -79,7 +79,7 @@ export default class VideoScreen extends React.Component{
 
   render(){
     return(
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, padding: 10}}>
         <Consumer>
           {({textColor, backGround}) => (
           <FlatList
