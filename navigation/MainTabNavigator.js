@@ -91,6 +91,7 @@ const VideoStack = createStackNavigator({
 
 
 VideoStack.navigationOptions = ({ navigation }) => {
+
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -100,7 +101,7 @@ VideoStack.navigationOptions = ({ navigation }) => {
     tabBarIcon: ({ focused }) => {
       var footerHeight, opacity;
 
-      if (focused) {
+      if (focused ) {
         footerHeight = 1;
         opacity = 1;
       } else {
@@ -187,7 +188,7 @@ export default createBottomTabNavigator({
         screen: () => null,
         navigationOptions: ({navigation}) => ({
             tabBarIcon: () => (
-                <CustomTabBarBottom />
+                <CustomTabBarBottom navigation={navigation}/>
             )
         }),
         params: {

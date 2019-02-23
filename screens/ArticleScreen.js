@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, Linking, AsyncStorage,Keyboard,ScrollView,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform, Share, Image, PixelRatio, Modal } from 'react-native';
 import HTMLView from 'react-native-htmlview';
+import HTML from 'react-native-render-html';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
 import AuthorSubscription from '../components/AuthorSubscription';
@@ -161,7 +162,7 @@ export default class ArticleScreen extends React.Component {
 
 
 
-            <BaomoiText style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold', color: textColor}}>{this.state.Article.title.plaintitle}</BaomoiText>
+            <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor}}>{this.state.Article.title.plaintitle}</Text>
             <BaomoiText style={{color: '#696969', marginTop:10, fontSize: 15*fontSizeRatio}}>Cập nhật {moment(this.state.Article.modified).fromNow()}</BaomoiText>
 
             <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
@@ -171,19 +172,24 @@ export default class ArticleScreen extends React.Component {
               <HyperText>
               {this.state.Article.content.plaintext}
               </HyperText> :
-              <HTMLView
-                addLineBreak={false}
-                textComponentProps={{ style: {
-                  fontSize: 18*fontSizeRatio,
-                  lineHeight: 20,
-                  color: textColor,
-                  fontFamily: 'baomoi-regular',
+              <HTML
+                alterChildren = { (node) => {
+                    if (node.name === 'iframe') {
+                        delete node.attribs.width;
+                        delete node.attribs.height;
+                    }
+                    return node.children;
+                }}
+                html={this.state.Article.content.plaintext}
+                imagesMaxWidth={Dimensions.get('window').width-20}
+                onLinkPress={(event, href)=>{
+                  Linking.openURL(href)
+                }}
+                ignoredStyles={['width']}
+                staticContentMaxWidth={Dimensions.get('window').width-20}
+                tagsStyles={{blockquote:{marginLeft: 50}}}
+                baseFontStyle={{fontSize: 18*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:20*fontSizeRatio }}/>
 
-                }}}
-                value={this.state.Article.content.plaintext}
-                stylesheet={this.textStyle(textColor, fontSizeRatio)}
-                renderNode={this.renderNode}
-                />
             }
 
             <View style={{flexDirection: 'row', marginTop : 20}}>
@@ -240,12 +246,7 @@ export default class ArticleScreen extends React.Component {
          flexWrap: 'wrap',
          alignItems: 'flex-start',
          flex: 1,
-           p: {
-             fontSize: 18*r,
-             lineHeight: 20,
-             color: myColor,
-             fontFamily: 'baomoi-regular',
-           },
+
            h3: {
              marginTop: 10,
              color: myColor,
@@ -279,8 +280,10 @@ export default class ArticleScreen extends React.Component {
          }
      }
     renderNode(node, index, siblings, parent, defaultRenderer) {
+
       if (node.name === 'img') {
-      const { src, height } = node.attribs;
+      const{ src, height } = node.attribs;
+      console.log(src)
       Image.getSize(src, (w, h) => {
         if( h < w )
           h = 300
@@ -295,31 +298,28 @@ export default class ArticleScreen extends React.Component {
           </View>
         );
 
-      })
+      },(err) => {
+          console.log('err', err)
+          return (
+            <View>
+            <Image
+              key={index}
+              style={{ width: screenWidth-20, height: 300 }}
+              source={{ uri: src }}
+              resizeMode='cover'/>
+            </View>
+          )
+        })
 
-    }
-    if(node.name == 'p' && node.children.length != 0) {
-      const iframeNodes = node.children.filter((node) => node.name === 'iframe')
-      const imageNodes = node.children.filter((node) => node.name === 'img')
-      const sources = iframeNodes.map((node) => node.attribs.src);
-      if (iframeNodes.length != 0)
-        return (
-          <View>
-            <WebView source={{uri : sources[0]}} style={{width:screenWidth-20, height: 300}}/>
-          </View>
-        )
-      if (imageNodes.length != 0)
-            return(
-              <View>
-              <Image
-                style={{ width: screenWidth-20, height: 300, marginBottom: 10 }}
-                source={{ uri: imageNodes[0].attribs.src }}
-                resizeMode='contain'/>
-              </View>
-            )
+      }
 
-
-    }
+        if (node.children && node.children.length > 0 && node.children[0].name === 'iframe') {
+          return (
+            <View>
+              <WebView source={{uri : node.children[0].attribs.src}} style={{width:screenWidth-20, height: 300}}/>
+            </View>
+          )
+        }
 
    }
 };

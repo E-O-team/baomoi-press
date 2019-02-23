@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "@expo/videoplayer": "^0.4.0",
     "axios": "^0.18.0",
     "babel-preset-react-native": "^4.0.1",
     "expo": "^31.0.2",
@@ -22,6 +23,9 @@
     "react-native-elements": "^0.19.1",
     "react-native-htmlview": "^0.13.0",
     "react-native-multibar": "0.0.4",
+    "react-native-render-html": "^4.1.1",
+    "react-native-video": "^3.2.1",
+    "react-native-video-player": "^0.10.0",
     "react-navigation": "^3.3.0",
     "react-navigation-tabs": "^0.4.0"
   },
