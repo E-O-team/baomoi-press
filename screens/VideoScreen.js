@@ -79,7 +79,7 @@ export default class VideoScreen extends React.Component{
 
   render(){
     return(
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, padding: 10}}>
         <Consumer>
           {({textColor, backGround}) => (
           <FlatList

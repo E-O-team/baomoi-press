@@ -53,7 +53,7 @@ export default class Articles extends React.Component {
         Comments = (props) => {
             if(this.state.numberOfComments !== 0){
                 return(
-                  <View style={{flexDirection: "row"}}><BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText><Icon name='comment' color='#696969' size={15}/></View>
+                  <View style={{flexDirection: "row"}}><BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText><Icon name='comments-o' type="font-awesome" color='#696969' size={15}/></View>
                 )
             }else{
                 return null;
@@ -77,6 +77,8 @@ export default class Articles extends React.Component {
                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
                             <View style={{alignItems: 'center'}}>
                                 <Tile
+                                    height={180}
+                                    imageContainerStyle={{borderRadius: 5, }}
                                     activeOpacity={1}
                                     imageSrc={{uri :item.thumb || defaultImg}}
                                     icon={{ name: 'play-circle', type: 'font-awesome', color: "white", size: 45 }}
@@ -87,11 +89,14 @@ export default class Articles extends React.Component {
                                 />
                             </View>
                             <View>
+                                <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
+                                    <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                    <Comments id={item.id}/>
+                                </View>
                                 <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
+                            <Divider style={{ backgroundColor: '#e0e0e0', height: 1, marginTop: 5}} />
                         </View>
-
-                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}} numberOfLines={3}>{item.excerpt.plainexcerpt}</BaomoiText>
                     </TouchableOpacity>
                 )
             }else{
