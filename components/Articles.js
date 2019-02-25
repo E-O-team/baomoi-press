@@ -55,7 +55,7 @@ export default class Articles extends React.Component {
                 return(
                   <View style={{flexDirection: "row", alignItems: "center"}}>
                       <BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText>
-                      <Icon containerStyle={{marginTop: -2}} name='comments-o' type="font-awesome" color='#696969' size={20}/>
+                      <Icon containerStyle={{marginTop: -2}} name='comment' type="evilicon" color='#696969' size={20}/>
                   </View>
                 )
             }else{
@@ -106,41 +106,63 @@ export default class Articles extends React.Component {
                 if(item.featured_post == "on"){
                     if(index === 0){
                         return(
-                            <TouchableOpacity
-                                activeOpacity={0.5}
-                                onPress={() => this.props.navigation.navigate("Article", {
-                                    Article: item
-                                })}
-                            >
-                                <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10}}>
-                                    <View style={{flexDirection: 'row', alignItems:'center'}}>
-                                        <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
-                                        <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>Tiêu Điểm</BaomoiText>
-                                    </View>
-                                    <Icon
-                                        size={30}
-                                        name='angle-right'
-                                        type='font-awesome'
-                                        color='#696969'
-                                    />
-                                </View>
-                                <View style={{marginTop: 5}}>
-                                    <Image
-                                        source={{uri: item.thumb || defaultImg}}
-                                        style= {{height: 180, width: width}}
-                                        loadingIndicatorSource={spinner}
-
-                                    />
-                                    <View style={{padding: 10}}>
-                                        <View style={{flexDirection: "row", alignItems:'center'}}>
-                                            <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
-                                            <Comments id={item.id}/>
+                            <View>
+                                <TouchableOpacity
+                                    activeOpacity={0.5}
+                                    onPress={() => this.props.navigation.navigate("Article", {
+                                        Article: item
+                                    })}
+                                >
+                                    <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
+                                        <View style={{flexDirection: 'row', alignItems:'center'}}>
+                                            <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
+                                            <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>Tiêu Điểm</BaomoiText>
                                         </View>
-                                        <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
-                                        <BaomoiText style={{fontSize:18, color: '#696969', marginTop:10}}>{item.excerpt.plainexcerpt}</BaomoiText>
+                                        <Icon
+                                            name='angle-right'
+                                            type='font-awesome'
+                                            color='#696969'
+                                        />
                                     </View>
+                                    <View style={{marginTop: 5}}>
+                                        <Image
+                                            source={{uri: item.thumb || defaultImg}}
+                                            style= {{height: 180, width: width}}
+                                            loadingIndicatorSource={spinner}
+                                        />
+                                        <View style={{padding: 10}}>
+                                            <View style={{flexDirection: "row", alignItems:'center'}}>
+                                                <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                <Comments id={item.id}/>
+                                            </View>
+                                            <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                                <View style={{padding: 10}}>
+                                    <FlatList
+                                        data={item.otherFeaturedPosts}
+                                        renderItem={({ item, index }) =>
+                                            <TouchableOpacity
+                                                onPress={() => this.props.navigation.navigate("Article", {
+                                                    Article: item
+                                                })}
+                                                key={item.id}
+                                                activeOpacity={0.8}
+                                            >
+                                                <View style={{flexDirection: "row", marginBottom: 3, alignItems: "flex-start"}}>
+                                                    <Icon
+                                                        type="entypo"
+                                                        name="dot-single"
+                                                    />
+                                                <BaomoiText style={{fontSize: 16, textAlign: "justify", color: '#696969', marginLeft: 5,flex: 1, flexWrap: 'wrap'}}>{item.title.plaintitle}</BaomoiText>
+                                                </View>
+                                            </TouchableOpacity>
+                                        }
+                                        keyExtractor={item => item.id.toString()}
+                                    />
                                 </View>
-                            </TouchableOpacity>
+                            </View>
                         )
                     }else{
                         // return null after first render of featured post

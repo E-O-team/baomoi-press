@@ -64,12 +64,14 @@ export default class HomeScreen extends React.Component {
         // Home
             if(this.state.page == 1){
                 axios.all([
-                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on"),
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on&per_page=4"),
                     axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
                 ])
                 .then(axios.spread((featuredPostRes, articlesRes) => {
+                    const featuredPost = Object.create(featuredPostRes.data[0])
+                    featuredPost.otherFeaturedPosts = [featuredPostRes.data[1], featuredPostRes.data[2], featuredPostRes.data[3]]
                     this.setState({
-                        articles: [...this.state.articles, featuredPostRes.data[0], ...articlesRes.data],
+                        articles: [...this.state.articles, featuredPost, ...articlesRes.data],
                         refreshing: false,
                     })
                 }))
