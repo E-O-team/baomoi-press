@@ -78,25 +78,29 @@ export default class Articles extends React.Component {
                         })}
                     >
                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
-                            <View style={{alignItems: 'center'}}>
-                                <Tile
-                                    height={180}
-                                    imageContainerStyle={{borderRadius: 5, }}
-                                    activeOpacity={1}
-                                    imageSrc={{uri :item.thumb || defaultImg}}
-                                    icon={{ name: 'play-circle', type: 'font-awesome', color: "white", size: 45 }}
-                                    featured
-                                    onPress={() => this.props.navigation.navigate("Article", {
-                                        Article: item
-                                    })}
-                                />
-                            </View>
+                              <View style={{alignItems: 'center', justifyContent:'center'}}>
+                                  <Image
+                                    key={index}
+                                    style={{ width: width, height: width * 9/16}}
+                                    source={{ uri: item.thumb || defaultImg }}
+                                    resizeMode='cover'/>
+                                  <View style={{position:'absolute'}}>
+                                    <Icon
+                                        size={80}
+                                        name='play-circle'
+                                        type='font-awesome'
+                                        color='#C0C0C0'
+                                    />
+                                  </View>
+
+
+                              </View>
                             <View>
                                 <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
                                     <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
                                     <Comments id={item.id}/>
                                 </View>
-                                <BaomoiText style={{fontSize: 20, fontWeight: '700', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                             <Divider style={{ backgroundColor: '#e0e0e0', height: 1, marginTop: 5}} />
                         </View>

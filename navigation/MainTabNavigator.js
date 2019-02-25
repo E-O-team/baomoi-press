@@ -55,8 +55,10 @@ HomeStack.navigationOptions = ({ navigation }) => {
       var footerHeight;
       if (focused) {
         footerHeight = 1;
+        opacity = 1;
       } else {
         footerHeight = 0;
+        opacity = 0.7;
       }
 
       var styles = StyleSheet.create({
@@ -72,7 +74,7 @@ HomeStack.navigationOptions = ({ navigation }) => {
       });
       return (
         <View style={styles.tab}>
-          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Home</Text>
+          <Text style={{color: 'white', opacity: opacity, fontSize: 20, fontWeight: "bold"}}>Home</Text>
           <View style={styles.labelFooter}/>
         </View>
       );
@@ -98,6 +100,7 @@ const VideoStack = createStackNavigator({
 
 
 VideoStack.navigationOptions = ({ navigation }) => {
+
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -105,11 +108,14 @@ VideoStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarLabel: 'Video',
     tabBarIcon: ({ focused }) => {
-      var footerHeight;
-      if (focused) {
+      var footerHeight, opacity;
+
+      if (focused ) {
         footerHeight = 1;
+        opacity = 1;
       } else {
         footerHeight = 0;
+        opacity = 0.7;
       }
 
       var styles = StyleSheet.create({
@@ -125,7 +131,7 @@ VideoStack.navigationOptions = ({ navigation }) => {
       });
       return (
         <View style={styles.tab}>
-          <Text style={{color: 'white', fontSize: 20, fontWeight: "bold"}}>Video</Text>
+          <Text style={{color: 'white', opacity: opacity, fontSize: 20, fontWeight: "bold"}}>Video</Text>
           <View style={styles.labelFooter}/>
         </View>
     )
@@ -191,7 +197,7 @@ export default createBottomTabNavigator({
         screen: () => null,
         navigationOptions: ({navigation}) => ({
             tabBarIcon: () => (
-                <CustomTabBarBottom />
+                <CustomTabBarBottom navigation={navigation}/>
             )
         }),
         params: {

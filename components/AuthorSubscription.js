@@ -80,17 +80,17 @@ export default class AuthorSubscription extends React.Component{
 
     return(
       <View style={styles.container}>
-        <View style={{height: 30 , width: 30, borderRadius: 30/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
+        <View style={{height: 32 , width: 32, borderRadius: 32/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
           <Image
-          source={{uri: "https://" + this.state.source.name + "/favicon.ico"}}
-          style={{ height: 30 , width: 30, borderRadius: 30/2, resizeMode:'contain'}}
+          source={{uri: "https://" + this.state.source.slug.replace('-','.') + "/favicon.ico"}}
+          style={{ height: 32 , width: 32, borderRadius: 32/2,}}
           />
         </View>
         <Consumer>
           {({textColor}) => (
-          <BaomoiText style={[styles.text,{color: textColor}]}>{this.state.source.name}</BaomoiText>
+          <BaomoiText style={[styles.text,{color: textColor}]}>{this.state.source.name.toUpperCase()}</BaomoiText>
           )}
-        </Consumer>  
+        </Consumer>
         {icon}
 
       </View>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     textAlign: 'left',
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: 'bold',
     marginLeft: 5,
   },

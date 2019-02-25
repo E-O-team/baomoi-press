@@ -24,7 +24,6 @@ export default class CustomTabBarBottom extends React.Component {
   }
   onClickBtn = ()=>{
 
-
     this.setState({animating: true,
       left:  new Animated.Value(20),
       bottom: new Animated.Value(30),

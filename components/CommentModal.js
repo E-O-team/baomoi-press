@@ -13,6 +13,7 @@ export default class CommentModal extends React.Component{
       modalVisible: false,
       registerVisible: false,
       text: '',
+      numberOfComments: 0,
       keyboardHeight: 0,
     }
   }
@@ -25,6 +26,7 @@ export default class CommentModal extends React.Component{
       'keyboardDidHide',
       this._keyboardDidHide.bind(this),
     );
+    this.fetchComment()
   }
 
   componentWillUnmount() {
@@ -39,7 +41,13 @@ export default class CommentModal extends React.Component{
   _keyboardDidHide() {
 
   }
-
+  fetchComment(){
+    fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.article.id)
+    .then(res => res.json())
+    .then(json => this.setState({
+        numberOfComments: json.length,
+    }))
+  }
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
@@ -62,6 +70,7 @@ export default class CommentModal extends React.Component{
                 })
                 .then(res => {
                   this.setState({text: '', modalVisible: false})
+                  this.props.onFetch()
                 })
                 .catch(err => console.log(err))
 
@@ -97,6 +106,22 @@ export default class CommentModal extends React.Component{
                 <Text style={{color: '#696969', fontSize: 10}}>Viết bình luận ...</Text>
               </TouchableOpacity>
             </View>
+            <View style={{flex : 1, alignItems:'center'}}>
+                <View style={{marginRight: 10}}>
+                    <Icon
+                      name='comment'
+                      type='evilicon'
+                      size={30}
+                      color='#696969'
+                      onPress={() => this.props.scrollView.scrollToEnd()}
+
+                      />
+                </View>
+                <View style={{width: 15, height: 15, backgroundColor:'red', borderRadius: 15/2, justifyContent:'center',
+                               position:'absolute'}}>
+                  <Text style={{color: 'white', textAlign:'center', fontSize: 5, fontWeight:'bold'}}>{this.props.commentLength}</Text>
+                </View>
+            </View>
 
           </View>
 
@@ -108,35 +133,46 @@ export default class CommentModal extends React.Component{
                  <TouchableOpacity style={{
                    backgroundColor:'black',
                    opacity: 0.7,
-                   height: screenHeight - 60 - this.state.keyboardHeight}}
+                   height: screenHeight - this.state.keyboardHeight- (Platform.OS == "ios" ? 150 : 170)}}
                    onPress={() => this.setModalVisible(!this.state.modalVisible)}>
 
                  </TouchableOpacity>
                  <View style={{
-                     height: 40,
+                     height: 150,
                      backgroundColor: 'white',
                      justifyContent:'center',
+                     padding: 10,
                    }}>
-                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
 
+                    <View style={{flex: 3}}>
                       <TextInput
-                        style={{flex: 3, alignItems:'center'}}
+                        style={{height: 80, backgroundColor:'#C0C0C0', borderRadius: 5}}
                         onChangeText={(text) => this.setState({text: text})}
                         autoFocus={true}
                         value={this.state.text}
+                        textAlignVertical={'top'}
                         multiline={true}
-                        placeholder='Write a comment...'
+                        placeholder='Lời bình luận hay được ưu tiên hiển thị'
+                        placeholderTextColor='#606060'
                       />
-                      <View style={{flex: 1}}>
-                         <TouchableHighlight
-                          style={{marginLeft: 20, width: 50, height:30, borderRadius:10, backgroundColor: '#0080FF', alignItems:'center', justifyContent:'center'}}
-                           onPress={() => {
-                             this.submitComment()
-                           }}>
-                           <BaomoiText style={{color: 'white'}}>Send</BaomoiText>
-                          </TouchableHighlight>
+                    </View>
+
+                    <View style={{flex: 1, flexDirection: 'row', alignItems:'center', marginBottom: 5}}>
+                      <View style={{flex : 3, alignItems:'center', justifyContent:'center'}}>
+                        <Text style={{color: '#606060', fontSize: 12}}>Bình luận không nói tục, chửi bậy</Text>
                       </View>
-                   </View>
+                      <View style={{flex : 1, alignItems:'center'}}>
+                       <TouchableHighlight
+                        style={{marginLeft: 20, width: 70, height:30, borderRadius:5, backgroundColor: 'red',
+                                alignItems:'center', justifyContent:'center',marginRight: 10}}
+                         onPress={() => {
+                           this.submitComment()
+                         }}>
+                         <BaomoiText style={{color: 'white', fontSize:10, fontWeight:'bold'}}>PHÁT BIỂU</BaomoiText>
+                        </TouchableHighlight>
+                      </View>
+                    </View>
+
                  </View>
             </View>
           </Modal>
