@@ -38,7 +38,7 @@ export default class ArticleScreen extends React.Component {
                   <SafeAreaView
                       style={{
                           flexDirection: "row",
-                          height: 50,
+                          height: 55,
                           backgroundColor: backGround,
                           marginTop: 20,
                           alignItems:'center',
