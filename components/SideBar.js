@@ -97,7 +97,12 @@ export default class SiderBar extends React.Component {
                                         reverse
                                         color="#a6122b"
                                     />
-                                    <Text style={{color: "white", fontSize: 20}} onPress={() => this.props.navigation.navigate("Auth")}>Đăng nhập</Text>
+                                    <TouchableOpacity
+                                        activeOpacity={0.5}
+                                        onPress={() => this.props.navigation.navigate("Auth")}
+                                    >
+                                        <Text style={{color: "white", fontSize: 20}}>Đăng nhập</Text>
+                                    </TouchableOpacity>
                                 </View>
                             )}
 
