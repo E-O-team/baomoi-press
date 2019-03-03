@@ -83,7 +83,7 @@ export default class AuthorSubscription extends React.Component{
         <View style={{height: 32 , width: 32, borderRadius: 32/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
           <Image
           source={{uri: "https://" + this.state.source.slug.replace('-','.') + "/favicon.ico"}}
-          style={{ height: 32 , width: 32, borderRadius: 32/2,}}
+
           />
         </View>
         <Consumer>

@@ -168,7 +168,7 @@ export default class RecommendedList extends React.Component{
                                       <View style={{flex: 1, flexDirection: "row", marginTop: 10, marginBottom: 10}}>
                                         <View style={{flex: 2}}>
 
-                                            <BaomoiText style={{fontSize: 18*fontSizeRatio, fontWeight: '400',color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                            <BaomoiText style={{fontSize: 18*fontSizeRatio, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
                                         </View>
                                         <Image
                                             source={{uri :item.thumb || defaultImg}}

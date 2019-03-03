@@ -74,7 +74,7 @@ export default class ArticleScreen extends React.Component {
 
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
-        })
+        },() => {this.fetchComment()})
 
 
         this.setState({

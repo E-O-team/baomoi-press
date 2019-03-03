@@ -113,7 +113,7 @@ export default class SiderBar extends React.Component {
                                     />
                                 </View>
                                 <View style={{backgroundColor:"#3a5685", height: 40, width: 150, marginBottom: 5, alignItems: "center", borderTopLeftRadius: 60, borderBottomLeftRadius: 60, alignItems: "flex-start", paddingLeft: 15, justifyContent: "space-around" }}>
-                                    <Text style={{color: "white"}}>MỜI BẠN, KHUI QUÀ</Text>
+                                    <Text style={{color: "white", fontSize: 10}}>MỜI BẠN, KHUI QUÀ</Text>
                                     {user ? (
                                         <View style={{flexDirection: "row", alignItems: "center"}}>
                                             <Icon
