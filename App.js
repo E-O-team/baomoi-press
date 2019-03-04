@@ -11,13 +11,13 @@ export default class App extends React.Component {
   render() {
     const menu = 123
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
-      return (
-        <AppLoading
-          startAsync={this._loadResourcesAsync}
-          onError={this._handleLoadingError}
-          onFinish={this._handleFinishLoading}
-        />
-      );
+        return (
+           <AppLoading
+             startAsync={this._loadResourcesAsync}
+             onError={this._handleLoadingError}
+             onFinish={this._handleFinishLoading}
+           />
+     );
     } else {
       return (
         <Provider>
@@ -55,5 +55,4 @@ export default class App extends React.Component {
 
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
-  };
-}
+  };}

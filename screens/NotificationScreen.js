@@ -10,25 +10,52 @@ import {
     ActivityIndicator,
     AsyncStorage,
     FlatList,
+    Modal,
+    TouchableHighlight,
+    Alert
 } from 'react-native';
-import {Consumer} from '../context/context.js'
-import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
+import {
+    Consumer
+} from '../context/context.js'
+import {
+    Avatar,
+    Card,
+    Icon,
+    Button,
+    Divider,
+    Badge
+} from 'react-native-elements';
 import Sources from '../components/Sources';
 import axios from 'axios';
+import ExchangeGiftsModal from '../components/ExchangeGiftsModal';
 
-export default class FollowingScreen extends React.Component {
+export default class NotificationScreen extends React.Component {
     constructor(props) {
         super(props)
-        this.state={
-            data: this.props.navigation.getParam("subscribed")
-        }
+        this.state = {
+            modalVisible: false,
+            value: null
+        };
     }
 
-    static navigationOptions = ({navigation}) => {
+    setModalVisible = (visible, value) => {
+        this.setState({
+            modalVisible: visible,
+            value: value
+        });
+    }
+
+    handleSubmit = () => {
+        console.log("submited");
+    }
+
+    static navigationOptions = ({
+        navigation
+    }) => {
         return {
             tabBarVisible: false,
             header: (
-              <Consumer>
+                <Consumer>
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
@@ -58,29 +85,11 @@ export default class FollowingScreen extends React.Component {
             )
         }
     }
-
-    render(){
-        return(
-            <Consumer>
-                {({textColor, backGround}) => (
-                    <View style={{flex: 1, backgroundColor: backGround}}>
-                        <FlatList
-                            data={this.state.data}
-                            extraData={this.state.data}
-                            renderItem={({ item, index }) => <Sources item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                            keyExtractor={item => item}
-                        />
-                    </View>
-                )}
-            </Consumer>
+    render() {
+        return (
+            <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                <Text>màn hình thông báo</Text>
+            </View>
         )
     }
-};
-
-
-// <View style={styles.container}>
-//     <FlatList
-//         data={this.state.data}
-//         renderItem={({ item }) => <Sources item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-//     />
-// </View>
+}

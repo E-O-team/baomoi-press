@@ -5,7 +5,9 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  Image
 } from 'react-native';
+import splashLogo from '../assets/images/logo-splash.png';
 import axios from 'axios';
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -27,6 +29,7 @@ export default class AuthLoadingScreen extends React.Component {
         .then(() => this.props.navigation.navigate("App"))
         .catch(err => this.props.navigation.navigate("Auth"))
     }else{
+        AsyncStorage.clear()
         this.props.navigation.navigate("App")
     }
     // This will switch to the App screen or Auth screen and this loading
@@ -37,7 +40,8 @@ export default class AuthLoadingScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator />
+        <Image source={splashLogo} style={styles.image}/>
+        <ActivityIndicator/>
       </View>
     );
   }
@@ -46,7 +50,10 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
-
+        justifyContent: 'space-around',
+    },
+    image:{
+        height: 300,
+        width: 300
     }
 })

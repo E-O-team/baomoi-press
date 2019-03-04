@@ -46,6 +46,20 @@ export default class SiderBar extends React.Component {
         })
     }
 
+    handleExchangeGiftsPress = () => {
+        if(this.checkLogedIn()){
+            this.props.navigation.navigate("ExchangeGifts", {
+                xu: this.state.user.xu
+            })
+        }
+    }
+
+    handleNotificationPress = () => {
+        if(this.checkLogedIn()){
+            this.props.navigation.navigate("Notifications")
+        }
+    }
+
     handleSubscribedPressed = () => {
         if(this.checkLogedIn()){
             this.props.navigation.navigate("Following", {
@@ -73,7 +87,7 @@ export default class SiderBar extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{backgroundColor: backGround, flex: 1, padding: 10}}>
-                        <View style={{flexDirection: "row", backgroundColor: '#dd273e', marginHorizontal: -10, marginTop: -10, height: 100, alignItems: "flex-end", justifyContent: 'space-between', }}>
+                        <View style={{flexDirection: "row", backgroundColor: '#dd273e', marginHorizontal: -10, marginTop: -10, height: 120, alignItems: "flex-end", justifyContent: 'space-between', }}>
                             {user ? (
                                 <View style={{flexDirection: "row", paddingLeft: 5, paddingBottom: 5}}>
                                     <Avatar
@@ -107,7 +121,7 @@ export default class SiderBar extends React.Component {
                             )}
 
                             <View>
-                                <View style={{alignSelf: "flex-end"}}>
+                                <View style={{alignSelf: "flex-end", marginBottom: 7}}>
                                     <Icon
                                         name='close'
                                         type='evilicon'
@@ -161,6 +175,7 @@ export default class SiderBar extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
+                                    onPress={this.handleNotificationPress}
 
                                 >
                                     <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45}}>
@@ -173,7 +188,10 @@ export default class SiderBar extends React.Component {
                                     </View>
                                     <Text style={{color: "#52607b"}}>Thông báo</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}>
+                                <TouchableOpacity
+                                    style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
+                                    onPress={this.handleExchangeGiftsPress}
+                                >
                                     <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45, justifyContent: "center"}}>
                                         <Icon
                                             name='present'
@@ -191,7 +209,7 @@ export default class SiderBar extends React.Component {
                                     <View style={{backgroundColor: "#fc5656", height: 18, width: 5}}></View>
                                     <Text style={{color: textColor, marginLeft: 10, fontSize: 18, fontWeight: "bold"}}>Nhiệm vụ kiếm xu</Text>
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{flexDirection: "row"}}>
                                         <Icon
@@ -203,7 +221,7 @@ export default class SiderBar extends React.Component {
                                     </View>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{flexDirection: "row"}}>
                                         <Icon
@@ -219,12 +237,12 @@ export default class SiderBar extends React.Component {
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>
                             </View>
-                            <View style={{marginTop: 20}}>
+                            <View style={{marginTop: 25}}>
                                 <View style={{flexDirection: "row"}}>
                                     <View style={{backgroundColor: "#fc5656", height: 18, width: 5}}></View>
                                     <Text style={{color: textColor, marginLeft: 10, fontSize: 18, fontWeight: "bold"}}>Nhiệm vụ hằng ngày</Text>
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                                         <View style={{flexDirection: "row"}}>
@@ -241,7 +259,7 @@ export default class SiderBar extends React.Component {
                                     </View>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                                         <View style={{flexDirection: "row"}}>
@@ -258,7 +276,7 @@ export default class SiderBar extends React.Component {
                                     </View>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                                         <View style={{flexDirection: "row"}}>
@@ -275,7 +293,7 @@ export default class SiderBar extends React.Component {
                                     </View>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                                         <View style={{flexDirection: "row"}}>
@@ -296,27 +314,31 @@ export default class SiderBar extends React.Component {
 
 
 
-                            <View style={{marginTop: 20}}>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <Text style={{color: textColor, fontSize: 18}} >Điều khoản sử dụng</Text>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                            <View style={{marginTop: 25}}>
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate("Terms")}
+                                >
+                                    <View style={{ height: 50, justifyContent: "space-between"}}>
+                                        <View></View>
+                                        <Text style={{color: textColor, fontSize: 18}} >Điều khoản sử dụng</Text>
+                                        <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
+                                    </View>
+                                </TouchableOpacity>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <Text style={{color: textColor, fontSize: 18}} >Bình chọn báo mới</Text>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>
-                                <View style={{ height: 40, justifyContent: "space-between"}}>
+                                <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
                                     <Text style={{color: textColor, fontSize: 18}} >Gửi email góp ý</Text>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1 }} />
                                 </View>
                                 {user &&
-                                    <View style={{ height: 40, justifyContent: "space-between"}}>
+                                    <View style={{ height: 50, justifyContent: "space-between"}}>
                                         <View></View>
-                                        <Text style={{color: textColor, fontSize: 18, fontWeight:"bold"}} onPress={this.logOut}>Đăng xuất</Text>
-                                        <Divider style={{ backgroundColor: '#e0e0e0', height: 1 }} />
+                                        <View opacity={0.3}><Text style={{color: textColor, fontSize: 18, }} onPress={this.logOut}>Đăng xuất</Text></View>
+                                        <View></View>
                                     </View>
                                 }
                             </View>

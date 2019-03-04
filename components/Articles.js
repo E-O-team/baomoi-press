@@ -178,7 +178,7 @@ export default class Articles extends React.Component {
                         return(
                             <View style={{flex: 1, flexDirection: 'column', padding: 10}}>
                                 <View style={{flex: 2}}>
-                                    <View style={{flexDirection: "row"}}>
+                                    <View style={{flexDirection: "row", marginBottom: 7}}>
                                         <TouchableOpacity
                                             activeOpacity={1}
                                             onPress={() => this.props.navigation.navigate("Article", {
@@ -275,7 +275,7 @@ export default class Articles extends React.Component {
             <View style={{backgroundColor: backGround}}>
                     <Post item={item} ui={{textColor}} index={index}/>
 
-                <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10 }} />
+                <Divider style={{ backgroundColor: '#e0e0e0'}} />
             </View>
           )}
           </Consumer>
