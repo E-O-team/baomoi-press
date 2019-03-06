@@ -12,10 +12,21 @@ export default class AuthorSubscription extends React.Component{
     this.state={
       source : {},
       isSubscribed: false,
+      logo: '',
     }
   }
   componentWillMount(){
     this.setState({source : this.props.taxonomy_source})
+
+    fetch("https://baomoi.press/wp-json/wp/v2/get_source_logo")
+    .then(res => res.json())
+    .then(json => {
+      var source_array = json.filter(e => e.title === 'Vnexpress')
+        this.setState({logo : source_array[0].img}, () => console.log(this.state.logo))
+    })
+    // .then(json => console.log(json))
+    .catch(err => console.log(err))
+
   }
   onSubscribe = async () => {
     this.setState({isSubscribed: true})
@@ -82,8 +93,9 @@ export default class AuthorSubscription extends React.Component{
       <View style={styles.container}>
         <View style={{height: 32 , width: 32, borderRadius: 32/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
           <Image
-          source={{uri: "https://" + this.state.source.slug.replace('-','.') + "/favicon.ico"}}
-
+          source={{uri: this.state.logo}}
+          resizeMode='contain'
+          style={{width: 30, height: 30}}
           />
         </View>
         <Consumer>

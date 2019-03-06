@@ -128,6 +128,7 @@ export default class CommentModal extends React.Component{
           <Modal
              transparent={true}
              visible={this.state.modalVisible}
+             onRequestClose={() => {}}
              >
             <View>
                  <TouchableOpacity style={{
@@ -146,7 +147,7 @@ export default class CommentModal extends React.Component{
 
                     <View style={{flex: 3}}>
                       <TextInput
-                        style={{height: 80, backgroundColor:'#C0C0C0', borderRadius: 5}}
+                        style={{height: 80, backgroundColor:'#C0C0C0', borderRadius: 5, padding: 5}}
                         onChangeText={(text) => this.setState({text: text})}
                         autoFocus={true}
                         value={this.state.text}
@@ -180,7 +181,8 @@ export default class CommentModal extends React.Component{
           <Modal
             animationType="slide"
             transparent={true}
-            visible={this.state.registerVisible}>
+            visible={this.state.registerVisible}
+            onRequestClose={() => {}}>
              <View style={{backgroundColor: 'black',
                            height: screenHeight /4,
                            marginTop: screenHeight*3/4,
