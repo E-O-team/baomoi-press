@@ -13,8 +13,6 @@ import {
 } from 'react-native';
 import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
-import axios from 'axios';
-import Articles from '../components/Articles';
 
 export default class TermsScreen extends React.PureComponent {
     render(){

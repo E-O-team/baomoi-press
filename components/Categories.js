@@ -13,10 +13,6 @@ import {
 } from 'react-native';
 import {Consumer} from '../../context/context.js';
 import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements'
-import {
-    WebBrowser
-} from 'expo';
-import { MonoText } from './StyledText';
 
 export default class Categories extends React.PureComponent {
     // constructor(props) {

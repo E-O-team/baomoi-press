@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, FlatList, ActivityIndicator} from 'react-native';
 import axios from 'axios';
-import Articles from '../components/Articles';
+import Articles from '../components/Articles/Articles';
 import Header from '../components/Header.js';
 import {Consumer} from '../context/context.js';
 

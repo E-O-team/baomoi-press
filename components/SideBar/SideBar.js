@@ -10,9 +10,11 @@ import {
     ActivityIndicator,
     AsyncStorage,
 } from 'react-native';
-import {Consumer} from '../context/context.js'
+import {Consumer} from '../../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import axios from 'axios';
+import MenuItemNoBadge from './MenuItemNoBadge';
+import MenuItemWithBadge from './MenuItemWithBadge';
 export default class SiderBar extends React.Component {
     constructor() {
         super()
@@ -68,6 +70,16 @@ export default class SiderBar extends React.Component {
         }
     }
 
+    handleNavigationPressed = (navigationDesination) => {
+        if(navigationDesination == "Following"){
+            this.handleSubscribedPressed()
+        }else if (navigationDesination == "Notifications") {
+            this.handleNotificationPress()
+        }else if (navigationDesination == "ExchangeGifts") {
+            this.handleExchangeGiftsPress()
+        }
+    }
+
     logOut = async () => {
         AsyncStorage.clear()
         this.props.navigation.navigate("AuthLoadingScreen")
@@ -81,8 +93,30 @@ export default class SiderBar extends React.Component {
         }
     }
 
+
     render(){
         const {user} = this.state
+        TopNavigator = (props) => {
+            const {name, type, color, content, navigationDesination, size} = props
+            return(
+                <TouchableOpacity
+                    style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
+                    onPress={() => {
+                        this.handleNavigationPressed(navigationDesination)
+                    }}
+                >
+                    <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45, justifyContent:"center"}}>
+                        <Icon
+                            name={name}
+                            type={type}
+                            color={color}
+                            size={size}
+                        />
+                    </View>
+                    <Text style={{color: "#52607b"}}>{content}</Text>
+                </TouchableOpacity>
+            )
+        }
         return(
             <Consumer>
                 {({textColor, backGround}) => (
@@ -164,49 +198,9 @@ export default class SiderBar extends React.Component {
                         </View>
                         <ScrollView>
                             <View style={{padding: 10, paddingHorizontal: -5, flexDirection: "row"}}>
-                                <TouchableOpacity
-                                    style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
-                                    onPress={this.handleSubscribedPressed}
-                                >
-                                    <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45}}>
-                                        <Icon
-                                            name='ios-people'
-                                            type='ionicon'
-                                            color='#f37f58'
-                                            size={40}
-                                        />
-                                    </View>
-                                    <Text style={{color: "#52607b"}}>Theo dõi</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
-                                    onPress={this.handleNotificationPress}
-
-                                >
-                                    <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45}}>
-                                        <Icon
-                                            name='ios-notifications'
-                                            type='ionicon'
-                                            color='#abbaff'
-                                            size={40}
-                                        />
-                                    </View>
-                                    <Text style={{color: "#52607b"}}>Thông báo</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
-                                    onPress={this.handleExchangeGiftsPress}
-                                >
-                                    <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45, justifyContent: "center"}}>
-                                        <Icon
-                                            name='present'
-                                            type='simple-line-icon'
-                                            color='#ffcd57'
-                                            size={32}
-                                        />
-                                    </View>
-                                    <Text style={{color: "#52607b"}}>Đổi quà</Text>
-                                </TouchableOpacity>
+                                <TopNavigator name='ios-people' type='ionicon' color='#f37f58' size={40} content="Theo dõi" navigationDesination="Following"/>
+                                <TopNavigator name='ios-notifications' type='ionicon' color='#abbaff' size={40} content="Thông báo" navigationDesination="Notifications"/>
+                                <TopNavigator name='present' type='simple-line-icon' color='#ffcd57' size={32} content="Đổi quà" navigationDesination="ExchangeGifts" />
                             </View>
                             <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                             <View style={{marginTop: 10}}>
@@ -214,111 +208,19 @@ export default class SiderBar extends React.Component {
                                     <View style={{backgroundColor: "#fc5656", height: 18, width: 5}}></View>
                                     <Text style={{color: textColor, marginLeft: 10, fontSize: 18, fontWeight: "bold"}}>Nhiệm vụ kiếm xu</Text>
                                 </View>
-                                <View style={{ height: 50, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <View style={{flexDirection: "row"}}>
-                                        <Icon
-                                            name='smartphone'
-                                            type='feather'
-                                            color='#768cb1'
-                                        />
-                                    <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >Xem clip kiếm thêm xu</Text>
-                                    </View>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
-                                <View style={{ height: 50, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <View style={{flexDirection: "row"}}>
-                                        <Icon
-                                            name='medal'
-                                            type='material-community'
-                                            color='#f46c6c'
-                                        />
-                                        <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >Chia sẻ kiếm tiền</Text>
-                                        <Badge containerStyle={{ backgroundColor: "#fd2624"}} wrapperStyle={{marginLeft: 10}}>
-                                            <Text style={{color: "white"}}>HOT</Text>
-                                        </Badge>
-                                    </View>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
+                                <MenuItemNoBadge name="smartphone" type="feather" color="#768cb1" content="Xem clip kiếm thêm xu" textColor={textColor} hot={false}/>
+                                <MenuItemNoBadge name="medal" type="material-community" color="#f46c6c" content="Chia sẻ kiếm tiền" textColor={textColor} hot={true}/>
                             </View>
                             <View style={{marginTop: 25}}>
                                 <View style={{flexDirection: "row"}}>
                                     <View style={{backgroundColor: "#fc5656", height: 18, width: 5}}></View>
                                     <Text style={{color: textColor, marginLeft: 10, fontSize: 18, fontWeight: "bold"}}>Nhiệm vụ hằng ngày</Text>
                                 </View>
-                                <View style={{ height: 50, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                                        <View style={{flexDirection: "row"}}>
-                                            <Icon
-                                                name='comments-o'
-                                                type='font-awesome'
-                                                color='#f4d644'
-                                            />
-                                            <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >Bình luận được duyệt</Text>
-                                        </View>
-                                            <Badge containerStyle={{ borderColor: "#f9b3b1", borderWidth: 1, backgroundColor: backGround}} wrapperStyle={{width: 80}}>
-                                                <Text style={{color: "#ff5756"}}>+1Exp</Text>
-                                            </Badge>
-                                    </View>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
-                                <View style={{ height: 50, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                                        <View style={{flexDirection: "row"}}>
-                                            <Icon
-                                                name='book'
-                                                type='octicon'
-                                                color='#f46c6c'
-                                            />
-                                        <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >Đọc bài báo 3 phút</Text>
-                                        </View>
-                                            <Badge containerStyle={{ borderColor: "#f9b3b1", borderWidth: 1, backgroundColor: backGround}} wrapperStyle={{width: 80}}>
-                                                <Text style={{color: "#ff5756"}}>+1Exp</Text>
-                                            </Badge>
-                                    </View>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
-                                <View style={{ height: 50, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                                        <View style={{flexDirection: "row"}}>
-                                            <Icon
-                                                name='ios-people'
-                                                type='ionicon'
-                                                color='#ea5251'
-                                            />
-                                        <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >Chia sẻ bài viết lên facebook</Text>
-                                        </View>
-                                            <Badge containerStyle={{ borderColor: "#f9b3b1", borderWidth: 1, backgroundColor: backGround}} wrapperStyle={{width: 80}}>
-                                                <Text style={{color: "#ff5756"}}>+5Exp</Text>
-                                            </Badge>
-                                    </View>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
-                                <View style={{ height: 50, justifyContent: "space-between"}}>
-                                    <View></View>
-                                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                                        <View style={{flexDirection: "row"}}>
-                                            <Icon
-                                                name='md-mail-open'
-                                                type='ionicon'
-                                                color='#ea5251'
-                                            />
-                                        <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >Mời bạn bè cài đặt app</Text>
-                                        </View>
-                                            <Badge containerStyle={{ borderColor: "#f9b3b1", borderWidth: 1, backgroundColor: backGround}} wrapperStyle={{width: 80}}>
-                                                <Text style={{color: "#ff5756"}}>+10Exp</Text>
-                                            </Badge>
-                                    </View>
-                                    <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
-                                </View>
+                                <MenuItemWithBadge name='comments-o' type='font-awesome' color='#f4d644' content="Bình luận được duyệt" textColor={textColor} exp="+1exp" backgroundColor={backGround}/>
+                                <MenuItemWithBadge name='book' type='octicon' color='#f46c6c' content="Đọc bài báo 3 phút" textColor={textColor} exp="+1exp" backgroundColor={backGround}/>
+                                <MenuItemWithBadge name='ios-people' type='ionicon' color='#f46c6c' content="Chia sẻ bài viết lên facebook" textColor={textColor} exp="+5Exp" backgroundColor={backGround}/>
+                                <MenuItemWithBadge name='md-mail-open' type='ionicon' color='#ea5251' content="Mời bạn bè cài đặt app" textColor={textColor} exp="+10Exp" backgroundColor={backGround}/>
                             </View>
-
-
-
                             <View style={{marginTop: 25}}>
                                 <TouchableOpacity
                                     onPress={() => this.props.navigation.navigate("Terms")}
