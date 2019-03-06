@@ -48,6 +48,7 @@ const HomeStack = createStackNavigator({
   Source: SourceScreen,
   Terms: TermsScreen,
   ExchangeHistory: ExchangeHistoryScreen,
+  WebView: OriginalWebView,
 },{
     headerMode: "float"
 });

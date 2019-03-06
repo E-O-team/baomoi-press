@@ -97,7 +97,12 @@ export default class Articles extends React.Component {
                               </View>
                             <View>
                                 <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
-                                    <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                    {
+                                      (item.taxonomy_source[0])?
+                                         <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                      :
+                                          <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                    }
                                     <Comments id={item.id}/>
                                 </View>
                                 <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
@@ -136,7 +141,13 @@ export default class Articles extends React.Component {
                                         />
                                         <View style={{padding: 10}}>
                                             <View style={{flexDirection: "row", alignItems:'center'}}>
-                                                <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+
+                                                {
+                                                  (item.taxonomy_source[0])?
+                                                     <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                  :
+                                                      <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                                }
                                                 <Comments id={item.id}/>
                                             </View>
                                             <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
@@ -228,7 +239,12 @@ export default class Articles extends React.Component {
                                         })}
                                     >
                                     <View style={{flexDirection: "row", alignItems:'center'}}>
-                                        <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                        {
+                                          (item.taxonomy_source[0])?
+                                             <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                          :
+                                              <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                        }
                                         <Comments id={item.id}/>
                                     </View>
                                         <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
@@ -249,7 +265,12 @@ export default class Articles extends React.Component {
                                     <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
                                         <View style={{flex: 2}}>
                                             <View style={{flexDirection: "row", alignItems:'center'}}>
-                                                <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                {
+                                                  (item.taxonomy_source[0])?
+                                                     <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                  :
+                                                      <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                                }
                                                 <Comments id={item.id}/>
                                             </View>
                                             <BaomoiText style={{fontSize: 20, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>

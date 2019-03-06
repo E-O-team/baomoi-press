@@ -49,7 +49,9 @@ export default class UserProfileEdit extends React.Component {
     render(){
         const {user} = this.state
         return(
-            <ScrollView style={styles.container}>
+            <ScrollView
+                horizontal={false}
+            >
                 <FormLabel>ngày sinh</FormLabel>
                 <FormInput placeholder={user.birth_date} onChangeText={(text) => this.setState({birth_date: text})}/>
                 <FormLabel>giới tính</FormLabel>
@@ -72,9 +74,6 @@ export default class UserProfileEdit extends React.Component {
 }
 
 styles = StyleSheet.create({
-    container:{
-        justifyContent: "flex-start",
-    },
     button:{
         marginTop: 10,
         backgroundColor: '#e12f28',

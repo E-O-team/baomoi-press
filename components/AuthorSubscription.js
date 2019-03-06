@@ -53,7 +53,7 @@ export default class AuthorSubscription extends React.Component{
   render(){
 
      if(this.props.user && !this.state.isSubscribed){
-       this.props.user.subscribed && this.props.user.subscribed.map( source => {
+       this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
          if(source === this.state.source.term_id.toString()) this.setState({isSubscribed : true})
        })
      }

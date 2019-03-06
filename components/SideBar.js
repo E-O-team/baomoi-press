@@ -89,20 +89,25 @@ export default class SiderBar extends React.Component {
                     <View style={{backgroundColor: backGround, flex: 1, padding: 10}}>
                         <View style={{flexDirection: "row", backgroundColor: '#dd273e', marginHorizontal: -10, marginTop: -10, height: 120, alignItems: "flex-end", justifyContent: 'space-between', }}>
                             {user ? (
-                                <View style={{flexDirection: "row", paddingLeft: 5, paddingBottom: 5}}>
-                                    <Avatar
-                                        overlayContainerStyle={styles.avatar}
-                                        medium
-                                        rounded
-                                        source={{uri: user.avatar_urls['96'] || defaultImg}}
-                                    />
-                                <View style={{justifyContent: "center", alignItems: "flex-start"}}>
-                                        <Text style={{color: "white", fontSize: 20,}}>{user.name}</Text>
-                                        <Badge containerStyle={{ backgroundColor: "#dd273e", borderColor: "white", borderWidth: 1}}>
-                                            <Text style={{color: "#f4d644"}}>{user.exp_rank.post.post_title}</Text>
-                                        </Badge>
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate("UserProfile")}
+                                    activeOpacity={0.5}
+                                >
+                                    <View style={{flexDirection: "row", paddingLeft: 5, paddingBottom: 5}}>
+                                        <Avatar
+                                            overlayContainerStyle={styles.avatar}
+                                            medium
+                                            rounded
+                                            source={{uri: user.avatar_urls['96'] || defaultImg}}
+                                        />
+                                    <View style={{justifyContent: "center", alignItems: "flex-start"}}>
+                                            <Text style={{color: "white", fontSize: 20,}}>{user.name}</Text>
+                                            <Badge containerStyle={{ backgroundColor: "#dd273e", borderColor: "white", borderWidth: 1}}>
+                                                <Text style={{color: "#f4d644"}}>{user.exp_rank.post.post_title}</Text>
+                                            </Badge>
+                                        </View>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             ) : (
                                 <View style={{flexDirection: "row", alignItems: "center"}}>
                                     <Icon

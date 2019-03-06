@@ -11,6 +11,7 @@ import {
     AsyncStorage,
     FlatList,
     Dimensions,
+    WebView,
 } from 'react-native';
 import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
@@ -92,17 +93,34 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
         }
 
         Cards = (props) => {
-            return(
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => this.setModalVisible(!this.state.modalVisible, props.value)}
-                >
-                    <Image
-                        style={{height: (width/2-15)/2.217, width: width/2-15}}
-                        source={props.source}
-                    />
-                </TouchableOpacity>
-            )
+            if(props.value !== "50 USD" && props.value !== "100 USD"){
+                return(
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => this.setModalVisible(!this.state.modalVisible, props.value)}
+                    >
+                        <Image
+                            style={{height: (width/2-15)/2.217, width: width/2-15}}
+                            source={props.source}
+                        />
+                    </TouchableOpacity>
+                )
+            }else{
+                return(
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={() => this.props.navigation.navigate("WebView", {
+                            url: "https://baomoi.press/doc-bao-nhan-qua"
+                        })}
+                    >
+                        <Image
+                            style={{height: (width/2-15)/2.217, width: width/2-15}}
+                            source={props.source}
+                        />
+                    </TouchableOpacity>
+                )
+            }
+
         }
         return(
             <Consumer>
