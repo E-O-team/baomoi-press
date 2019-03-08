@@ -181,11 +181,12 @@ export default class ArticleScreen extends React.Component {
                     return node.children;
                 }}
                 html={this.state.Article.content.plaintext}
+                imagesInitialDimensions={{width: 200, height: 200}}
                 imagesMaxWidth={Dimensions.get('window').width-20}
                 onLinkPress={(event, href)=>{
                   Linking.openURL(href)
                 }}
-                ignoredStyles={['width']}
+                ignoredStyles={['width', 'height', 'max-width']}
                 staticContentMaxWidth={Dimensions.get('window').width-20}
                 tagsStyles={{blockquote:{marginLeft: 50}}}
                 baseFontStyle={{fontSize: 18*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:20*fontSizeRatio }}/>
