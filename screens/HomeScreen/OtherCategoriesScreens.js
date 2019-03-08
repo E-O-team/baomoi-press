@@ -18,7 +18,7 @@ import {
 import Header from '../../components/Header';
 import axios from 'axios';
 import {Consumer} from '../../context/context.js';
-import Articles from '../../components/Articles';
+import Articles from '../../components/Articles/Articles';
 export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)

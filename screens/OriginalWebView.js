@@ -9,7 +9,7 @@ export default class OriginalWebView extends React.Component{
       }
   }
   componentWillMount(){
-    this.setState({uri : this.props.navigation.getParam("OriginalUrl", "ERR")})
+    this.setState({uri : this.props.navigation.getParam("url", "ERR")})
   }
   render(){
     return (

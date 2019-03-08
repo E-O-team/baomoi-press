@@ -22,6 +22,12 @@ import DrawerNavigator from './DrawerNavigator';
 import Header from '../components/Header.js';
 import FollowingScreen from '../screens/FollowingScreen';
 import SourceScreen from '../screens/SourceScreen';
+import NotificationScreen from '../screens/NotificationScreen';
+import TermsScreen from '../screens/TermsScreen';
+import ExchangeGiftsScreen from '../screens/ExchangeGiftsScreen';
+import ExchangeHistoryScreen from '../screens/ExchangeHistoryScreen';
+
+
 const HomeStack = createStackNavigator({
   Home: {
       screen: HomeTabNavigator,
@@ -37,7 +43,12 @@ const HomeStack = createStackNavigator({
   UserProfile: UserProfile,
   UserProfileEdit: UserProfileEdit,
   Following: FollowingScreen,
+  Notifications: NotificationScreen,
+  ExchangeGifts: ExchangeGiftsScreen,
   Source: SourceScreen,
+  Terms: TermsScreen,
+  ExchangeHistory: ExchangeHistoryScreen,
+  WebView: OriginalWebView,
 },{
     headerMode: "float"
 });

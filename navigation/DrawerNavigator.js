@@ -1,6 +1,6 @@
 import {createDrawerNavigator} from 'react-navigation';
 import HomeTabNavigator from './HomeTabNavigator';
-import SideBar from '../components/SideBar';
+import SideBar from '../components/SideBar/SideBar';
 import MainTabNavigator from './MainTabNavigator';
 import Header from '../components/Header.js';
 import { Dimensions } from 'react-native';

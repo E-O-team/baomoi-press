@@ -14,7 +14,7 @@ import {
 import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import axios from 'axios';
-import Articles from '../components/Articles';
+import Articles from '../components/Articles/Articles';
 
 export default class SourceScreen extends React.Component {
     constructor(props) {

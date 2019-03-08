@@ -120,7 +120,7 @@ export default class CustomTabBarBottom extends React.Component {
               <TouchableOpacity onPress={()=>this.onClickBtn()}>
                 <Image
                 source={logo}
-                style={{ width: 60, height: 60, resizeMode:'contain', borderRadius: 70/2}}
+                style={{ width: 60, height: 60, resizeMode:'contain', borderRadius: 60/2}}
                 />
               </TouchableOpacity>
             </View>

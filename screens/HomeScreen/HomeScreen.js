@@ -20,7 +20,7 @@ import { ListItem, List, Tile, Card, Divider, Icon } from 'react-native-elements
 import {
     WebBrowser
 } from 'expo';
-import Articles from '../../components/Articles';
+import Articles from '../../components/Articles/Articles';
 import Header from '../../components/Header.js';
 import { MonoText } from '../../components/StyledText';
 import {Consumer} from '../../context/context.js';

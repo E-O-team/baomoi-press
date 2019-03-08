@@ -20,9 +20,45 @@ export default class FollowingScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state={
-            data: this.props.navigation.getParam("subscribed")
+            data: Object.values(this.props.navigation.getParam("subscribed"))
         }
     }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+                            height: 60,
+                            marginTop: 20,
+                            flexDirection: "row",
+                            backgroundColor: backGround,
+                            alignItems:'center',
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#C6C3BC'
+                        }}
+                    >
+                        <View>
+                            <Icon
+                                name='chevron-left'
+                                size={35}
+                                color={textColor}
+                                onPress={() => {
+                                    navigation.goBack()
+                                    navigation.openDrawer()
+                                }}
+                            />
+                        </View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
+        }
+    }
+
     render(){
         return(
             <Consumer>
@@ -40,19 +76,3 @@ export default class FollowingScreen extends React.Component {
         )
     }
 };
-
-const style = StyleSheet.create({
-    container:{
-        flex: 1,
-        backgroundColor: "white",
-        justifyContent: "center",
-        alignItems: "center",
-    }
-})
-
-// <View style={styles.container}>
-//     <FlatList
-//         data={this.state.data}
-//         renderItem={({ item }) => <Sources item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-//     />
-// </View>
