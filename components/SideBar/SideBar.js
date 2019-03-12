@@ -9,12 +9,14 @@ import {
     SafeAreaView,
     ActivityIndicator,
     AsyncStorage,
+    Linking,
 } from 'react-native';
 import {Consumer} from '../../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import axios from 'axios';
 import MenuItemNoBadge from './MenuItemNoBadge';
 import MenuItemWithBadge from './MenuItemWithBadge';
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 export default class SiderBar extends React.Component {
     constructor() {
         super()
@@ -83,6 +85,19 @@ export default class SiderBar extends React.Component {
     logOut = async () => {
         AsyncStorage.clear()
         this.props.navigation.navigate("AuthLoadingScreen")
+    }
+
+    sendEmail = () => {
+        const url = "mailto:baomoi.press@gmail.com?subject=Góp ý&body="
+        Linking.canOpenURL(url)
+        .then((supported) => {
+            if (!supported) {
+                console.log("Can't handle url: " + url);
+            } else {
+                return Linking.openURL(url);
+            }
+        })
+        .catch((err) => console.error('An error occurred', err));
     }
 
     checkLogedIn = () => {
@@ -238,7 +253,7 @@ export default class SiderBar extends React.Component {
                                 </View>
                                 <View style={{ height: 50, justifyContent: "space-between"}}>
                                     <View></View>
-                                    <Text style={{color: textColor, fontSize: 18}} >Gửi email góp ý</Text>
+                                    <Text style={{color: textColor, fontSize: 18}} onPress={this.sendEmail} >Gửi email góp ý</Text>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1 }} />
                                 </View>
                                 {user &&

@@ -75,7 +75,7 @@ export default class HomeScreen extends React.Component {
                         refreshing: false,
                     })
                 }))
-                .catch(err => console.log(err))
+                .catch(err => console.log("there have been error: " + err))
             }else{
                 axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
                 .then(res => this.setState({

@@ -5,9 +5,11 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  Image
+  Image,
+  NetInfo
 } from 'react-native';
 import splashLogo from '../assets/images/logo-splash.png';
+import HandleNetworkError from '../components/HandleNetworkError';
 import axios from 'axios';
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -19,6 +21,20 @@ export default class AuthLoadingScreen extends React.Component {
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
     let user = await AsyncStorage.getItem('user');
+    // NetInfo.isConnected.fetch().then(isConnected => {
+    //     console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+    // });
+    // function handleFirstConnectivityChange(isConnected) {
+    //     console.log('Then, is ' + (isConnected ? 'online' : 'offxline'));
+    //     NetInfo.isConnected.removeEventListener(
+    //     'connectionChange',
+    //     handleFirstConnectivityChange
+    //     );
+    // }
+    // NetInfo.isConnected.addEventListener(
+    //     'connectionChange',
+    //     handleFirstConnectivityChange
+    // );
     if(user){
         user = JSON.parse(user)
         axios({
@@ -27,7 +43,11 @@ export default class AuthLoadingScreen extends React.Component {
             headers: {'Authorization': 'Bearer ' + user.token},
         })
         .then(() => this.props.navigation.navigate("App"))
-        .catch(err => this.props.navigation.navigate("Auth"))
+        .catch(err => {
+            if(err.response){
+                
+            }
+        })
     }else{
         AsyncStorage.clear()
         this.props.navigation.navigate("App")

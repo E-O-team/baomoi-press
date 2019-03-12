@@ -18,7 +18,6 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import CustomTabBarBottom from '../components/CustomTabBarBottom'
 import UserProfileEdit from '../screens/UserProfileEditScreen';
 import HomeTabNavigator from './HomeTabNavigator';
-import DrawerNavigator from './DrawerNavigator';
 import Header from '../components/Header.js';
 import FollowingScreen from '../screens/FollowingScreen';
 import SourceScreen from '../screens/SourceScreen';

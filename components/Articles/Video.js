@@ -37,7 +37,7 @@ export default class Video extends React.PureComponent {
                                 size={80}
                                 name='play-circle'
                                 type='font-awesome'
-                                color='#C0C0C0'
+                                color='white'
                             />
                           </View>
 

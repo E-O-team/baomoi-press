@@ -32,16 +32,18 @@ export default class FollowingScreen extends React.Component {
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
+
                             height: 60,
                             marginTop: 20,
                             flexDirection: "row",
                             backgroundColor: backGround,
                             alignItems:'center',
                             borderBottomWidth: 1,
-                            borderBottomColor: '#C6C3BC'
+                            borderBottomColor: '#C6C3BC',
+
                         }}
                     >
-                        <View>
+                        <View style={{flex: 1, alignItems: "flex-start"}}>
                             <Icon
                                 name='chevron-left'
                                 size={35}
@@ -52,6 +54,8 @@ export default class FollowingScreen extends React.Component {
                                 }}
                             />
                         </View>
+                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Theo dõi</Text></View>
+                        <View style={{flex: 1}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
