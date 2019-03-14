@@ -5,12 +5,14 @@ import {
     Image,
     Dimensions,
     FlatList,
+    Text
 } from 'react-native';
 import { Divider, Icon } from 'react-native-elements';
 import {Consumer} from '../../context/context.js'
 import { BaomoiText } from '../StyledText';
 import moment from 'moment/min/moment-with-locales'
 import spinner from '../../assets/images/spinner.gif';
+import Ad from '../Ad';
 var { width, height } = Dimensions.get('window');
 
 moment.locale('vi');
@@ -23,6 +25,10 @@ export default class FeaturedPost extends React.Component {
         const index = this.props.index
         return(
             <View>
+                <View style={{height: 70}}>
+                    <Text style={{fontSize: 20, fontWeight: "bold"}}>Sự kiện nóng</Text>
+                    <Ad/>
+                </View>
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => this.props.navigation.navigate("Article", {

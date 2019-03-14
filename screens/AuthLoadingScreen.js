@@ -45,7 +45,7 @@ export default class AuthLoadingScreen extends React.Component {
         .then(() => this.props.navigation.navigate("App"))
         .catch(err => {
             if(err.response){
-                
+
             }
         })
     }else{
