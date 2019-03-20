@@ -209,7 +209,6 @@ export default class RecommendedList extends React.Component{
                                                     name='controller-play'
                                                     type='entypo'
                                                     color='black'
-                                                    iconStyle={{borderWidth:1, borderColor:'white'}}
                                                 />
                                               </View>
 
