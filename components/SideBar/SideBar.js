@@ -11,6 +11,7 @@ import {
     AsyncStorage,
     Linking,
     Alert,
+    Modal,
 } from 'react-native';
 import {Consumer} from '../../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
@@ -185,7 +186,9 @@ export default class SiderBar extends React.Component {
                             )}
 
                             <View>
-                                {this.state.modalVisible && <SignInModal visible={this.state.modalVisible} setModalVisible={this.setModalVisible} navigation={this.props.navigation} setLoading={this.setLoading}/>}
+                                <View>
+                                    {this.state.modalVisible && <SignInModal visible={this.state.modalVisible} setModalVisible={this.setModalVisible} navigation={this.props.navigation} setLoading={this.setLoading}/>}
+                                </View>
                                 <View style={{alignSelf: "flex-end", marginBottom: 7}}>
                                     <Icon
                                         name='close'

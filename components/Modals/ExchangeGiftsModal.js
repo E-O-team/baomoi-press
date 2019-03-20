@@ -108,6 +108,7 @@ export default class ExchangeGiftsModal extends React.Component {
                 animationType="fade"
                 transparent={true}
                 visible={this.state.modalVisible}
+                onRequestClose={() => this.props.setModalVisible(!this.state.modalVisible, null)}
             >
             <View style={{alignItems: "center", justifyContent:"center", flex:1, backgroundColor: 'rgba(0,0,0,0.5)'}}
 
