@@ -10,18 +10,23 @@ import {
     ActivityIndicator,
     AsyncStorage,
     Linking,
+    Alert,
 } from 'react-native';
 import {Consumer} from '../../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import axios from 'axios';
 import MenuItemNoBadge from './MenuItemNoBadge';
 import MenuItemWithBadge from './MenuItemWithBadge';
+import SignInModal from '../../components/Modals/SignInModal';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+const FB = 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=410408676429078&height=200&width=200&ext=1555596027&hash=AeRSIiZ4P4tf_hA_'
 export default class SiderBar extends React.Component {
     constructor() {
         super()
         this.state={
             user: null,
+            modalVisible: false,
+            loading: false
         }
     }
     componentWillMount() {
@@ -66,9 +71,7 @@ export default class SiderBar extends React.Component {
 
     handleSubscribedPressed = () => {
         if(this.checkLogedIn()){
-            this.props.navigation.navigate("Following", {
-                subscribed: this.state.user.subscribed,
-            })
+            this.props.navigation.navigate("Following")
         }
     }
 
@@ -106,6 +109,18 @@ export default class SiderBar extends React.Component {
         }else{
             return false
         }
+    }
+
+    setModalVisible = (visible) => {
+        this.setState({
+            modalVisible: visible,
+        });
+    }
+
+    setLoading = (isLoading) => {
+        this.setState({
+            loading: isLoading
+        })
     }
 
 
@@ -147,7 +162,7 @@ export default class SiderBar extends React.Component {
                                             overlayContainerStyle={styles.avatar}
                                             medium
                                             rounded
-                                            source={{uri: user.avatar_urls['96'] || defaultImg}}
+                                            source={{uri: user.custom_avatar || defaultImg}}
                                         />
                                     <View style={{justifyContent: "center", alignItems: "flex-start"}}>
                                             <Text style={{color: "white", fontSize: 20,}}>{user.name}</Text>
@@ -165,16 +180,12 @@ export default class SiderBar extends React.Component {
                                         reverse
                                         color="#a6122b"
                                     />
-                                    <TouchableOpacity
-                                        activeOpacity={0.5}
-                                        onPress={() => this.props.navigation.navigate("Auth")}
-                                    >
-                                        <Text style={{color: "white", fontSize: 20}}>Đăng nhập</Text>
-                                    </TouchableOpacity>
+                                    <Button buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} onPress={() => this.setModalVisible(!this.state.modalVisible)} />
                                 </View>
                             )}
 
                             <View>
+                                {this.state.modalVisible && <SignInModal visible={this.state.modalVisible} setModalVisible={this.setModalVisible} navigation={this.props.navigation} setLoading={this.setLoading}/>}
                                 <View style={{alignSelf: "flex-end", marginBottom: 7}}>
                                     <Icon
                                         name='close'

@@ -25,10 +25,9 @@ export default class FeaturedPost extends React.Component {
         const index = this.props.index
         return(
             <View>
-                <View style={{height: 70}}>
-                    <Text style={{fontSize: 20, fontWeight: "bold"}}>Sự kiện nóng</Text>
-                    <Ad/>
-                </View>
+
+                <Ad/>
+
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => this.props.navigation.navigate("Article", {
@@ -37,7 +36,7 @@ export default class FeaturedPost extends React.Component {
                 >
                     <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
                         <View style={{flexDirection: 'row', alignItems:'center'}}>
-                            <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
+                            <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 4, marginBottom: 3}}></View>
                             <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>Tiêu Điểm</BaomoiText>
                         </View>
                         <Icon

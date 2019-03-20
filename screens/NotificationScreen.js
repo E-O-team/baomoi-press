@@ -27,7 +27,7 @@ import {
 } from 'react-native-elements';
 import Sources from '../components/Sources';
 import axios from 'axios';
-import ExchangeGiftsModal from '../components/ExchangeGiftsModal';
+
 
 export default class NotificationScreen extends React.Component {
     constructor(props) {

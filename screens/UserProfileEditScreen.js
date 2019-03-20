@@ -1,7 +1,12 @@
 import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage, Platform, DatePickerAndroid, SafeAreaView } from 'react-native';
 import axios from 'axios';
-import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import DatePickerios from '../components/DatePickerios';
+import DatePickerandroid from '../components/DatePickerandroid';
+import DatePick from '../components/DatePick';
+import {Consumer} from '../context/context.js'
+import dateFormat from 'dateformat';
+import { Button, FormLabel, FormInput, FormValidationMessage, Icon } from 'react-native-elements';
 export default class UserProfileEdit extends React.Component {
     constructor(props){
         super(props)
@@ -9,6 +14,40 @@ export default class UserProfileEdit extends React.Component {
             user: {}
         }
 
+    }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+                        height: 60,
+                        marginTop: 20,
+                        flexDirection: "row",
+                        backgroundColor: backGround,
+                        alignItems:'center',
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#C6C3BC'
+                        }}
+                    >
+                        <View>
+                            <Icon
+                                name='chevron-left'
+                                size={35}
+                                color={textColor}
+                                onPress={() => {
+                                    navigation.goBack()
+                                }}
+                            />
+                        </View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
+        }
     }
     componentWillMount() {
         const user = this.props.navigation.getParam("user", null)
@@ -46,16 +85,44 @@ export default class UserProfileEdit extends React.Component {
         this.props.navigation.navigate("Auth")
     }
 
+    handleOnDateChange = (newDate) => {
+        this.setState({birth_date: newDate.toString()})
+    }
+
+    calendarLaunched = async(date) => {
+        // console.log(date);
+        try {
+            const {action, year, month, day} = await DatePickerAndroid.open({
+                // Use `new Date()` for current date.
+                // May 25 2020. Month 0 is January.
+                date: new Date(date),
+                mode: "spinner"
+            });
+            if (action !== DatePickerAndroid.dismissedAction) {
+                if(action == DatePickerAndroid.dateSetAction){
+                    var birth_date = new Date(year, month, day);
+                    this.handleOnDateChange(birth_date)
+                }
+                // Selected year, month (0-11), day
+
+            }
+        }
+        catch ({code, message}) {
+            console.warn('Cannot open date picker', message);
+        }
+    }
+
+
     render(){
         const {user} = this.state
         return(
             <ScrollView
                 horizontal={false}
             >
-                <FormLabel>ngày sinh</FormLabel>
-                <FormInput placeholder={user.birth_date} onChangeText={(text) => this.setState({birth_date: text})}/>
+
+                <DatePick date={user.birth_date} handleOnDateChange={this.handleOnDateChange}/>
                 <FormLabel>giới tính</FormLabel>
-                <FormInput placeholder={user.gender[0]} onChangeText={(text) => this.setState({gender: text})}/>
+                <FormInput placeholder={user.gender} onChangeText={(text) => this.setState({gender: text})}/>
                 <FormLabel>sở thích</FormLabel>
                 <FormInput placeholder={user.so_thich} onChangeText={(text) => this.setState({so_thich: text})}/>
                 <FormLabel>số điện thoại</FormLabel>

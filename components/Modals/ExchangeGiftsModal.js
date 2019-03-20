@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import {
     Consumer
-} from '../context/context.js'
+} from '../../context/context.js'
 import {
     Avatar,
     Card,
@@ -26,12 +26,12 @@ import {
     Badge,
     FormValidationMessage
 } from 'react-native-elements';
-import Sources from '../components/Sources';
-import gmobile from '../assets/images/ExchangeGiftsScreen/icon-Gmobile.jpg';
-import mobiphone from '../assets/images/ExchangeGiftsScreen/icon-mobiphone.jpg';
-import vietnammobi from '../assets/images/ExchangeGiftsScreen/icon-vietnammobi.png';
-import viettel from '../assets/images/ExchangeGiftsScreen/icon-viettel.png';
-import vinaphone from '../assets/images/ExchangeGiftsScreen/icon-vinaphone.png';
+import Sources from '../../components/Sources';
+import gmobile from '../../assets/images/ExchangeGiftsScreen/icon-Gmobile.jpg';
+import mobiphone from '../../assets/images/ExchangeGiftsScreen/icon-mobiphone.jpg';
+import vietnammobi from '../../assets/images/ExchangeGiftsScreen/icon-vietnammobi.png';
+import viettel from '../../assets/images/ExchangeGiftsScreen/icon-viettel.png';
+import vinaphone from '../../assets/images/ExchangeGiftsScreen/icon-vinaphone.png';
 import axios from 'axios';
 const Carriers = [
     {
@@ -116,7 +116,7 @@ export default class ExchangeGiftsModal extends React.Component {
                     <View>
                         <View style={{flexDirection: "row", alignItems: "center", height: 32, justifyContent: "space-between", backgroundColor:"#555358"}}>
                             <Text style={{color: "white", marginLeft: 3}}>{this.props.value}</Text>
-                            
+
                             <Icon
                                 name='close'
                                 type='evilicon'

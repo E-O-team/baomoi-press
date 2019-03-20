@@ -9,13 +9,15 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import { Facebook } from 'expo';
 import axios from 'axios';
 import { ListItem, List, Tile, Card, Divider, Icon, FormLabel, FormInput, FormValidationMessage,Button, } from 'react-native-elements'
 import logo from '../assets/images/logo-press.png';
 const FBAppID = "418043712281827"
+const {width} = Dimensions.get("window")
 export default class SignInScreen extends React.Component {
     constructor(){
         super()
@@ -59,8 +61,7 @@ export default class SignInScreen extends React.Component {
         })
         .then((response) => {
             let user = response.data
-            console.log(user);
-            this.signInApp(user)
+            this.signInApp(user, picture)
         })
         .catch((err) => {
             console.log(err.response.data);
@@ -70,24 +71,39 @@ export default class SignInScreen extends React.Component {
         });
     }
 
-    signInApp = (user) => {
+    signInApp = (user, picture) => {
         axios({
             method: "GET",
             url: 'https://baomoi.press/wp-json/wp/v2/current_user',
             headers: {'Authorization': 'Bearer ' + user.token},
         })
         .then(res => {
+            console.log(user.token);
             let id = res.data.data.ID
             return axios({
                 method: "GET",
                 url: "https://baomoi.press/wp-json/wp/v2/users/" + id,
                 headers: {'Authorization': 'Bearer ' + user.token},
             })
-            .then(res => {
-                res.data.token = user.token
+        })
+        .then(res => {
+            res.data.token = user.token
+            const data = new FormData()
+            data.append("avatar_url", picture.data.url)
+            // const data = {
+            //     avatar_url: picture.data.url
+            // }
+            axios({
+                method: "POST",
+                url: 'https://baomoi.press/wp-json/wp/v2/update_user_avatar',
+                headers: {'Authorization': 'Bearer ' + user.token},
+                data: data
+            })
+            .then(() => {
                 AsyncStorage.setItem('user', JSON.stringify(res.data))
                 this.props.navigation.navigate('App')
             })
+
         })
         .catch(err => console.log(err))
     }
@@ -128,11 +144,13 @@ export default class SignInScreen extends React.Component {
             data: data
         })
         .then(res => {
+            // NEW ACCOUNT
             if(res.data.code == 200){
                 this.signIn(email, id, name, picture)
             }
         })
         .catch(err => {
+            // ACCOUNT ALREADY EXIST, PROCEED TO LOGIN
             if(err.response.data.code == 406){
                 this.signIn(email, id, name, picture)
             }
@@ -141,28 +159,24 @@ export default class SignInScreen extends React.Component {
     render(){
         return(
             <SafeAreaView style={styles.container}>
-                <View>
-                    <View style={{width: 150, height: 150, alignSelf: "center"}}>
-                        <Image
-                            source={logo}
-                            style={{ width: 150, height: 150, alignSelf: 'center' }}
-                            resizeMode="contain"
-                        />
-                    </View>
-                    <View styles={styles.form}>
-                        <FormLabel>User Name</FormLabel>
-                        <FormInput textContentType="username" containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({username: text})}/>
-                        <FormLabel>Password</FormLabel>
-                        <FormInput textContentType="password" secureTextEntry={true} containerStyle={styles.formInputContainerStyle} onChangeText={(text) => this.setState({password: text})}/>
-                    </View>
-                    <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
-                    <View>
-                        <Button buttonStyle={styles.button} title="Đăng Nhập" loading={this.state.loading} onPress={this.FBLogin}/>
-                        <Button buttonStyle={styles.button} title="Trở Về" onPress={() => this.props.navigation.navigate("App")}/>
-                    </View>
+                <View style={{width: width-60, height: width-60, alignSelf: "center"}}>
+                    <Image
+                        source={logo}
+                        style={{ width: width-60, height: width-60, alignSelf: 'center' }}
+                        resizeMode="contain"
+                    />
                 </View>
-                <View style={{justifyContent: "flex-end", marginBottom: 20}}>
-                    <Button buttonStyle={styles.button} title="Đăng Kí" onPress={() => this.props.navigation.navigate("SignUp")}/>
+                <View>
+                    <Button
+                        backgroundColor="#4a6da7"
+                        buttonStyle={{margin: 5}}
+                        raised
+                        icon={{name: 'facebook-official', type: "font-awesome", reverse: true}}
+                        title='Đăng nhập bằng facebook'
+                        loading={this.state.loading}
+                        onPress={this.FBLogin}
+                    />
+                    <Button buttonStyle={styles.button} title="Trở Về" onPress={() => this.props.navigation.navigate("App")}/>
                 </View>
             </SafeAreaView>
         )

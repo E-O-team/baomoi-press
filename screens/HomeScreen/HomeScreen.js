@@ -28,6 +28,7 @@ import { BaomoiText } from '../../components/StyledText';
 import axios from 'axios';
 import moment from 'moment/min/moment-with-locales'
 import Ad from '../../components/Ad';
+import InterstitialAd from '../../components/InterstitialAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 

@@ -23,7 +23,7 @@ import VND200K from "../assets/images/200kVND.jpg"
 import VND500K from "../assets/images/500kVND.jpg"
 import USD50 from "../assets/images/50USD.jpg"
 import USD100 from "../assets/images/100USD.jpg"
-import ExchangeGiftsModal from '../components/ExchangeGiftsModal';
+import ExchangeGiftsModal from '../components/Modals/ExchangeGiftsModal';
 
 const {width} = Dimensions.get("window")
 export default class ExchangeGiftsScreen extends React.PureComponent {
@@ -140,7 +140,7 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                                             <Text style={{color: "#01969a", fontSize: 30, fontWeight: "bold"}}>0</Text>
                                             <Text style={{color: "black", fontSize: 20}}>Bạn bè đã mời ></Text>
                                         </View>
-                                        <View style={{ backgroundColor: "#949494", height: 100, width: 2}}></View>
+                                        <View style={{ backgroundColor: "#949494", height: 90, width: 2}}></View>
                                         <View style={{ flex:1, alignItems: "center", justifyContent: "center"}}>
                                             <Text style={{color: "#01969a", fontSize: 30, fontWeight: "bold"}}>{this.props.navigation.getParam("xu")}</Text>
                                             <View style={{flexDirection: "row", alignItems: "center"}}>

@@ -25,14 +25,6 @@ export default class SourceScreen extends React.Component {
         }
     }
 
-    componentWillMount() {
-        axios.get("https://baomoi.press//wp-json/wp/v2/posts?filter[taxonomy]=source&filter[term]=" + this.state.source.slug)
-        .then(res => this.setState({
-            articles: res.data
-        }))
-        .catch(err => console.log(err))
-    }
-
     static navigationOptions = ({navigation}) => {
         return {
             tabBarVisible: false,
@@ -52,8 +44,17 @@ export default class SourceScreen extends React.Component {
 
                         }}
                     >
-
-                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Theo dõi</Text></View>
+                        <View style={{flex: 1, alignItems: "flex-start"}}>
+                            <Icon
+                                name='chevron-left'
+                                size={35}
+                                color={textColor}
+                                onPress={() => {
+                                    navigation.goBack()
+                                }}
+                            />
+                        </View>
+                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Nguồn tin</Text></View>
                         <View style={{flex: 1}}></View>
                     </SafeAreaView>
                 )}
@@ -62,31 +63,21 @@ export default class SourceScreen extends React.Component {
         }
     }
 
+    componentWillMount() {
+        axios.get("https://baomoi.press//wp-json/wp/v2/posts?filter[taxonomy]=source&filter[term]=" + this.state.source.slug)
+        .then(res => this.setState({
+            articles: res.data
+        }))
+        .catch(err => console.log(err))
+    }
+
+
     render(){
         const {source} = this.state
         return(
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{backgroundColor: backGround}}>
-                        <View style={{flex: 1, alignItems: "flex-start", padding: 5, height: 60,}}>
-                            <Icon
-                                name='chevron-left'
-                                size={35}
-                                color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                    navigation.openDrawer()
-                                }}
-                            />
-                            <View>
-                                <Avatar
-                                    medium
-                                    rounded
-                                    source={{uri: this.state.source.img || defaultImg}}
-                                />
-                                <Text>{this.state.source.name}</Text>
-                            </View>
-                        </View>
                         <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                         <FlatList
                             initialNumToRender={5}

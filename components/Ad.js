@@ -13,7 +13,6 @@ export default class Ad extends React.Component {
             return (
                 <View style={styles.container}>
                     <AdMobBanner
-                    style={{flex: 1}}
                     bannerSize="banner"
                     adUnitID="ca-app-pub-8065933325498833/1824869099"
                     testDeviceID="ios"
@@ -25,7 +24,6 @@ export default class Ad extends React.Component {
             return (
                 <View style={styles.container}>
                     <AdMobBanner
-                    style={{flex: 1}}
                     bannerSize="banner"
                     adUnitID="ca-app-pub-8065933325498833/1302356427"
                     testDeviceID="android"
@@ -38,7 +36,9 @@ export default class Ad extends React.Component {
     }
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      alignItems: "center"
+     height: 70,
+     alignItems: "center",
+     justifyContent: "center",
+
   },
 });

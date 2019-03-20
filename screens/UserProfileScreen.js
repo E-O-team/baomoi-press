@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, AsyncStorage, StyleSheet, TouchableOpacity, Picker, ScrollView } from 'react-native';
+import { Text, View, AsyncStorage, StyleSheet, TouchableOpacity, Picker, ScrollView, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import { Avatar, Card, Icon, Button } from 'react-native-elements';
 import {Consumer} from '../context/context.js'
+import dateFormat from 'dateformat';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 export default class UserProfile extends React.PureComponent {
     constructor() {
@@ -11,6 +12,42 @@ export default class UserProfile extends React.PureComponent {
             user: {}
         }
     }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+                        height: 60,
+                        marginTop: 20,
+                        flexDirection: "row",
+                        backgroundColor: backGround,
+                        alignItems:'center',
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#C6C3BC'
+                        }}
+                    >
+                        <View>
+                            <Icon
+                                name='chevron-left'
+                                size={35}
+                                color={textColor}
+                                onPress={() => {
+                                    navigation.goBack()
+                                    navigation.openDrawer()
+                                }}
+                            />
+                        </View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
+        }
+    }
+
     componentWillMount() {
         AsyncStorage.getItem('user')
         .then(res => {
@@ -53,7 +90,7 @@ export default class UserProfile extends React.PureComponent {
                             large
                             width={100}
                             rounded
-                            source={{uri: user.avatar_urls['96'] || defaultImg}}
+                            source={{uri: user.custom_avatar || defaultImg}}
                         />
                     }
                     <View style={styles.name_email}>
@@ -67,6 +104,7 @@ export default class UserProfile extends React.PureComponent {
                             <Text style={styles.menuItemText}>Xu</Text>
                             <Text style={{color: "#ffb040", fontSize: 35}}>{user.xu}</Text>
                         </View>
+                        <View style={{ backgroundColor: "#949494", height: 100, width: 2}}></View>
                         <View style={styles.menuItem}>
                             <Text style={styles.menuItemText}>Exp</Text>
                             <Text style={{color: "#ffb040", fontSize: 35}}>{user.exp}</Text>
@@ -83,7 +121,7 @@ export default class UserProfile extends React.PureComponent {
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Ngày Sinh</Text>
-                            <Text style={{fontSize: 20, color: '#696969'}}>{user.birth_date}</Text>
+                            <Text style={{fontSize: 20, color: '#696969'}}>{dateFormat(user.birth_date, "dd-mm-yyyy")}</Text>
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Giới Tính</Text>
@@ -124,6 +162,7 @@ export default class UserProfile extends React.PureComponent {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "#f3f3f3"
     },
     avatar_name_email: {
         padding: 10,

@@ -19,6 +19,7 @@ import Header from '../../components/Header';
 import axios from 'axios';
 import {Consumer} from '../../context/context.js';
 import Articles from '../../components/Articles/Articles';
+import Ad from '../../components/Ad';
 export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)
@@ -128,6 +129,7 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                                 keyExtractor={item => item.id.toString()}
                             />
                         </View>
+                        <Ad/>
                         <FlatList
                             onScrollBeginDrag={this.handleBeginDrag}
                             onScrollEndDrag={this.handleEndDrag}
