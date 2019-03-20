@@ -15,14 +15,16 @@ import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import AuthorSubscription from './AuthorSubscription';
 import axios from 'axios';
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
-export default class Sources extends React.PureComponent {
+export default class Sources extends React.Component {
     constructor(props){
         super(props)
         this.state = {
             source: {},
             allSources: [],
-            user:{}
+            user:{},
+            img: defaultImg,
         }
     }
 
@@ -36,12 +38,17 @@ export default class Sources extends React.PureComponent {
                 source: sourceRes.data,
                 allSources: allSourcesRes.data
             }, () => {
-                // this.state.allSources.forEach(item =>{
-                //     if(this.state.source.link == item.url){
-                //         console.log(item);
-                //     }
-                // })
-                console.log(this.state.source.taxonomy);
+                this.state.allSources.forEach(item =>{
+                    if(this.state.source.link == item.url){
+                        let tempSource = this.state.source
+                        tempSource.img = item.img
+                        this.setState({
+                            source: tempSource,
+                            img: tempSource.img
+                        })
+                    }
+                })
+
             })
         }))
         .catch(err => console.log(err))
@@ -70,8 +77,13 @@ export default class Sources extends React.PureComponent {
                             >
                                 <View style={{justifyContent: "space-between"}}>
                                     <View></View>
-                                    <View style={{marginTop: 10, marginBottom: 10}}>
-                                        <Text style={{color: textColor, fontWeight: "bold"}}>{this.state.source.name}</Text>
+                                    <View style={{marginTop: 10, marginBottom: 10, flexDirection: "row", alignItems: "center"}}>
+                                        <Avatar
+                                            medium
+                                            rounded
+                                            source={{uri: this.state.img || defaultImg}}
+                                        />
+                                        <Text style={{color: textColor, fontWeight: "bold", fontSize: 17, marginLeft: 10}}>{this.state.source.name}</Text>
                                     </View>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                                 </View>

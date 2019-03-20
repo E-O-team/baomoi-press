@@ -20,8 +20,34 @@ export default class FollowingScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state={
-            data: Object.values(this.props.navigation.getParam("subscribed"))
+            data: []
         }
+    }
+
+    componentWillMount() {
+        AsyncStorage.getItem('user')
+        .then(res => {
+            if(res){
+                const user = JSON.parse(res)
+                this.setState({
+                    user: user,
+                    token: user.token
+                }, () => {
+                    axios({
+                        method: "GET",
+                        url: "https://baomoi.press/wp-json/wp/v2/users/" + this.state.user.id,
+                        headers: {'Authorization': 'Bearer ' + this.state.user.token},
+                    })
+                    .then((res) => this.setState({
+                        data: Object.values(res.data.subscribed)
+                    }))
+                    .catch(err => console.log(err))
+
+                })
+            }else{
+                this.props.navigation.navigate("Auth")
+            }
+        })
     }
 
     static navigationOptions = ({navigation}) => {
@@ -32,16 +58,18 @@ export default class FollowingScreen extends React.Component {
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
+
                             height: 60,
                             marginTop: 20,
                             flexDirection: "row",
                             backgroundColor: backGround,
                             alignItems:'center',
                             borderBottomWidth: 1,
-                            borderBottomColor: '#C6C3BC'
+                            borderBottomColor: '#C6C3BC',
+
                         }}
                     >
-                        <View>
+                        <View style={{flex: 1, alignItems: "flex-start"}}>
                             <Icon
                                 name='chevron-left'
                                 size={35}
@@ -52,6 +80,8 @@ export default class FollowingScreen extends React.Component {
                                 }}
                             />
                         </View>
+                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Theo dõi</Text></View>
+                        <View style={{flex: 1}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>

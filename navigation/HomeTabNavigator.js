@@ -7,7 +7,6 @@ import Header from '../components/Header.js';
 import {
     StyleSheet,
 } from 'react-native';
-console.log(Consumer);
 export default createMaterialTopTabNavigator({
     Home: {
         screen: HomeScreen,

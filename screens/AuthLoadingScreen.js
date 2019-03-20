@@ -5,20 +5,55 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  Image
+  Image,
+  NetInfo,
+  Alert,
 } from 'react-native';
 import splashLogo from '../assets/images/logo-splash.png';
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded
+} from 'expo';
+import HandleNetworkError from '../components/HandleNetworkError';
 import axios from 'axios';
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
-    this._bootstrapAsync();
+    this.checkConnect()
+
+
+  }
+
+  checkConnect = () => {
+      NetInfo.isConnected.fetch().then(isConnected => {
+          if(isConnected == false){
+              Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
+          }else if (isConnected == true) {
+              console.log("connected");
+              NetInfo.addEventListener('connectionChange', this.handleFirstConnectivityChange);
+              this._bootstrapAsync();
+          }
+      });
+
+  }
+
+  handleFirstConnectivityChange = (isConnected) => {
+      console.log(isConnected);
+      if(isConnected.type !== "none"){
+          console.log("connected!!");
+      }else{
+          Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
+      }
   }
 
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
     let user = await AsyncStorage.getItem('user');
+
+
     if(user){
         user = JSON.parse(user)
         axios({
@@ -27,7 +62,11 @@ export default class AuthLoadingScreen extends React.Component {
             headers: {'Authorization': 'Bearer ' + user.token},
         })
         .then(() => this.props.navigation.navigate("App"))
-        .catch(err => this.props.navigation.navigate("Auth"))
+        .catch(err => {
+            if(err.response){
+
+            }
+        })
     }else{
         AsyncStorage.clear()
         this.props.navigation.navigate("App")

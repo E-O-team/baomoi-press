@@ -20,10 +20,6 @@ export default class SignUpScreen extends React.Component {
         }
     }
     handleSubmit = () => {
-        // const data = new FormData()
-        // data.append("email", this.state.email)
-        // data.append("username", this.state.username)
-        // data.append("password", this.state.password)
         const data = {
             email: this.state.email,
             username: this.state.username,

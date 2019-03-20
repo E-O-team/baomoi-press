@@ -27,6 +27,8 @@ import {Consumer} from '../../context/context.js';
 import { BaomoiText } from '../../components/StyledText';
 import axios from 'axios';
 import moment from 'moment/min/moment-with-locales'
+import Ad from '../../components/Ad';
+import InterstitialAd from '../../components/InterstitialAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 
@@ -75,7 +77,7 @@ export default class HomeScreen extends React.Component {
                         refreshing: false,
                     })
                 }))
-                .catch(err => console.log(err))
+                .catch(err => console.log("there have been error: " + err))
             }else{
                 axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
                 .then(res => this.setState({
@@ -130,21 +132,19 @@ export default class HomeScreen extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{flex: 1, backgroundColor: backGround}}>
-
-
-                            <FlatList
-                                onScroll={this.handleOnScroll}
-                                initialNumToRender={5}
-                                data={this.state.articles}
-                                extraData={this.state.articles}
-                                renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                                keyExtractor={item => item.id.toString()}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.handleRefresh}
-                                onEndReached={() => this.handleLoadMore()}
-                                onEndReachedThreshold={0.5}
-                                scrollEventThrottle={16}
-                            />
+                        <FlatList
+                            onScroll={this.handleOnScroll}
+                            initialNumToRender={5}
+                            data={this.state.articles}
+                            extraData={this.state.articles}
+                            renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
+                            keyExtractor={item => item.id.toString()}
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.handleRefresh}
+                            onEndReached={() => this.handleLoadMore()}
+                            onEndReachedThreshold={0.5}
+                            scrollEventThrottle={16}
+                        />
                   </View>
                 )}
             </Consumer>
@@ -169,47 +169,3 @@ const style = StyleSheet.create({
         padding: 10,
     },
 })
-
-const categories = [
-    {
-        name: "Thời trang",
-        id: 144,
-    },
-    {
-        name: "Làm đẹp",
-        id: 143,
-    },
-]
-
-// <View style={{height: 37}}>
-//     <FlatList
-//         showsHorizontalScrollIndicator={false}
-//         horizontal={true}
-//         keyExtractor={item => item.id.toString()}
-//         data={this.state.categories}
-//         renderItem={({item}) =>
-//         <Consumer>
-//         {({textColor, backGround}) => (
-//             <TouchableOpacity
-//                 onPress={() => this.setCategory(item.id)}
-//                 style={{backgroundColor: backGround,
-//                         padding: 10,}}
-//                 underlayColor="white"
-//                 activeOpacity={1}
-//             >
-//               {
-//                 (item.id === this.state.selectedCategory)?
-//                 <View>
-//                   <Text style={{color: "red"}}>{item.name}</Text>
-//                   <View style={{height: 1, backgroundColor: 'red'}}></View>
-//                 </View> : <Text style={{color: textColor}}>{item.name}</Text>
-//               }
-//
-//             </TouchableOpacity>
-//           )}
-//           </Consumer>
-//
-//         }
-//         keyExtractor={item => item.id.toString()}
-//     />
-// </View>

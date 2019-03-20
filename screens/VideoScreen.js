@@ -4,6 +4,7 @@ import axios from 'axios';
 import Articles from '../components/Articles/Articles';
 import Header from '../components/Header.js';
 import {Consumer} from '../context/context.js';
+import Ad from '../components/Ad';
 
 
 export default class VideoScreen extends React.Component{
@@ -77,27 +78,30 @@ export default class VideoScreen extends React.Component{
      }
   }
 
-  render(){
+    render(){
     return(
-      <View style={{flex: 1, padding: 10}}>
-        <Consumer>
-          {({textColor, backGround}) => (
-          <FlatList
-              onScrollBeginDrag={this.handleBeginDrag}
-              onScrollEndDrag={this.handleEndDrag}
-              onScroll={this.handleOnScroll}
-              data={this.state.articles}
-              renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} video={true} ui={{textColor, backGround}}/>}
-              keyExtractor={item => item.id.toString()}
-              refreshing={this.state.refreshing}
-              ListFooterComponent={() => <ActivityIndicator size="large" animating />}
-              onRefresh={this.handleRefresh}
-              onEndReached={() => this.handleLoadMore()}
-              onEndReachedThreshold={0.7}
-          />
-        )}
-        </Consumer>
-      </View>
+        <View style={{flex: 1, padding: 10}}>
+            <Consumer>
+                {({textColor, backGround}) => (
+                <View>
+                    <Ad/>
+                    <FlatList
+                    onScrollBeginDrag={this.handleBeginDrag}
+                    onScrollEndDrag={this.handleEndDrag}
+                    onScroll={this.handleOnScroll}
+                    data={this.state.articles}
+                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} video={true} ui={{textColor, backGround}}/>}
+                    keyExtractor={item => item.id.toString()}
+                    refreshing={this.state.refreshing}
+                    ListFooterComponent={() => <ActivityIndicator size="large" animating />}
+                    onRefresh={this.handleRefresh}
+                    onEndReached={() => this.handleLoadMore()}
+                    onEndReachedThreshold={0.7}
+                    />
+                </View>
+            )}
+            </Consumer>
+        </View>
     )
-  }
+    }
 }

@@ -15,13 +15,51 @@ import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import axios from 'axios';
 import Articles from '../components/Articles/Articles';
-
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 export default class SourceScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             source: this.props.navigation.getParam("source"),
             articles: []
+        }
+    }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+
+                            height: 60,
+                            marginTop: 20,
+                            flexDirection: "row",
+                            backgroundColor: backGround,
+                            alignItems:'center',
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#C6C3BC',
+
+                        }}
+                    >
+                        <View style={{flex: 1, alignItems: "flex-start"}}>
+                            <Icon
+                                name='chevron-left'
+                                size={35}
+                                color={textColor}
+                                onPress={() => {
+                                    navigation.goBack()
+                                }}
+                            />
+                        </View>
+                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Nguồn tin</Text></View>
+                        <View style={{flex: 1}}></View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
         }
     }
 
@@ -33,13 +71,13 @@ export default class SourceScreen extends React.Component {
         .catch(err => console.log(err))
     }
 
+
     render(){
         const {source} = this.state
         return(
             <Consumer>
                 {({textColor, backGround}) => (
-                    <View style={{backgroundColor: backGround, padding: 5}}>
-                        <Text style={{color: textColor, fontSize: 40, fontWeight: "bold"}}>{source.name}</Text>
+                    <View style={{backgroundColor: backGround}}>
                         <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
                         <FlatList
                             initialNumToRender={5}

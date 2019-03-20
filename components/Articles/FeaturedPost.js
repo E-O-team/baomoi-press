@@ -5,12 +5,14 @@ import {
     Image,
     Dimensions,
     FlatList,
+    Text
 } from 'react-native';
 import { Divider, Icon } from 'react-native-elements';
 import {Consumer} from '../../context/context.js'
 import { BaomoiText } from '../StyledText';
 import moment from 'moment/min/moment-with-locales'
 import spinner from '../../assets/images/spinner.gif';
+import Ad from '../Ad';
 var { width, height } = Dimensions.get('window');
 
 moment.locale('vi');
@@ -23,6 +25,9 @@ export default class FeaturedPost extends React.Component {
         const index = this.props.index
         return(
             <View>
+
+                <Ad/>
+
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => this.props.navigation.navigate("Article", {
@@ -31,7 +36,7 @@ export default class FeaturedPost extends React.Component {
                 >
                     <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
                         <View style={{flexDirection: 'row', alignItems:'center'}}>
-                            <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 5, marginBottom: 3}}></View>
+                            <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 4, marginBottom: 3}}></View>
                             <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>Tiêu Điểm</BaomoiText>
                         </View>
                         <Icon
