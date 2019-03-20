@@ -28,8 +28,8 @@ export default class CommentList extends React.Component{
 
             {
             (this.props.comments.length != 0) ?
-              <View>
-                <BaomoiText style={{fontSize : 25, marginTop: 20, color: this.props.ui.textColor}}>Bình luận mới nhất</BaomoiText>
+              <View style={{padding: 10}}>
+                <BaomoiText style={{fontSize : 18, marginTop: 20, color: '#003333'}}>Bình luận mới nhất</BaomoiText>
                  <FlatList
                       style={styles.root}
                       data={this.props.comments}
@@ -44,23 +44,20 @@ export default class CommentList extends React.Component{
                         return(
                           <View style={styles.container}>
                             <TouchableOpacity onPress={() => {}}>
-                              <Avatar
-                                size="small"
+                              <Image
                                 source={{uri: Notification.author_avatar_urls['96']}}
-                                onPress={() => console.log(image)}
-                                activeOpacity={0.7}
+                                style={styles.image}
                               />
                             </TouchableOpacity>
                             <View style={styles.content}>
-                              <View style={styles.contentHeader}>
-                                <BaomoiText  style={{fontSize:16*this.props.ui.fontSizeRatio,
-                                              fontWeight:"bold",
-                                              color:this.props.ui.textColor}}>{Notification.author_name} </BaomoiText>
-                                <BaomoiText style={[styles.time,{fontSize:11*this.props.ui.fontSizeRatio}]}>
-                                  {moment(Notification.date).fromNow()}
-                                </BaomoiText>
-                              </View>
-                              <HTMLView value={Notification.content.rendered} stylesheet={{p:{color:this.props.ui.textColor, fontSize: 15* this.props.ui.fontSizeRatio}}}/>
+
+                                <Text>
+                                <BaomoiText style={{color:this.props.ui.textColor, fontSize: 18* this.props.ui.fontSizeRatio}}>{Notification.content.rendered.replace('<p>','').replace('</p>','').replace('\n','')}</BaomoiText>
+
+
+                                <BaomoiText  style={{fontSize:10*this.props.ui.fontSizeRatio,
+                                                      color:'#808080'}}> - {Notification.author_name} - {moment(Notification.date).fromNow()}</BaomoiText>
+                                </Text>
                             </View>
                           </View>
                         );
@@ -86,27 +83,29 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   content: {
-    marginLeft: 16,
+    marginLeft: 10,
     flex: 1,
+    flexDirection: 'row',
+    alignItems:'flex-start'
   },
   contentHeader: {
-    flexDirection: 'row',
+
     marginBottom: 6,
-    alignItems: 'center'
+    justifyContent:'center'
   },
   separator: {
     height: 1,
     backgroundColor: "#CCCCCC"
   },
   image:{
-    width:45,
-    height:45,
-    borderRadius:20,
-    marginLeft:20
+    width:30,
+    height:30,
+    borderRadius:5,
+    marginLeft:5
   },
   time:{
     color:"#808080",
-    marginLeft: 5,
+    marginLeft: 10,
   },
   name:{
     fontSize:16,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Linking, AsyncStorage,Keyboard,ScrollView,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform, Share, Image, PixelRatio, Modal } from 'react-native';
+import { Text, View, Linking, AsyncStorage,Keyboard,ScrollView,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform, Share, Image, PixelRatio, Modal, Animated, Switch } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import HTML from 'react-native-render-html';
 import CommentList from '../components/CommentList';
@@ -8,7 +8,7 @@ import AuthorSubscription from '../components/AuthorSubscription';
 import CommentModal from '../components/CommentModal';
 import HyperText from '../components/HyperText'
 import {Consumer, Provider} from '../context/context.js';
-import {Icon} from 'react-native-elements';
+import {Icon, Divider} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
 import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
@@ -16,6 +16,10 @@ import { BaomoiText } from '../components/StyledText';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 moment.locale('vi');
+HEADER_MAX_HEIGHT = 100;
+HEADER_MIN_HEIGHT = 50;
+
+
 
 export default class ArticleScreen extends React.Component {
     constructor(props) {
@@ -25,49 +29,17 @@ export default class ArticleScreen extends React.Component {
             currentCount : 0,
             intervalId: undefined,
             user: undefined,
-            comments: []
+            comments: [],
+            scrollY: new Animated.Value(0),
+            TopViewHeight: 100,
+            settingModalVisible: false
         }
     }
     static navigationOptions = ({navigation}) => {
         return {
             title: "Article",
             tabBarVisible: false,
-            header: (
-              <Consumer>
-                {({backGround}) => (
-                  <SafeAreaView
-                      style={{
-                          flexDirection: "row",
-                          height: 55,
-                          backgroundColor: backGround,
-                          marginTop: 20,
-                          alignItems:'center',
-                          borderBottomWidth: 1,
-                          borderBottomColor: '#C6C3BC'
-                          // marginTop: Platform.OS == "ios" ? 39 : 0 // only for IOS to give StatusBar Space
-                      }}
-                      >
-                      <View style={{flex: 1, alignItems:'flex-start'}}>
-                        <Icon
-                          name='chevron-left'
-                          size={35}
-                          color='#696969'
-                          onPress={()=>navigation.goBack()}
-                        />
-                      </View>
-                      <View style={{flex:1, alignItems: 'flex-end', justifyContent: 'center'}}>
-                        <Icon
-                          name='dots-three-vertical'
-                          type='entypo'
-                          size={25}
-                          color='#696969'
-                          onPress={()=>navigation.navigate('Settings')}
-                        />
-                      </View>
-              </SafeAreaView>
-                )}
-            </Consumer>
-            )
+            header: null
         }
     }
     componentWillMount = async () => {
@@ -154,59 +126,169 @@ export default class ArticleScreen extends React.Component {
     }
 
     render(){
+      const headerSource = this.state.scrollY.interpolate({
+        inputRange: [0, this.state.TopViewHeight-10, this.state.TopViewHeight -9],
+        outputRange: [0, 0 , 1],
+        extrapolate: 'clamp',
+      });
         return(
       <Consumer>
         {({textColor, backGround, fontSizeRatio}) => (
         <View style={{backgroundColor: backGround, flexDirection:'column', flex: 1}}>
-          <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround, padding: 10, zIndex: 1}}>
+          <Animated.View style={{
+                                  position:'absolute',
+                                  top: 20,
+                                  right: 0,
+                                  left: 0,
+                                  height: 50,
+                                  zIndex: 1,
+                                  backgroundColor: backGround,
+                                  alignItems:'center',
+                                  flexDirection: "row",
+                                  flex: 1,
+                                  borderBottomWidth: 0.5,
+                                  borderBottomColor: '#e0e0e0'
+                                  }}>
+              <View style={{flex: 1, alignItems:'flex-start'}}>
+                <Icon
+                  name='chevron-left'
+                  size={35}
+                  color='#696969'
+                  onPress={()=>this.props.navigation.goBack()}
+                />
+              </View>
+              <Animated.View style={{opacity: headerSource, flex: 5}}>
+                <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user}/>
+              </Animated.View>
+
+              <View style={{flex:1, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <Icon
+                  name='dots-three-vertical'
+                  type='entypo'
+                  size={25}
+                  color='#696969'
+                  style={{marginRight: 5}}
+                  onPress={()=>this.setState({settingModalVisible: true})}
+                />
+
+                <Modal
+                   transparent={true}
+                   visible={this.state.settingModalVisible}
+                   onRequestClose={() => {}}
+                   >
+                    <TouchableOpacity style={{backgroundColor: 'rgba(0,0,0,0.5)',flex: 1, alignItems:'flex-end'}} onPress={()=>this.setState({settingModalVisible: false})}>
+                        <Consumer>
+                          {({changeDay, changeNight, backGround, changeRatio, fontSizeRatio, nightMode, switchMode, textColor}) => (
+                             <View style={{
+                                           height: 150,
+                                           width: 150,
+                                           backgroundColor: 'white',
+                                           justifyContent:'center',
+                                           marginTop: 55,
+                                           marginRight: 10,
+                                           borderRadius: 10
+                                         }}>
+                                  <View style={{flexDirection:'row', height: 75}}>
+                                      <TouchableOpacity style={{flex:1, borderRightColor:'#696969',borderRightWidth: 1, alignItems:'center', justifyContent:'center'}} onPress={() => changeRatio(0.8)}>
+                                        <BaomoiText style={{fontSize: 16}}>Aa</BaomoiText>
+                                      </TouchableOpacity>
+                                      <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}} onPress={() => changeRatio(1.2)}>
+                                        <BaomoiText style={{fontSize: 20, fontWeight: '500'}}>Aa</BaomoiText>
+                                      </TouchableOpacity>
+                                  </View>
+                                  <Divider style={{backgroundColor:'#696969'}}/>
+                                  <View style={{flexDirection:'row', height: 75, alignItems:'center', justifyContent:'space-between', padding: 5}}>
+                                  <BaomoiText style={{fontSize: 16}}>Giao diện</BaomoiText>
+                                  <Switch
+                                      onValueChange={switchMode}
+                                      value={nightMode}
+                                  />
+                                  </View>
+
+                              </View>
+                        )}
+                        </Consumer>
+
+                    </TouchableOpacity>
+                </Modal>
+
+              </View>
 
 
 
-            <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor}}>{this.state.Article.title.plaintitle}</Text>
-            <BaomoiText style={{color: '#696969', marginTop:10, fontSize: 15*fontSizeRatio}}>Cập nhật {moment(this.state.Article.modified).fromNow()}</BaomoiText>
+          </Animated.View>
 
-            <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} user={this.state.user}/>
+          <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 70}}
+                            scrollEventThrottle={16}
+                            onScroll={Animated.event(
+                            [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
+                            )}>
 
-            {
-              (this.state.Article.format === 'video')?
-              <HyperText>
-              {this.state.Article.content.plaintext}
-              </HyperText> :
-              <HTML
-                alterChildren = { (node) => {
-                    if (node.name === 'iframe') {
-                        delete node.attribs.width;
-                        delete node.attribs.height;
-                    }
-                    return node.children;
-                }}
-                html={this.state.Article.content.plaintext}
-                imagesInitialDimensions={{width: 200, height: 200}}
-                imagesMaxWidth={Dimensions.get('window').width-20}
-                onLinkPress={(event, href)=>{
-                  Linking.openURL(href)
-                }}
-                ignoredStyles={['width', 'height', 'max-width']}
-                staticContentMaxWidth={Dimensions.get('window').width-20}
-                tagsStyles={{blockquote:{marginLeft: 50}}}
-                baseFontStyle={{fontSize: 18*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:20*fontSizeRatio }}/>
 
-            }
+                <View onLayout={(event) => {
+                                  var {x, y, width, height} = event.nativeEvent.layout;
+                                  this.setState({TopViewHeight : height},()=> console.log(this.state.TopViewHeight))
+                                }} >
+                  {
+                    (this.state.Article.format === 'video')? <View style={{marginTop: 10}}></View>
+                    :
+                    <View style={{padding: 10}}>
+                      <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor, marginBottom: 5}}>{this.state.Article.title.plaintitle}</Text>
 
-            <View style={{flexDirection: 'row', marginTop : 20}}>
+                      <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} moment={moment(this.state.Article.modified).fromNow()}/>
+                    </View>
 
-                  <TouchableOpacity style={{alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#cc0000'}}
+                  }
+
+                  </View>
+
+
+                <View style={{marginTop: 10}}>
+                {
+                  (this.state.Article.format === 'video')?
+                  <HyperText navigation={this.props.navigation} article={this.state.Article} moment={moment(this.state.Article.modified).fromNow()}>
+                  {this.state.Article.content.plaintext}
+                  </HyperText> :
+                  <View style={{padding: 10}}>
+                      <Text style={{fontSize: 19*fontSizeRatio, fontWeight:'500',fontFamily: 'baomoi-regular',lineHeight:23*fontSizeRatio, color: textColor}}>{this.state.Article.excerpt.custom_excerpt}</Text>
+                      <HTML
+                        alterChildren = { (node) => {
+                            if (node.name === 'iframe') {
+                                delete node.attribs.width;
+                                delete node.attribs.height;
+                            }
+                            return node.children;
+                        }}
+                        html={this.state.Article.content.plaintext}
+                        imagesMaxWidth={Dimensions.get('window').width-20}
+                        onLinkPress={(event, href)=>{
+                          Linking.openURL(href)
+                        }}
+                        ignoredStyles={['width', 'height', 'max-width']}
+                        staticContentMaxWidth={Dimensions.get('window').width-20}
+                        tagsStyles={{blockquote:{marginLeft: 50}}}
+                        baseFontStyle={{fontSize: 20*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
+                  </View>
+
+                }
+                </View>
+
+
+            <View style={{flexDirection: 'row', marginTop : 20, marginBottom: 10}}>
+
+                  <TouchableOpacity style={{height: 40, alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#cc0000'}}
                                     onPress={() => Linking.openURL(this.state.Article.source_link)}>
                       <Icon
                         name='share-2'
                         type='feather'
                         color='white'
                         size={30}
+
                       />
                       <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>LINK GỐC</BaomoiText>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={{alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#3b5998'}}
+                  <TouchableOpacity style={{height: 40, alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#3b5998'}}
                                     onPress={this.onShare}>
                       <View style={{borderColor: 'white', backgroundColor: '#3b5998', width:30 , height: 30, borderRadius: 15, borderWidth: 1,
                                     alignItems:'center', justifyContent:'center'}}>
@@ -216,6 +298,7 @@ export default class ArticleScreen extends React.Component {
                             color='white'
                             size={30}
 
+
                           />
                       </View>
                       <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>CHIA SẺ</BaomoiText>
@@ -224,10 +307,10 @@ export default class ArticleScreen extends React.Component {
 
             </View>
 
+                <Divider style={{ backgroundColor: '#e0e0e0', height: 15}} />
 
-
-            <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
-            <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
+                <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
+                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
 
           </ScrollView>
 

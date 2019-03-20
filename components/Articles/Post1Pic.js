@@ -14,11 +14,13 @@ var { width, height } = Dimensions.get('window');
 moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
-export default class Post3Pic extends React.PureComponent {
+export default class Post1Pic extends React.PureComponent {
+
     render(){
         const item = this.props.item
         const ui = this.props.ui
         const index = this.props.index
+
         return(
             <View style={{padding: 10}}>
                 <TouchableOpacity

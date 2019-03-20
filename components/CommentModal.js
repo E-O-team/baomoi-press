@@ -93,33 +93,41 @@ export default class CommentModal extends React.Component{
     return (
       <View >
           <View style={styles.BottomView}>
-            <View style={{flex: 1}}>
-              <Icon
-                name='pencil'
-                type='evilicon'
-                size={30}
-                color='#696969'
-                />
+            <View style={{flex: 1, alignItems: 'center'}}>
+              {
+                (this.props.user != undefined) ?
+                <Image
+                style={{width: 30, height: 30, borderRadius: 2, borderWidth:1, borderColor: '#99CCFF'}}
+                source={{uri : this.props.user.avatar_urls['96']}}
+                /> :
+                <Icon
+                  name='pencil'
+                  type='evilicon'
+                  size={30}
+                  color='#696969'
+                  />
+              }
+
             </View>
             <View style={{flex : 3}}>
               <TouchableOpacity style={styles.commentButton} onPress={() => this.setModalVisible(true)}>
-                <Text style={{color: '#696969', fontSize: 10}}>Viết bình luận ...</Text>
+                <Text style={{color: '#C0C0C0', fontSize: 14}}>Nhập bình luận ...</Text>
               </TouchableOpacity>
             </View>
-            <View style={{flex : 1, alignItems:'center'}}>
+            <View style={{flex : 1, alignItems:'flex-start'}}>
                 <View style={{marginRight: 10}}>
                     <Icon
                       name='comment'
                       type='evilicon'
-                      size={30}
+                      size={35}
                       color='#696969'
                       onPress={() => this.props.scrollView.scrollToEnd()}
 
                       />
                 </View>
-                <View style={{width: 15, height: 15, backgroundColor:'red', borderRadius: 15/2, justifyContent:'center',
+                <View style={{width: 20, height: 20, backgroundColor:'red', borderRadius: 20/2, justifyContent:'center', left: 15,
                                position:'absolute'}}>
-                  <Text style={{color: 'white', textAlign:'center', fontSize: 5, fontWeight:'bold'}}>{this.props.commentLength}</Text>
+                  <Text style={{color: 'white', textAlign:'center', fontSize: 8, fontWeight:'bold'}}>{this.props.commentLength}</Text>
                 </View>
             </View>
 
@@ -159,7 +167,7 @@ export default class CommentModal extends React.Component{
                     </View>
 
                     <View style={{flex: 1, flexDirection: 'row', alignItems:'center', marginBottom: 5}}>
-                      <View style={{flex : 3, alignItems:'center', justifyContent:'center'}}>
+                      <View style={{flex : 3, alignItems:'flex-start', justifyContent:'center'}}>
                         <Text style={{color: '#606060', fontSize: 12}}>Bình luận không nói tục, chửi bậy</Text>
                       </View>
                       <View style={{flex : 1, alignItems:'center'}}>
@@ -189,7 +197,7 @@ export default class CommentModal extends React.Component{
                            padding: 20}}>
 
                 <View style={{flexDirection: 'row'}}>
-                  <BaomoiText style={{color: 'white', flex : 3, fontSize: 20}}> Sign In to Comment</BaomoiText>
+                  <BaomoiText style={{color: 'white', flex : 3, fontSize: 20}}> Đăng Nhập để bình luận</BaomoiText>
                   <View style={{flex: 1,  alignItems: 'flex-end'}}>
                     <TouchableOpacity onPress={() => this.setState({registerVisible: false})}>
                       <Icon
@@ -232,17 +240,14 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     flexDirection: 'row',
-    borderColor: '#696969',
+    borderColor: '#e0e0e0',
     justifyContent:'center',
     borderWidth: 0.5
   },
   commentButton:{
-    borderColor:'#CCCCCC',
-    borderWidth: 2,
-    borderRadius: 5,
-    marginRight : 10,
+    marginLeft: 10,
     height: 30,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-start'
   },
 });

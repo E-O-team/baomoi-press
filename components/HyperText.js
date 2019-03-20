@@ -6,10 +6,14 @@ import {
   WebView,
   View,
   Linking,
-  Dimensions
+  Dimensions,
+  StyleSheet
 } from 'react-native';
 import _ from 'lodash';
 import {Video} from 'expo';
+import { MaterialIcons, Octicons } from '@expo/vector-icons';
+import {Icon} from 'react-native-elements';
+import {Consumer} from '../context/context.js';
 import VideoPlayer from '@expo/videoplayer';
 
 
@@ -25,15 +29,50 @@ export default class HyperText extends React.Component {
   constructor(){
     super()
     this.state={
-      isPortrait : true
-    }
-  }
-  switchPortrait = () => {
-    this.setState({isPortrait:false})
+                mute: false,
+            		fullScreen: false,
+            		shouldPlay: true,
+                }
   }
 
+  componentWillMount () {
+    this.blurSubscription =
+      this.props.navigation.addListener(
+        'willBlur',
+        () => {
+          if (this.state.shouldPlay) {
+            this.handlePlayAndPause()
+          }
+        }
+      )
+  }
+  componentWillUnmount () {
+    this.blurSubscription.remove()
+  }
+
+  handlePlayAndPause = () => {
+		this.setState(prevState => ({
+			shouldPlay: !prevState.shouldPlay
+		}));
+	}
+
+	handleVolume = () => {
+		this.setState(prevState => ({
+			mute: !prevState.mute,
+		}));
+	}
+  onShouldStartLoadWithRequest = (navigator) => {
+      if (navigator.url.indexOf('embed') !== -1
+      ) {
+          return true;
+      } else {
+          this.videoPlayer.stopLoading(); //Some reference to your WebView to make it stop loading that URL
+          return false;
+      }
+  }
   render() {
     const Hyper = this
+    const { width } = Dimensions.get('window');
     // Check if nested content is a plain string
     if (typeof this.props.children === 'string') {
 
@@ -51,11 +90,34 @@ export default class HyperText extends React.Component {
             if(word.includes('youtu.be')) word = word.replace("youtu.be/", "youtube.com/embed/")
             console.log(word)
 
-            return <WebView key={i}
-                            javaScriptEnabled={true}
-                            domStorageEnabled={true}
-                            source={{uri : word}}
-                            style={{width:screenWidth-20, height: (screenWidth-20)*9/16}}/>;
+            return     <View style={{ width:screenWidth, height: (screenWidth)*9/16 }} key={i}>
+                        {
+                          Hyper.state.shouldPlay ? <WebView
+                                                      key={i}
+                                                      style={{flex:1}}
+                                                      ref={(ref) => { Hyper.videoPlayer = ref;}}
+                                                      scalesPageToFit={true}
+                                                      source={{html: '<html><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /><iframe src="'+word+'?autoplay=1&modestbranding=1&playsinline=1&showinfo=0&rel=0" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe></html>'}}
+                                                      allowsInlineMediaPlayback={true}
+                                                      mediaPlaybackRequiresUserAction={false}
+                                                      onShouldStartLoadWithRequest={Hyper.onShouldStartLoadWithRequest} //for iOS
+                                                      onNavigationStateChange ={Hyper.onShouldStartLoadWithRequest} //for Android
+                                                  />
+                          : <View style={{backgroundColor:'black', flex: 1, alignItems:'center', justifyContent:'center'}}>
+                              <Icon
+                                  size={50}
+                                  name='play-circle'
+                                  type='font-awesome'
+                                  color='white'
+                                  onPress={()=> Hyper.handlePlayAndPause()}
+                              />
+                            </View>
+                        }
+                       </View>                  // control playback of video with true/false
+
+
+
+
         // The word is not a URL, return the word as-is
         }
         if (word.includes('mp4=')) {
@@ -63,20 +125,19 @@ export default class HyperText extends React.Component {
                       .replace("][/video]",'')
                       .replace(new RegExp('"', 'g'), '')
             console.log(word)
-            return    <VideoPlayer
-                        videoProps={{
-                          shouldPlay: true,
-                          source: {
-                            uri: word,
-                          },
-                          resizeMode: Video.RESIZE_MODE_COVER,
+            return    <View style={styles.container} key={i}>
+                				<View>
+                						<Video
+                							source={{ uri: word }}
+                							shouldPlay={Hyper.state.shouldPlay}
+                							resizeMode="cover"
+                							style={{ width, height: (screenWidth)*9/16}}
+                							isMuted={Hyper.state.mute}
+                              useNativeControls={true}
+                						/>
 
-                        }}
-                        isPortrait={Hyper.state.isPortrait}
-                        switchToLanscape={Hyper.switchPortrait}
-                        switchToPortrait={Hyper.switchPortrait}
-                        playFromPositionMillis={0}
-                      />
+                					</View>
+                      </View>
         // The word is not a URL, return the word as-is
         }
       });
@@ -92,8 +153,38 @@ export default class HyperText extends React.Component {
     return (
       <View >
         {contents}
+        <Consumer>
+          {({textColor, backGround, fontSizeRatio}) => (
+              <View style={{padding: 10}}>
+              <Text style={{color: '#C0C0C0', fontSize: 16*fontSizeRatio, marginBottom: 5, fontFamily: 'baomoi-regular'}}>{this.props.article.taxonomy_source[0].name} - {this.props.moment}</Text>
+              <Text style={{fontSize: 18*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor}}>{this.props.article.title.plaintitle}</Text>
+
+
+              </View>
+          )}
+        </Consumer>
       </View>
     );
   }
 
 }
+
+const styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+   },
+   controlBar: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 45,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+   }
+});

@@ -29,7 +29,8 @@ export default class OtherCategoriesScreens extends React.PureComponent {
             styles: styles,
             refreshing: true,
             loading: false,
-            page: 1
+            page: 1,
+            y: 0
         }
     }
 
@@ -88,6 +89,22 @@ export default class OtherCategoriesScreens extends React.PureComponent {
             this.fetchNews(this.state.selectedCategory);
         })
     }
+    handleOnScroll = (e) => {
+      this.setState({y: e.nativeEvent.contentOffset.y})
+        if(this.state.y != 0){
+           if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
+             this.props.navigation.setParams({ visible: true })
+             this.setState({isScrollDown : false})
+           }
+           if(this.state.y < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
+
+             this.props.navigation.setParams({ visible: false })
+             this.setState({isScrollDown : true})
+           }
+
+
+       }
+    }
     render(){
         return(
             <Consumer>
@@ -129,8 +146,6 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                             />
                         </View>
                         <FlatList
-                            onScrollBeginDrag={this.handleBeginDrag}
-                            onScrollEndDrag={this.handleEndDrag}
                             onScroll={this.handleOnScroll}
                             data={this.state.articles}
                             extraData={this.state.articles}

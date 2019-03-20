@@ -3,7 +3,8 @@ import {
     TouchableOpacity,
     View,
     Image,
-    Dimensions
+    Dimensions,
+    StyleSheet
 } from 'react-native';
 import { Divider, Icon } from 'react-native-elements';
 import {Consumer} from '../../context/context.js'
@@ -32,12 +33,12 @@ export default class Video extends React.PureComponent {
                             style={{ width: width, height: width * 9/16}}
                             source={{ uri: item.thumb || defaultImg }}
                             resizeMode='cover'/>
-                          <View style={{position:'absolute'}}>
+                          <View style={{position:'absolute', opacity:0.6}}>
                             <Icon
-                                size={80}
-                                name='play-circle'
-                                type='font-awesome'
-                                color='#C0C0C0'
+                                size={120}
+                                name='controller-play'
+                                type='entypo'
+                                color='black'
                             />
                           </View>
 
@@ -61,3 +62,17 @@ export default class Video extends React.PureComponent {
         )
     }
 }
+const styles = StyleSheet.create({
+  triangleShape: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 120,
+    borderTopWidth: 60,
+    borderBottomWidth: 60,
+    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderLeftColor: 'black'
+  }
+})

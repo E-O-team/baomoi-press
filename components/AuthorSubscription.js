@@ -4,6 +4,7 @@ import { BaomoiText } from './StyledText';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
 import {Consumer} from '../context/context.js'
+const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 
 export default class AuthorSubscription extends React.Component{
@@ -15,21 +16,30 @@ export default class AuthorSubscription extends React.Component{
       logo: '',
     }
   }
+
   componentWillMount(){
     this.setState({source : this.props.taxonomy_source})
 
     fetch("https://baomoi.press/wp-json/wp/v2/get_source_logo")
     .then(res => res.json())
     .then(json => {
-      var source_array = json.filter(e => e.title === 'Vnexpress')
-        this.setState({logo : source_array[0].img}, () => console.log(this.state.logo))
+      if(json.length != 0){
+        var source_array = json.filter(e => e.title.toUpperCase() === this.state.source.name.toUpperCase())
+          this.setState({logo : source_array[0].img}, () => console.log(this.state.logo))
+      }
     })
     // .then(json => console.log(json))
     .catch(err => console.log(err))
 
+
+
   }
-  onSubscribe = async () => {
+  isSubscribed = () =>{
     this.setState({isSubscribed: true})
+  }
+
+  onSubscribe = async () => {
+
     var bodyFormData = new FormData();
     bodyFormData.append('source', this.state.source.term_id.toString());
     axios({
@@ -38,6 +48,7 @@ export default class AuthorSubscription extends React.Component{
         data: bodyFormData,
         headers: {'Authorization': 'Bearer ' + this.props.user.token},
     }).then(res => {
+      this.setState({isSubscribed: true})
       if(!this.props.user.subscribed) this.props.user.subscribed = []
       this.props.user.subscribed.push(this.state.source.term_id.toString())
        AsyncStorage.setItem('user', JSON.stringify(this.props.user))
@@ -63,11 +74,12 @@ export default class AuthorSubscription extends React.Component{
   }
   render(){
 
-     if(this.props.user && !this.state.isSubscribed){
-       this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
-         if(source === this.state.source.term_id.toString()) this.setState({isSubscribed : true})
-       })
-     }
+    if(this.props.user && !this.state.isSubscribed){
+      this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
+        if(source === this.state.source.term_id.toString()) this.isSubscribed()
+      })
+    }
+
     var icon = (this.state.isSubscribed)?
     <View style={[styles.IconView, {backgroundColor : 'red'}]}>
       <Icon
@@ -91,18 +103,18 @@ export default class AuthorSubscription extends React.Component{
 
     return(
       <View style={styles.container}>
-        <View style={{height: 32 , width: 32, borderRadius: 32/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
+        <View style={{height: 28 , width: 28, borderRadius: 28/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
           <Image
-          source={{uri: this.state.logo}}
+          source={{uri: this.state.logo || defaultImg}}
           resizeMode='contain'
-          style={{width: 30, height: 30}}
+          style={{width: 28, height: 28, borderRadius: 28/2}}
           />
         </View>
-        <Consumer>
-          {({textColor}) => (
-          <BaomoiText style={[styles.text,{color: textColor}]}>{this.state.source.name.toUpperCase()}</BaomoiText>
-          )}
-        </Consumer>
+        {
+          (this.props.onHeader) ? <BaomoiText style={[styles.text,{color: '#006666'}]}>{this.state.source.name}</BaomoiText>
+          : <BaomoiText style={[styles.text,{color: '#C0C0C0'}]}>{this.state.source.name} - {this.props.moment}</BaomoiText>
+        }
+
         {icon}
 
       </View>
@@ -112,23 +124,21 @@ export default class AuthorSubscription extends React.Component{
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
-    alignItems: 'center'
+    alignItems: 'center',
+    flex : 1
   },
   text: {
     flex: 1,
     textAlign: 'left',
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: 17,
     marginLeft: 5,
   },
   IconView:{
-    marginRight: 20,
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 2,
+    justifyContent:'center',
     borderColor: 'red',
     borderWidth: 1,
   },

@@ -13,13 +13,47 @@ import {
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import { BaomoiText } from '../components/StyledText';
-import { Divider,    Tile, Icon } from 'react-native-elements';
+import { Divider, Icon } from 'react-native-elements';
 import Moment from 'moment';
 import {Consumer} from '../context/context.js'
+import Post1Pic from './Articles/Post1Pic'
+import moment from 'moment/min/moment-with-locales'
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 const screenWidth = Dimensions.get('window').width;
 const videoHeightRatio = 9/16;
+moment.locale('vi');
+
+class Comment extends React.Component {
+    constructor(){
+      super()
+      this.state={
+        numberOfComments: 0
+      }
+    }
+
+    componentDidMount() {
+        fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id)
+        .then(res => res.json())
+        .then(json => this.setState({
+            numberOfComments: json.length,
+        }))
+    }
+    render(){
+        const item = this.props.item
+
+        return(               <View style={{flexDirection: "row", alignItems: "center"}}>
+                                {
+                                  (this.state.numberOfComments !== 0)?
+                                  <View>
+                                      <BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText>                                  :
+                                      <Icon containerStyle={{marginTop: -2}} name='comment' type="evilicon" color='#696969' size={20}/>
+                                  </View> : <View></View>
+                                }
+                              </View>
+        )
+    }
+}
 
 export default class RecommendedList extends React.Component{
   constructor(props){
@@ -121,19 +155,39 @@ export default class RecommendedList extends React.Component{
   }
 
   render(){
+    Comments = (props) => {
+        // fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + props.id)
+        // .then(res => res.json())
+        // .then(json => {
+        //     if(json.length !== 0){
+        //         return(
+        //           <View style={{flexDirection: "row", alignItems: "center"}}>
+        //               <BaomoiText style={{color: '#696969', fontSize: 15}}> - {json.length} </BaomoiText>
+        //               <Icon containerStyle={{marginTop: -2}} name='comment' type="evilicon" color='#696969' size={20}/>
+        //           </View>
+        //         )
+        //     }else{
+        //         return null;
+        //     }
+        // }).catch(err => {
+        //   return null
+        // })
+        return <Text>shit</Text>
 
+
+    }
 
     return(
       <View style={{padding: 10}}>
         <Consumer>
           {({textColor, backGround, fontSizeRatio}) => (
             <View>
-              <BaomoiText style={{fontSize: 25* this.props.ui.fontSizeRatio, textAlign: 'center',color:this.props.ui.textColor, marginBottom: 10, textDecorationLine: 'underline'}}>Tin đề xuất</BaomoiText>
+              <BaomoiText style={{fontSize: 16* this.props.ui.fontSizeRatio,color:'#003333', marginBottom: 15, fontWeight:'500'}}>TIN KHÁC</BaomoiText>
               {this.state.Articles && <FlatList
                     data={this.state.Articles}
-                    renderItem={({ item }) =>
+                    renderItem={({ item , index}) =>
                     <Consumer>
-                      {({textColor, fontSizeRatio}) => (
+                      {({textColor, backGround, fontSizeRatio}) => (
                         <TouchableOpacity
                             activeOpacity={0.5}
                             onPress={() => this.props.navigation.push("Article", {
@@ -149,34 +203,52 @@ export default class RecommendedList extends React.Component{
                                                 style={{ width: screenWidth-20, height: ((screenWidth-20) * 9/16), borderRadius: 10}}
                                                 source={{ uri: item.thumb || defaultImg }}
                                                 resizeMode='cover'/>
-                                              <View style={{position:'absolute'}}>
+                                              <View style={{position:'absolute', opacity: 0.6}}>
                                                 <Icon
-                                                    size={80}
-                                                    name='play-circle'
-                                                    type='font-awesome'
-                                                    color='#C0C0C0'
+                                                    size={120}
+                                                    name='controller-play'
+                                                    type='entypo'
+                                                    color='black'
+                                                    iconStyle={{borderWidth:1, borderColor:'white'}}
                                                 />
                                               </View>
 
 
                                           </View>
                                           <View>
-                                              <BaomoiText style={{marginTop:10, fontSize: 18*fontSizeRatio,color:textColor, fontWeight: '400'}}>{item.title.plaintitle}</BaomoiText>
+                                                <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
+                                                    {
+                                                      (item.taxonomy_source[0])?
+                                                         <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                      :
+                                                          <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                                    }
+                                                    <Comment item={item}/>
+                                                </View>
+                                                    <BaomoiText style={{ fontSize: 18*fontSizeRatio,color:textColor, fontWeight: '400'}}>{item.title.plaintitle}</BaomoiText>
                                           </View>
                                       </View> :
 
-                                      <View style={{flex: 1, flexDirection: "row", marginTop: 10, marginBottom: 10}}>
-                                        <View style={{flex: 2}}>
-
-                                            <BaomoiText style={{fontSize: 18*fontSizeRatio, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
-                                        </View>
-                                        <Image
-                                            source={{uri :item.thumb || defaultImg}}
-                                            style={{height: 80, flex: 1, width: 180, borderRadius: 5}}
-                                        />
+                                      <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
+                                          <View style={{flex: 2}}>
+                                              <View style={{flexDirection: "row", alignItems:'center'}}>
+                                                  {
+                                                    (item.taxonomy_source[0])?
+                                                       <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                                    :
+                                                        <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                                  }
+                                                  <Comment item={item}/>
+                                              </View>
+                                              <BaomoiText style={{fontSize: 20, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                          </View>
+                                          <Image
+                                              source={{uri :item.thumb || defaultImg}}
+                                              style={{height: 90, flex: 1, marginLeft: 5, borderRadius: 5}}
+                                          />
                                       </View>
                                 }
-
+                                <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10, marginBottom: 10}} />
 
                         </TouchableOpacity>
                       )}
