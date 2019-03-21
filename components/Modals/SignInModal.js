@@ -175,6 +175,7 @@ export default class SignInModal extends React.Component {
                 animationType="fade"
                 transparent={true}
                 visible={this.state.modalVisible}
+                onRequestClose={() => this.props.setModalVisible(!this.state.modalVisible)}
             >
             <View style={{alignItems: "center", justifyContent:"center", flex:1, backgroundColor: 'rgba(0,0,0,0.5)'}}
 
@@ -213,8 +214,9 @@ export default class SignInModal extends React.Component {
                             </View>
                             <View>
                                 <Button
+                                    containerViewStyle={{marginTop: 20}}
                                     backgroundColor="#4a6da7"
-                                    buttonStyle={{marginTop: 20, borderRadius: 6.5, marginHorizontal: -15}}
+                                    buttonStyle={{borderRadius: 6.5, marginHorizontal: -15}}
                                     raised
                                     icon={{name: 'facebook-official', type: "font-awesome", reverse: true}}
                                     title='Đăng nhập bằng facebook'
@@ -222,7 +224,7 @@ export default class SignInModal extends React.Component {
                                     onPress={this.FBLogin}
                                 />
                             </View>
-                            <View style={{marginHorizontal: -15}}>
+                            <View style={{}}>
                                 <Text style={{fontStyle: "italic", textAlign: "center", marginTop: 30}}>Đăng nhập để trải nghiệm đầy đủ các tính năng của ứng dụng và để lại những bình luận hay</Text>
                             </View>
                         </View>
