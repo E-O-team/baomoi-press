@@ -165,12 +165,23 @@ class TabBarComponent extends Component {
   componentWillReceiveProps(props) {
     const oldState = this.props.navigation.state;
     const oldRoute = oldState.routes[oldState.index];
-    const oldParams = oldRoute.routes[oldRoute.index].params;
+    var oldParams = oldRoute.routes[oldRoute.index].params;
+    if(oldState.index === 0)
+    {
+    const oldRouteChild = oldRoute.routes[oldRoute.index]
+    oldParams = oldRouteChild.routes[oldRouteChild.index].params;
+    }
     const wasVisible = !oldParams || oldParams.visible;
+
 
     const newState = props.navigation.state;
     const newRoute = newState.routes[newState.index];
-    const newParams = newRoute.routes[newRoute.index].params;
+    var newParams = newRoute.routes[newRoute.index].params;
+    if(newState.index === 0)
+    {
+    const newRouteChild = newRoute.routes[newRoute.index]
+    newParams = newRouteChild.routes[newRouteChild.index].params;
+    }
     const isVisible = !newParams || newParams.visible;
 
     if (wasVisible && !isVisible) {
@@ -194,7 +205,7 @@ const styles = {
     left: 0,
     right: 0,
     backgroundColor: 'black',
-    height: 55,
+    height: 50,
     elevation: 8,
   },
 };

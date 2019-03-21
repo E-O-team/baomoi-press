@@ -65,7 +65,7 @@ export default class CustomTabBarBottom extends React.Component {
 
     var expandedView = (this.state.animating)?
     <View style={{zIndex: 1000, position: 'absolute'}}>
-          <View style={{borderColor:'#fff', borderWidth:2, width: 70, height:70, borderRadius: 70/2, bottom: 10, justifyContent:'center'}}>
+          <View style={{borderColor:'#fff', borderWidth:2, width: 65, height:65, borderRadius: 65/2, bottom: 10, justifyContent:'center'}}>
             <Ionicons name={"ios-close"} size={45} color={"#fff"} style={styles.buttonIcon} onPress={()=>this.onCloseBtn()}/>
           </View>
           <Animated.View style={{     right:this.state.left,
@@ -116,11 +116,11 @@ export default class CustomTabBarBottom extends React.Component {
       <View
       >
           <View style={styles.actionButton}>
-            <View style={{backgroundColor:'#e0272e', width: 70, height:70, borderRadius: 70/2, bottom:10,justifyContent:'center', alignItems:'center'}}>
+            <View style={{backgroundColor:'#e0272e', width: 65, height:65, borderRadius: 65/2, bottom:10,justifyContent:'center', alignItems:'center'}}>
               <TouchableOpacity onPress={()=>this.onClickBtn()}>
                 <Image
                 source={logo}
-                style={{ width: 60, height: 60, resizeMode:'contain', borderRadius: 60/2}}
+                style={{ width: 55, height: 55, resizeMode:'contain', borderRadius: 55/2}}
                 />
               </TouchableOpacity>
             </View>

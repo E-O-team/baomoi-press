@@ -184,7 +184,7 @@ export default class ArticleScreen extends React.Component {
                                            width: 150,
                                            backgroundColor: 'white',
                                            justifyContent:'center',
-                                           marginTop: 55,
+                                           marginTop: 50,
                                            marginRight: 10,
                                            borderRadius: 10
                                          }}>
