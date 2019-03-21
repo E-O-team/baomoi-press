@@ -98,7 +98,7 @@ export default class CommentModal extends React.Component{
                 (this.props.user != undefined) ?
                 <Image
                 style={{width: 30, height: 30, borderRadius: 2, borderWidth:1, borderColor: '#99CCFF'}}
-                source={{uri : this.props.user.avatar_urls['96']}}
+                source={{uri : this.props.user.custom_avatar || this.props.user.avatar_urls['96']}}
                 /> :
                 <Icon
                   name='pencil'
