@@ -87,6 +87,7 @@ export default class ExchangeGiftsModal extends React.Component {
                 data.append("title", user.name)
                 data.append("fields[userID]", user.id)
                 data.append("fields[request_status]", "Đang chờ duyệt")
+                data.append("fields[report]", "null")
                 data.append("status", "publish")
                 // console.log(data);
                 axios({
