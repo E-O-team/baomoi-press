@@ -29,24 +29,28 @@ export default class AuthLoadingScreen extends React.Component {
     Permissions.NOTIFICATIONS
   );
   let finalStatus = existingStatus;
-
+  console.log(existingStatus);
   // only ask if permissions have not already been determined, because
   // iOS won't necessarily prompt the user a second time.
   if (existingStatus !== 'granted') {
+
     // Android remote notification permissions are granted during the app
     // install, so this will only ask on iOS
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     finalStatus = status;
+    console.log(status);
   }
 
   // Stop here if the user did not grant permissions
   if (finalStatus !== 'granted') {
+      console.log(finalStatus);
     return;
   }
 
   // Get the token that uniquely identifies this device
   let token = await Notifications.getExpoPushTokenAsync();
-  console.log(token);
+
+  this._notificationSubscription = Notifications.addListener(this._handleNotification);
   // POST the token to your backend server from where you can retrieve it to send push notifications.
   // return fetch(PUSH_ENDPOINT, {
   //   method: 'POST',
@@ -70,7 +74,6 @@ export default class AuthLoadingScreen extends React.Component {
           if(isConnected == false){
               Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
           }else if (isConnected == true) {
-              console.log("connected");
               NetInfo.addEventListener('connectionChange', this.handleFirstConnectivityChange);
               this._bootstrapAsync();
           }
@@ -79,7 +82,6 @@ export default class AuthLoadingScreen extends React.Component {
   }
 
   handleFirstConnectivityChange = (isConnected) => {
-      console.log(isConnected);
       if(isConnected.type !== "none"){
           console.log("connected!!");
       }else{
@@ -90,17 +92,32 @@ export default class AuthLoadingScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    let user = await AsyncStorage.getItem('user');
-
-
+    let user = JSON.parse(await AsyncStorage.getItem('user'));
+    let ExpoToken = await Notifications.getExpoPushTokenAsync();
     if(user){
-        user = JSON.parse(user)
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
             headers: {'Authorization': 'Bearer ' + user.token},
         })
-        .then(() => this.props.navigation.navigate("App"))
+        .then(() => {
+            // console.log(user.id);
+            // const data = new FormData()
+            // data.append("fields[deviceToken]", ExpoToken)
+            // axios({
+            //     method: "POST",
+            //     url: 'https://baomoi.press/wp-json/acf/v3/users/' + user.id,
+            //     headers: {'Authorization': 'Bearer ' + user.token},
+            //     data: data
+            // })
+            // .then((res) => {
+            //     console.log(res.status);
+            //     this.props.navigation.navigate("App")
+            // })
+            // .catch(err => console.log(err))
+            this.props.navigation.navigate("App")
+
+        })
         .catch(err => {
             if(err.response){
 
