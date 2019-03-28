@@ -95,27 +95,27 @@ export default class AuthLoadingScreen extends React.Component {
     let user = JSON.parse(await AsyncStorage.getItem('user'));
     let ExpoToken = await Notifications.getExpoPushTokenAsync();
     if(user){
+        console.log(user.token);
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
             headers: {'Authorization': 'Bearer ' + user.token},
         })
         .then(() => {
-            // console.log(user.id);
-            // const data = new FormData()
-            // data.append("fields[deviceToken]", ExpoToken)
-            // axios({
-            //     method: "POST",
-            //     url: 'https://baomoi.press/wp-json/acf/v3/users/' + user.id,
-            //     headers: {'Authorization': 'Bearer ' + user.token},
-            //     data: data
-            // })
-            // .then((res) => {
-            //     console.log(res.status);
-            //     this.props.navigation.navigate("App")
-            // })
-            // .catch(err => console.log(err))
-            this.props.navigation.navigate("App")
+            const data = new FormData()
+            data.append("fields[deviceToken]", ExpoToken)
+            axios({
+                method: "POST",
+                url: 'https://baomoi.press/wp-json/acf/v3/users/' + user.id,
+                headers: {'Authorization': 'Bearer ' + user.token},
+                data: data
+            })
+            .then((res) => {
+                if(res.status == 200){
+                    this.props.navigation.navigate("App")
+                }
+            })
+            .catch(err => console.log(err))
 
         })
         .catch(err => {
