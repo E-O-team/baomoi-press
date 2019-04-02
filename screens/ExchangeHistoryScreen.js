@@ -12,7 +12,8 @@ import {
     FlatList,
     Modal,
     TouchableHighlight,
-    Alert
+    Alert,
+    Clipboard
 } from 'react-native';
 import {
     Consumer
@@ -27,13 +28,146 @@ import {
 } from 'react-native-elements';
 import Sources from '../components/Sources';
 import axios from 'axios';
+import gmobile from '../assets/images/ExchangeGiftsScreen/icon-Gmobile.jpg';
+import mobiphone from '../assets/images/ExchangeGiftsScreen/icon-mobiphone.jpg';
+import vietnammobi from '../assets/images/ExchangeGiftsScreen/icon-vietnammobi.png';
+import viettel from '../assets/images/ExchangeGiftsScreen/icon-viettel.png';
+import vinaphone from '../assets/images/ExchangeGiftsScreen/icon-vinaphone.png';
+import dateFormat from 'dateformat';
+const Carriers = [
+    {
+        name: "Gmobile",
+        source: gmobile
+    },
+    {
+        name: "Mobiphone",
+        source: mobiphone
+    },
+    {
+        name: "Vietnammobi",
+        source: vietnammobi
+    },
+    {
+        name: "Viettel",
+        source: viettel
+    },
+    {
+        name: "Vinaphone",
+        source: vinaphone
+    },
+]
 
-export default class ExchangeHistory extends React.Component {
+export default class ExchangeHistory extends React.PureComponent {
+    constructor(){
+        super()
+        this.state={
+            data: []
+        }
+        this.getUserID()
+    }
+
+    getUserID = async() => {
+        // let user = JSON.parse(await AsyncStorage.getItem('user'))
+        // console.log(user);
+        let id = JSON.parse(await AsyncStorage.getItem('user')).id
+        axios.get("https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]=" + id)
+        .then(res => this.setState({data: res.data}))
+        .catch(err => console.log(err))
+    }
+
     render(){
+        CardRequest = (props) => {
+            const {date, id,} = props.data
+            const {card_code, carrier, price, request_status, series_number} = props.data.acf
+            // const carrierPic = Carriers.filter(item => {
+            //     if(carrier == item.name){
+            //         console.log(carrier + "=" + item.name);
+            //         return item
+            //     }
+            // })
+            var carrierPic
+            Carriers.forEach(item => {
+                if(carrier == item.name){
+                    carrierPic = item.source
+                }
+            })
+
+
+            return(
+                <View style={{
+                    marginBottom: 10,
+                    backgroundColor: "white",
+                    padding: 10,
+                    borderWidth: 0.5,
+                    borderColor: "#dadada",
+                    borderRadius: 9,
+                }}>
+                    <View style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center"}}>
+                        <Image source={carrierPic} style={{height: 55, width: 55, borderWidth: 1, borderColor: "#dadada"}}/>
+                        <View style={{marginLeft: 10, justifyContent: "space-between", height: 55}}>
+                            <Text style={{fontSize: 19}}>{carrier}</Text>
+                            <Text style={{fontSize: 19, fontWeight: "bold"}}>{price}</Text>
+                        </View>
+                    </View>
+                    <View style={{marginTop: 10}}>
+                        <View style={{flex: 1, justifyContent: "flex-start"}}>
+                            <Divider/>
+                        </View>
+                        <View style={{flex: 2, justifyContent: "center"}}>
+                            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                <Text style={{fontSize: 20}}>Mã nạp:</Text>
+                                {(request_status == "đã duyệt")?
+                                    <Text style={{fontSize: 20, fontWeight: "bold"}}>{card_code}</Text>
+                                    :
+                                    <Text style={{fontSize: 20}}>********</Text>
+                                }
+                            </View>
+                            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                <Text style={{fontSize: 20}}>Số seri:</Text>
+                                {(request_status == "đã duyệt")?
+                                    <Text style={{fontSize: 20, fontWeight: "bold"}}>{series_number}</Text>
+                                    :
+                                    <Text style={{fontSize: 20}}>********</Text>
+                                }
+                            </View>
+                        </View>
+                        <View style={{flex: 1, justifyContent: "flex-end"}}>
+                            <Divider/>
+                        </View>
+                    </View>
+                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10}}>
+                        <View style={{backgroundColor: "#ecf4ff", flex: 6, alignItems: "center", justifyContent: "center", height: 29}}>
+                            <Text style={{color: "#4d90e1", fontSize: 20}}>{dateFormat(date, "dd-mm-yyyy")}</Text>
+                        </View>
+                        <View style={{flex: 0.4}}></View>
+                        {(request_status == "đã duyệt")?
+                            <TouchableOpacity
+                                onPress={() => Clipboard.setString("*100*" + card_code + "#")}
+                                activeOpacity={0.5}
+                                style={{flex: 6, height: 29}}
+                            >
+                                <View style={{backgroundColor: "#ecf4ff", alignItems: "center", justifyContent: "center", height: 29}}>
+                                    <Text style={{color: "#4d90e1", fontSize: 20}}>Nạp ngay</Text>
+                                </View>
+                            </TouchableOpacity>
+                            :
+                            <View style={{backgroundColor: "#e0272d", flex: 6, alignItems: "center", justifyContent: "center", height: 29}}>
+                                <Text style={{color: "white", fontSize: 20}}>{request_status}</Text>
+                            </View>
+                        }
+                    </View>
+                </View>
+            )
+        }
         return(
-            <View style={styles.container}>
-                <Text>ExchangeHistory</Text>
-            </View>
+            <ScrollView style={styles.container}>
+                <FlatList
+                    data={this.state.data}
+                    extraData={this.state.data}
+                    renderItem={({ item, index }) => <CardRequest data={item}/>}
+                    keyExtractor={item => item.id.toString()}
+                />
+            </ScrollView>
         )
     }
 };
@@ -41,8 +175,7 @@ export default class ExchangeHistory extends React.Component {
 styles = StyleSheet.create({
     container:{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white"
+        padding: 10,
+        backgroundColor: "#f3f3f3",
     }
 })

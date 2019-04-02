@@ -20,66 +20,67 @@ export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
     this.checkConnect()
-    this.registerForPushNotificationsAsync()
+    // this.registerForPushNotificationsAsync()
 
   }
+//
+//   registerForPushNotificationsAsync = async() => {
+//   const { status: existingStatus } = await Permissions.getAsync(
+//     Permissions.NOTIFICATIONS
+//   );
+//   let finalStatus = existingStatus;
+//   console.log(existingStatus);
+//   // only ask if permissions have not already been determined, because
+//   // iOS won't necessarily prompt the user a second time.
+//   if (existingStatus !== 'granted') {
+//
+//     // Android remote notification permissions are granted during the app
+//     // install, so this will only ask on iOS
+//     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+//     finalStatus = status;
+//   }
+//
+//   // Stop here if the user did not grant permissions
+//   if (finalStatus !== 'granted') {
+//     return;
+//   }
+//
+//   // Get the token that uniquely identifies this device
+//   let token = await Notifications.getExpoPushTokenAsync();
+//
+//   this._notificationSubscription = Notifications.addListener(this._handleNotification);
+//   // POST the token to your backend server from where you can retrieve it to send push notifications.
+//   // return fetch(PUSH_ENDPOINT, {
+//   //   method: 'POST',
+//   //   headers: {
+//   //     Accept: 'application/json',
+//   //     'Content-Type': 'application/json',
+//   //   },
+//   //   body: JSON.stringify({
+//   //     token: {
+//   //       value: token,
+//   //     },
+//   //     user: {
+//   //       username: 'Brent',
+//   //     },
+//   //   }),
+//   // });
+// }
+//
+//     _handleNotification = notification => {
+//         this.setState({ notification: notification });
+//     };
 
-  registerForPushNotificationsAsync = async() => {
-  const { status: existingStatus } = await Permissions.getAsync(
-    Permissions.NOTIFICATIONS
-  );
-  let finalStatus = existingStatus;
-  console.log(existingStatus);
-  // only ask if permissions have not already been determined, because
-  // iOS won't necessarily prompt the user a second time.
-  if (existingStatus !== 'granted') {
-
-    // Android remote notification permissions are granted during the app
-    // install, so this will only ask on iOS
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    finalStatus = status;
-    console.log(status);
-  }
-
-  // Stop here if the user did not grant permissions
-  if (finalStatus !== 'granted') {
-      console.log(finalStatus);
-    return;
-  }
-
-  // Get the token that uniquely identifies this device
-  let token = await Notifications.getExpoPushTokenAsync();
-
-  this._notificationSubscription = Notifications.addListener(this._handleNotification);
-  // POST the token to your backend server from where you can retrieve it to send push notifications.
-  // return fetch(PUSH_ENDPOINT, {
-  //   method: 'POST',
-  //   headers: {
-  //     Accept: 'application/json',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     token: {
-  //       value: token,
-  //     },
-  //     user: {
-  //       username: 'Brent',
-  //     },
-  //   }),
-  // });
-}
-
-  checkConnect = () => {
-      NetInfo.isConnected.fetch().then(isConnected => {
-          if(isConnected == false){
-              Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
-          }else if (isConnected == true) {
-              NetInfo.addEventListener('connectionChange', this.handleFirstConnectivityChange);
-              this._bootstrapAsync();
-          }
-      });
-
-  }
+    checkConnect = () => {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if(isConnected == false){
+                Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
+            }else if (isConnected == true) {
+                NetInfo.addEventListener('connectionChange', this.handleFirstConnectivityChange);
+                this._bootstrapAsync();
+            }
+        });
+    }
 
   handleFirstConnectivityChange = (isConnected) => {
       if(isConnected.type !== "none"){
@@ -95,7 +96,6 @@ export default class AuthLoadingScreen extends React.Component {
     let user = JSON.parse(await AsyncStorage.getItem('user'));
     let ExpoToken = await Notifications.getExpoPushTokenAsync();
     if(user){
-        console.log(user.token);
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
@@ -115,13 +115,14 @@ export default class AuthLoadingScreen extends React.Component {
                     this.props.navigation.navigate("App")
                 }
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err);
+            })
 
         })
         .catch(err => {
-            if(err.response){
-
-            }
+            AsyncStorage.clear()
+            this.props.navigation.navigate("App")
         })
     }else{
         AsyncStorage.clear()

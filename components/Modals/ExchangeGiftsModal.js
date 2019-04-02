@@ -35,23 +35,23 @@ import vinaphone from '../../assets/images/ExchangeGiftsScreen/icon-vinaphone.pn
 import axios from 'axios';
 const Carriers = [
     {
-        name: "gmobile",
+        name: "Gmobile",
         source: gmobile
     },
     {
-        name: "mobiphone",
+        name: "Mobiphone",
         source: mobiphone
     },
     {
-        name: "vietnammobi",
+        name: "Vietnammobi",
         source: vietnammobi
     },
     {
-        name: "viettel",
+        name: "Viettel",
         source: viettel
     },
     {
-        name: "vinaphone",
+        name: "Vinaphone",
         source: vinaphone
     },
 ]
