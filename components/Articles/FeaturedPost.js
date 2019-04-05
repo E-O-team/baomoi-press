@@ -12,7 +12,7 @@ import {Consumer} from '../../context/context.js'
 import { BaomoiText } from '../StyledText';
 import moment from 'moment/min/moment-with-locales'
 import spinner from '../../assets/images/spinner.gif';
-import Ad from '../Ad';
+import BannerAd from '../Ads/BannerAd';
 var { width, height } = Dimensions.get('window');
 
 moment.locale('vi');
@@ -26,7 +26,7 @@ export default class FeaturedPost extends React.Component {
         return(
             <View>
 
-                <Ad/>
+                <BannerAd/>
 
                 <TouchableOpacity
                     activeOpacity={0.5}

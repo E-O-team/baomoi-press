@@ -1,12 +1,15 @@
 import React from 'react';
-import { Platform, AsyncStorage, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
+import { Platform, AsyncStorage, StatusBar, StyleSheet, View, SafeAreaView, Text } from 'react-native';
+import NotificationPopup from 'react-native-push-notification-popup';
 import { AppLoading, Asset, Font, Icon, Permissions, Notifications } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import { Provider } from './context/context.js'
+import dateFormat from 'dateformat';
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
     notification: {},
+    notificationExist: false,
   };
 
 
@@ -35,23 +38,7 @@ export default class App extends React.Component {
     // Get the token that uniquely identifies this device
     let token = await Notifications.getExpoPushTokenAsync();
 
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
-    // POST the token to your backend server from where you can retrieve it to send push notifications.
-    // return fetch(PUSH_ENDPOINT, {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     token: {
-    //       value: token,
-    //     },
-    //     user: {
-    //       username: 'Brent',
-    //     },
-    //   }),
-    // });
+    this.notificationSubscription = Notifications.addListener(this._handleNotification);
   }
 
     componentDidMount() {
@@ -61,7 +48,20 @@ export default class App extends React.Component {
     }
 
     _handleNotification = notification => {
-        this.setState({ notification: notification });
+        this.setState({
+            notification: notification.data,
+            notificationExist: true
+        }, () => {
+            const {title, body} = this.state.notification
+            this.popup.show({
+                onPress: function() {console.log('Pressed')},
+                appIconSource: require('./assets/images/logo-256x256.png'),
+                appTitle: 'Baomoi.press',
+                timeText: dateFormat(new Date(), "dd-mm-yyyy"),
+                title: title,
+                body: body,
+            });
+        });
     };
 
 
@@ -80,6 +80,7 @@ export default class App extends React.Component {
         <Provider>
             <View style={{flex: 1, backgroundColor: "white"}}>
                 {Platform.OS === 'ios' && <StatusBar backgroundColor="white" />}
+                <NotificationPopup ref={ref => this.popup = ref} />
                 <AppNavigator />
             </View>
         </Provider>

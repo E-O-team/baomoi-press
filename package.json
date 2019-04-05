@@ -25,6 +25,7 @@
     "react-native-elements": "^0.19.1",
     "react-native-htmlview": "^0.13.0",
     "react-native-multibar": "0.0.4",
+    "react-native-push-notification-popup": "^1.2.0",
     "react-native-render-html": "^4.1.2",
     "react-navigation": "^3.3.0",
     "react-navigation-tabs": "^0.4.0"

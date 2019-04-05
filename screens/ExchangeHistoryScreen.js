@@ -70,8 +70,15 @@ export default class ExchangeHistory extends React.PureComponent {
         // let user = JSON.parse(await AsyncStorage.getItem('user'))
         // console.log(user);
         let id = JSON.parse(await AsyncStorage.getItem('user')).id
-        axios.get("https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]=" + id)
-        .then(res => this.setState({data: res.data}))
+        let token = JSON.parse(await AsyncStorage.getItem('user')).token
+        console.log(token);
+        axios({
+            method: "GET",
+            url: "https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]="+ id +"&status=publish, draft",
+            headers: {'Authorization': 'Bearer ' + token},
+        })
+        // axios.get("https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]="+ id +"&status=publish, draft")
+        .then(res => this.setState({data: res.data}, () => console.log(this.state.data)))
         .catch(err => console.log(err))
     }
 
@@ -151,8 +158,21 @@ export default class ExchangeHistory extends React.PureComponent {
                                 </View>
                             </TouchableOpacity>
                             :
-                            <View style={{backgroundColor: "#e0272d", flex: 6, alignItems: "center", justifyContent: "center", height: 29}}>
-                                <Text style={{color: "white", fontSize: 20}}>{request_status}</Text>
+                            <View style={{flex: 6, height: 29}}>
+                                {(request_status == "Bị từ chối")?
+                                    <TouchableOpacity
+                                        onPress={() => Alert.alert("Yêu cầu của bạn đã bị từ chối do vi phạm điều khoản thanh toán", "Bạn muốn phản hồi vui lòng liên hệ về mail baomoi.press@gmail.com")}
+                                        activeOpacity={0.5}
+                                    >
+                                        <View style={{backgroundColor: "#e0272d", alignItems: "center", justifyContent: "center", height: 29}}>
+                                            <Text style={{color: "white", fontSize: 20}}>{request_status}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    :
+                                    <View style={{backgroundColor: "#e0272d", alignItems: "center", justifyContent: "center", height: 29}}>
+                                        <Text style={{color: "white", fontSize: 20}}>{request_status}</Text>
+                                    </View>
+                                }
                             </View>
                         }
                     </View>

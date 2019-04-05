@@ -27,8 +27,7 @@ import {Consumer} from '../../context/context.js';
 import { BaomoiText } from '../../components/StyledText';
 import axios from 'axios';
 import moment from 'moment/min/moment-with-locales'
-import Ad from '../../components/Ad';
-import InterstitialAd from '../../components/InterstitialAd';
+import InterstitialAd from '../../components/Ads/InterstitialAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 
@@ -42,7 +41,6 @@ export default class HomeScreen extends React.Component {
             page: 1,
             y: 0,
             isScrollDown: false,
-
         }
     }
     // static navigationOptions = ({navigation}) => {
@@ -52,11 +50,10 @@ export default class HomeScreen extends React.Component {
     //     }
     // }
     componentWillMount() {
-        this.fetchNews(this.state.selectedCategory)
+        this.fetchNews()
         // this.fetchCategories()
     }
-    fetchNews = (selectedCategory) => {
-        console.log("page: " + this.state.page);
+    fetchNews = () => {
         if(this.state.refreshing == true){
             this.setState({
                 page: 1,
@@ -88,16 +85,17 @@ export default class HomeScreen extends React.Component {
 
     handleRefresh = () => {
         this.setState({
-                refreshing: true
+                refreshing: true,
+                page: 1
             },
-            () => this.fetchNews(this.state.selectedCategory)
+            () => this.fetchNews()
         );
     }
     handleLoadMore = () => {
         console.log("loading more");
         this.setState({
             page: this.state.page + 1,
-        }, () => this.fetchNews(this.state.selectedCategory))
+        }, () => this.fetchNews())
     }
 
     setCategory = (id) => {
@@ -106,7 +104,7 @@ export default class HomeScreen extends React.Component {
             page: 1,
             articles: []
         }, () => {
-            this.fetchNews(this.state.selectedCategory);
+            this.fetchNews();
             // this.fetchCategories();
         })
     }
@@ -132,6 +130,7 @@ export default class HomeScreen extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{flex: 1, backgroundColor: backGround}}>
+                        <InterstitialAd/>
                         <FlatList
                             onScroll={this.handleOnScroll}
                             initialNumToRender={5}
