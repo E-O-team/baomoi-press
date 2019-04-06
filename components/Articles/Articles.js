@@ -20,6 +20,8 @@ import {Consumer} from '../../context/context.js'
 import { BaomoiText } from '../StyledText';
 import moment from 'moment/min/moment-with-locales'
 import spinner from '../../assets/images/spinner.gif';
+import BannderAd from '../Ads/BannerAd';
+import Notification from './Notification';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 moment.locale('vi');
@@ -66,9 +68,12 @@ export default class Articles extends React.Component {
             const item = prop.item
             const ui = prop.ui
             const index = prop.index
+            console.log(index);
             if(this.props.video == true){
                 // post with video format
                 return <Video item={item} ui={ui} index={index} navigation={this.props.navigation}/>
+            }else if (this.props.notification == true) {
+                return <Notification item={item} ui={ui} index={index} navigation={this.props.navigation}/>
             }else{
                 if(item.featured_post == "on"){
                     if(index === 0){
@@ -95,7 +100,10 @@ export default class Articles extends React.Component {
           <Consumer>
             {({textColor, backGround}) => (
             <View style={{backgroundColor: backGround}}>
-                    <Post item={item} ui={{textColor}} index={index}/>
+                {index == 0 &&
+                    <BannderAd size="small"/>
+                }
+                <Post item={item} ui={{textColor}} index={index} notification={this.props.notification}/>
 
                 <Divider style={{ backgroundColor: '#e0e0e0'}} />
             </View>

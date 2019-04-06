@@ -26,7 +26,7 @@ export default class FeaturedPost extends React.Component {
         return(
             <View>
 
-                <BannerAd/>
+                
 
                 <TouchableOpacity
                     activeOpacity={0.5}

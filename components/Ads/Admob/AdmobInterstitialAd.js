@@ -32,8 +32,6 @@ export default class AdmobInterstitialAd extends React.Component {
     }
 
     showAD = () => {
-        AdMobInterstitial.setTestDeviceID("EMULATOR");
-        // ALWAYS USE TEST ID for Admob ads
         if(Platform.OS == "ios"){
             AdMobInterstitial.setAdUnitID(this.state.ios);
         }else if (Platform.OS == "android") {

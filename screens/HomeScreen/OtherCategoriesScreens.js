@@ -146,7 +146,6 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                                 keyExtractor={item => item.id.toString()}
                             />
                         </View>
-                        <BannerAd/>
                         <FlatList
                             onScroll={this.handleOnScroll}
                             data={this.state.articles}

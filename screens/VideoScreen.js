@@ -76,13 +76,12 @@ export default class VideoScreen extends React.Component{
             <Consumer>
                 {({textColor, backGround}) => (
                 <View>
-                    <BannerAd/>
                     <FlatList
                     onScrollBeginDrag={this.handleBeginDrag}
                     onScrollEndDrag={this.handleEndDrag}
                     onScroll={this.handleOnScroll}
                     data={this.state.articles}
-                    renderItem={({ item }) => <Articles item={item} navigation={this.props.navigation} video={true} ui={{textColor, backGround}}/>}
+                    renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} video={true} ui={{textColor, backGround}} index={index}/>}
                     keyExtractor={item => item.id.toString()}
                     refreshing={this.state.refreshing}
                     ListFooterComponent={() => <ActivityIndicator size="large" animating />}

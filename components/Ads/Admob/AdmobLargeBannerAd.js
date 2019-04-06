@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import { AdMobBanner, AdMobInterstitial, AdMobRewarded, Notifications } from "expo";
 import axios from 'axios';
-export default class AdmobBannerAd extends React.Component {
+export default class AdmobLargeBannerAd extends React.Component {
 
     constructor(props) {
         super(props);
@@ -40,18 +40,20 @@ export default class AdmobBannerAd extends React.Component {
         if(Platform.OS == "ios" && this.state.ios !== ""){
             return (
                 <View style={styles.container}>
-                    <AdMobBanner
-                        bannerSize="banner"
-                        adUnitID={this.state.ios}
-                        didFailToReceiveAdWithError={this.bannerError}
-                    />
+                    {this.state.ios !== "" &&
+                        <AdMobBanner
+                            bannerSize="mediumRectangle"
+                            adUnitID={this.state.ios}
+                            didFailToReceiveAdWithError={this.bannerError}
+                        />
+                    }
                 </View>
             );
         }else if (Platform.OS == "android" && this.state.android !== "") {
             return (
                 <View style={styles.container}>
                     <AdMobBanner
-                        bannerSize="banner"
+                        bannerSize="mediumRectangle"
                         adUnitID={this.state.android}
                         didFailToReceiveAdWithError={this.bannerError}
                     />
@@ -64,7 +66,7 @@ export default class AdmobBannerAd extends React.Component {
     }
 const styles = StyleSheet.create({
   container: {
-     height: 70,
+     height: 260,
      alignItems: "center",
      justifyContent: "center",
 

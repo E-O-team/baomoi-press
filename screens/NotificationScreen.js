@@ -26,6 +26,7 @@ import {
     Badge
 } from 'react-native-elements';
 import Sources from '../components/Sources';
+import Articles from '../components/Articles/Articles';
 import axios from 'axios';
 
 
@@ -34,8 +35,16 @@ export default class NotificationScreen extends React.Component {
         super(props)
         this.state = {
             modalVisible: false,
-            value: null
+            value: null,
+            data: []
         };
+        this.getNotifications()
+    }
+
+    getNotifications = () => {
+        axios.get("https://baomoi.press/wp-json/wp/v2/thong_bao")
+        .then(res => this.setState({data: res.data}))
+        .catch(err => console.log(err))
     }
 
     setModalVisible = (visible, value) => {
@@ -87,9 +96,18 @@ export default class NotificationScreen extends React.Component {
     }
     render() {
         return (
-            <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                <Text>màn hình thông báo</Text>
-            </View>
+            <Consumer>
+                {({textColor, backGround}) => (
+                    <ScrollView style={{flex: 1}}>
+                        <FlatList
+                            data={this.state.data}
+                            extraData={this.state.data}
+                            renderItem={({ item, index }) => <Articles notification={true} item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
+                            keyExtractor={item => item.id.toString()}
+                        />
+                    </ScrollView>
+                )}
+            </Consumer>
         )
     }
 }
