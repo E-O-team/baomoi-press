@@ -22,6 +22,7 @@ import moment from 'moment/min/moment-with-locales'
 import spinner from '../../assets/images/spinner.gif';
 import BannderAd from '../Ads/BannerAd';
 import Notification from './Notification';
+import ArticleAd from '../Ads/ArticleAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 moment.locale('vi');
@@ -101,7 +102,10 @@ export default class Articles extends React.Component {
             {({textColor, backGround}) => (
             <View style={{backgroundColor: backGround}}>
                 {index == 0 &&
-                    <BannderAd size="small"/>
+                    <BannderAd size="small" AdPosition="List Home"/>
+                }
+                {(index % 6 == 0 && index !== 0) &&
+                    <ArticleAd/>
                 }
                 <Post item={item} ui={{textColor}} index={index} notification={this.props.notification}/>
 

@@ -181,7 +181,7 @@ export default class SiderBar extends React.Component {
                                         reverse
                                         color="#a6122b"
                                     />
-                                    <Button buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} onPress={() => this.setModalVisible(!this.state.modalVisible)} />
+                                <Button buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} onPress={() => this.setModalVisible(!this.state.modalVisible)} />
                                 </View>
                             )}
 

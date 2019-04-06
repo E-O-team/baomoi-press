@@ -17,11 +17,11 @@ export default class AdmobBannerAd extends React.Component {
         axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=banner")
         .then(res => {
             res.data.forEach(item => {
-                if(item.acf.os == "android"){
+                if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Admob"){
                     this.setState({
                         android: item.acf.unitID
                     })
-                }else if (item.acf.os == "ios") {
+                }else if (item.acf.os == "ios" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Admob") {
                     this.setState({
                         ios: item.acf.unitID
                     })
