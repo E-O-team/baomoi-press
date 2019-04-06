@@ -103,11 +103,11 @@ export default class AuthorSubscription extends React.Component{
 
     return(
       <View style={styles.container}>
-        <View style={{height: 28 , width: 28, borderRadius: 28/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
+        <View style={{height: 30 , width: 30, borderRadius: 30/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
           <Image
           source={{uri: this.state.logo || defaultImg}}
           resizeMode='contain'
-          style={{width: 28, height: 28, borderRadius: 28/2}}
+          style={{width: 20, height: 20, borderRadius: 20/2}}
           />
         </View>
         {

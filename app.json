@@ -29,6 +29,8 @@
     "android": {
       "package": "com.press.baomoi"
     },
-    "description": "alpha release"
+    "description": "alpha release",
+    "facebookAppId": "415223319249971",
+    "facebookDisplayName": "baomoi-press"
   }
 }

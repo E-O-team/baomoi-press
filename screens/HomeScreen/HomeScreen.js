@@ -26,6 +26,8 @@ import { MonoText } from '../../components/StyledText';
 import {Consumer} from '../../context/context.js';
 import { BaomoiText } from '../../components/StyledText';
 import axios from 'axios';
+import { FacebookAds } from 'expo';
+
 import moment from 'moment/min/moment-with-locales'
 import Ad from '../../components/Ad';
 import InterstitialAd from '../../components/InterstitialAd';
@@ -53,6 +55,7 @@ export default class HomeScreen extends React.Component {
     // }
     componentWillMount() {
         this.fetchNews(this.state.selectedCategory)
+    
         // this.fetchCategories()
     }
     fetchNews = (selectedCategory) => {

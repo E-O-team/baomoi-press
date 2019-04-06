@@ -10,12 +10,18 @@ import HyperText from '../components/HyperText'
 import {Consumer, Provider} from '../context/context.js';
 import {Icon, Divider} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
+import { FacebookAds } from 'expo';
+import PreAdComponent from '../components/PreAdComponent'
+
 import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
 import { BaomoiText } from '../components/StyledText';
+
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 moment.locale('vi');
+
 HEADER_MAX_HEIGHT = 100;
 HEADER_MIN_HEIGHT = 50;
 
@@ -46,8 +52,10 @@ export default class ArticleScreen extends React.Component {
 
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
-        },() => {this.fetchComment()})
-
+        },() => {
+          this.fetchComment()
+          this.ContentAds()
+        })
 
         this.setState({
             user: JSON.parse(await AsyncStorage.getItem('user'))
@@ -123,6 +131,21 @@ export default class ArticleScreen extends React.Component {
       }))
       // .then(json => console.log(json))
       .catch(err => console.log(err))
+    }
+    ContentAds = () => {
+      //Add advertising in the middle of content
+      const string = this.state.Article.content.plaintext
+      var str = "Visit W3Schools.\nLearn JavaScript.";
+       var patt1 = /\n/;
+       var result = str.search(patt1);
+      console.log(result)
+      var middle_position = Math.floor(string.length /2)
+      const new_position = string.indexOf(patt1, middle_position)
+      console.log(new_position)
+
+      const new_content = [string.slice(0, middle_position+new_position), '<Ads></Ads>', string.slice(middle_position+new_position)].join('');
+      console.log(new_content)
+
     }
 
     render(){
@@ -308,19 +331,24 @@ export default class ArticleScreen extends React.Component {
             </View>
 
                 <Divider style={{ backgroundColor: '#e0e0e0', height: 15}} />
+                <PreAdComponent position='Content(Cuối bài viết)'/>
 
                 <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
                 <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
 
           </ScrollView>
 
+
           <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} navigation={this.props.navigation}/>
 
 
 
+
         </View>
+
         )}
       </Consumer>
+
 
         );
     }
