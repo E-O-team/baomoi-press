@@ -133,18 +133,19 @@ export default class ArticleScreen extends React.Component {
       .catch(err => console.log(err))
     }
     ContentAds = () => {
-      //Add advertising in the middle of content
+      //Add advertising in the middle of content'
+      var article = this.state.Article
       const string = this.state.Article.content.plaintext
-      var str = "Visit W3Schools.\nLearn JavaScript.";
-       var patt1 = /\n/;
-       var result = str.search(patt1);
-      console.log(result)
-      var middle_position = Math.floor(string.length /2)
-      const new_position = string.indexOf(patt1, middle_position)
-      console.log(new_position)
 
-      const new_content = [string.slice(0, middle_position+new_position), '<Ads></Ads>', string.slice(middle_position+new_position)].join('');
+
+      var middle_position = Math.floor(string.length /2)
+      var match = /\r|\n/.exec(string.slice(middle_position));
+      console.log(match.index)
+
+      const new_content = [string.slice(0, middle_position+match.index), '<Ads></Ads>', string.slice(middle_position+match.index)].join('');
       console.log(new_content)
+      article.content.plaintext = new_content
+      this.setState({Article: article}, ()=>console.log(this.state.Article.content.plaintext))
 
     }
 
@@ -282,6 +283,11 @@ export default class ArticleScreen extends React.Component {
                             }
                             return node.children;
                         }}
+                        renderers={
+                          {
+                             Ads: () => <View style={{ width: 100, height: 100, borderRadius: 30, backgroundColor: 'blue' }} />
+                           }
+                          }
                         html={this.state.Article.content.plaintext}
                         imagesMaxWidth={Dimensions.get('window').width-20}
                         onLinkPress={(event, href)=>{
