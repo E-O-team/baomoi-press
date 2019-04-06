@@ -25,7 +25,7 @@ import NotificationScreen from '../screens/NotificationScreen';
 import TermsScreen from '../screens/TermsScreen';
 import ExchangeGiftsScreen from '../screens/ExchangeGiftsScreen';
 import ExchangeHistoryScreen from '../screens/ExchangeHistoryScreen';
-
+import NotificationsDetail from '../screens/NotificationsDetail';
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -43,11 +43,13 @@ const HomeStack = createStackNavigator({
   UserProfileEdit: UserProfileEdit,
   Following: FollowingScreen,
   Notifications: NotificationScreen,
+  NotificationsDetail: NotificationsDetail,
   ExchangeGifts: ExchangeGiftsScreen,
   Source: SourceScreen,
   Terms: TermsScreen,
   ExchangeHistory: ExchangeHistoryScreen,
   WebView: OriginalWebView,
+
 },{
     headerMode: "float"
 });

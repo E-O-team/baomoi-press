@@ -31,9 +31,9 @@ export default class notification extends React.PureComponent {
             <View style={{padding: 10}}>
                 <TouchableOpacity
                     activeOpacity={0.5}
-                    // onPress={() => this.props.navigation.navigate("Article", {
-                    //     Article: item
-                    // })}
+                    onPress={() => this.props.navigation.navigate("NotificationsDetail", {
+                        data: item,
+                    })}
                 >
                     <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                         <View>
