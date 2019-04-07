@@ -5,10 +5,10 @@ import AdmobLargeBannerAd from './Admob/AdmobLargeBannerAd';
 export default class BannerAd extends Component {
 
     render() {
-        if(this.props.size == "large"){
-            return <AdmobLargeBannerAd/>
+        if(this.props.size == "rectangle"){
+            return <AdmobLargeBannerAd AdPosition={this.props.AdPosition}/>
         }else if (this.props.size == "small") {
-            return <AdmobBannerAd/>
+            return <AdmobBannerAd AdPosition={this.props.AdPosition}/>
         }
     }
 

@@ -48,6 +48,7 @@ export default class AuthLoadingScreen extends React.Component {
   _bootstrapAsync = async () => {
     let user = JSON.parse(await AsyncStorage.getItem('user'));
     let ExpoToken = await Notifications.getExpoPushTokenAsync();
+    // console.log(user.token);
     if(user){
         axios({
             method: "POST",

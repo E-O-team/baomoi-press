@@ -6,7 +6,7 @@ export default class InterstitialAd extends Component {
 
     render() {
         return (
-            <AdmobInterstitialAd/>
+            <AdmobInterstitialAd AdPosition={this.props.AdPosition}/>
         );
     }
 

@@ -130,7 +130,7 @@ export default class HomeScreen extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{flex: 1, backgroundColor: backGround}}>
-                        <InterstitialAd/>
+                        <InterstitialAd AdPosition="Khởi động ứng dụng"/>
                         <FlatList
                             onScroll={this.handleOnScroll}
                             initialNumToRender={5}
