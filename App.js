@@ -1,12 +1,69 @@
 import React from 'react';
-import { Platform, AsyncStorage, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
+import { Platform, AsyncStorage, StatusBar, StyleSheet, View, SafeAreaView, Text } from 'react-native';
+import NotificationPopup from 'react-native-push-notification-popup';
+import { AppLoading, Asset, Font, Icon, Permissions, Notifications } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import { Provider } from './context/context.js'
+import dateFormat from 'dateformat';
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
+    notification: {},
+    notificationExist: false,
   };
+
+
+
+    registerForPushNotificationsAsync = async() => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+    console.log(existingStatus);
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== 'granted') {
+      return;
+    }
+
+    // Get the token that uniquely identifies this device
+    let token = await Notifications.getExpoPushTokenAsync();
+
+    this.notificationSubscription = Notifications.addListener(this._handleNotification);
+  }
+
+    componentDidMount() {
+        this.registerForPushNotificationsAsync();
+
+        // this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    }
+
+    _handleNotification = notification => {
+        this.setState({
+            notification: notification.data,
+            notificationExist: true
+        }, () => {
+            const {title, body} = this.state.notification
+            this.popup.show({
+                onPress: function() {console.log('Pressed')},
+                appIconSource: require('./assets/images/logo-256x256.png'),
+                appTitle: 'Baomoi.press',
+                timeText: dateFormat(new Date(), "dd-mm-yyyy"),
+                title: title,
+                body: body,
+            });
+        });
+    };
+
 
   render() {
     const menu = 123
@@ -23,6 +80,7 @@ export default class App extends React.Component {
         <Provider>
             <View style={{flex: 1, backgroundColor: "white"}}>
                 {Platform.OS === 'ios' && <StatusBar backgroundColor="white" />}
+                <NotificationPopup ref={ref => this.popup = ref} />
                 <AppNavigator />
             </View>
         </Provider>

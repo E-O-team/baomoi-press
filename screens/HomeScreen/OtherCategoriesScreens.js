@@ -19,7 +19,6 @@ import Header from '../../components/Header';
 import axios from 'axios';
 import {Consumer} from '../../context/context.js';
 import Articles from '../../components/Articles/Articles';
-import Ad from '../../components/Ad';
 export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)
@@ -31,7 +30,8 @@ export default class OtherCategoriesScreens extends React.PureComponent {
             refreshing: true,
             loading: false,
             page: 1,
-            y: 0
+            y: 0,
+            isScrollDown: false,
         }
     }
 
@@ -68,14 +68,14 @@ export default class OtherCategoriesScreens extends React.PureComponent {
 
     handleRefresh = () => {
         this.setState({
-                refreshing: true
+                refreshing: true,
+                page: 1
             },
             () => this.fetchNews(this.state.selectedCategory)
         );
     }
 
     handleLoadMore = () => {
-        console.log("loading more");
         this.setState({
             page: this.state.page + 1,
         }, () => this.fetchNews(this.state.selectedCategory))
@@ -146,7 +146,6 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                                 keyExtractor={item => item.id.toString()}
                             />
                         </View>
-                        <Ad/>
                         <FlatList
                             onScroll={this.handleOnScroll}
                             data={this.state.articles}

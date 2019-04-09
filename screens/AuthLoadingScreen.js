@@ -11,36 +11,31 @@ import {
 } from 'react-native';
 import splashLogo from '../assets/images/logo-splash.png';
 import {
-  AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded
+  Permissions,
+  Notifications,
+  AdMobInterstitial
 } from 'expo';
 import HandleNetworkError from '../components/HandleNetworkError';
 import axios from 'axios';
 export default class AuthLoadingScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.checkConnect()
+    constructor(props) {
+      super(props);
+      this.checkConnect()
 
+    }
 
-  }
-
-  checkConnect = () => {
-      NetInfo.isConnected.fetch().then(isConnected => {
-          if(isConnected == false){
-              Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
-          }else if (isConnected == true) {
-              console.log("connected");
-              NetInfo.addEventListener('connectionChange', this.handleFirstConnectivityChange);
-              this._bootstrapAsync();
-          }
-      });
-
-  }
+    checkConnect = () => {
+        NetInfo.isConnected.fetch().then(isConnected => {
+            if(isConnected == false){
+                Alert.alert("Vui lòng kiểm tra lại kết nối mạng và khởi động lại ứng dụng")
+            }else if (isConnected == true) {
+                NetInfo.addEventListener('connectionChange', this.handleFirstConnectivityChange);
+                this._bootstrapAsync();
+            }
+        });
+    }
 
   handleFirstConnectivityChange = (isConnected) => {
-      console.log(isConnected);
       if(isConnected.type !== "none"){
           console.log("connected!!");
       }else{
@@ -51,21 +46,40 @@ export default class AuthLoadingScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    let user = await AsyncStorage.getItem('user');
-
-
+    let user = JSON.parse(await AsyncStorage.getItem('user'));
+    let ExpoToken = await Notifications.getExpoPushTokenAsync();
+    // console.log(user.token);
     if(user){
-        user = JSON.parse(user)
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
             headers: {'Authorization': 'Bearer ' + user.token},
         })
-        .then(() => this.props.navigation.navigate("App"))
-        .catch(err => {
-            if(err.response){
+        .then(() => {
+            const data = new FormData()
+            data.append("fields[deviceToken]", ExpoToken)
+            axios({
+                method: "POST",
+                url: 'https://baomoi.press/wp-json/acf/v3/users/' + user.id,
+                headers: {'Authorization': 'Bearer ' + user.token},
+                data: data
+            })
+            .then((res) => {
+                if(res.status == 200){
+                    // this.showInterstitialAd()
+                    this.props.navigation.navigate("App")
+                }
+            })
+            .catch(err => {
+                // AsyncStorage.clear()
+                // this.props.navigation.navigate("App")
+                console.log("here:" + err);
+            })
 
-            }
+        })
+        .catch(err => {
+            AsyncStorage.clear()
+            this.props.navigation.navigate("App")
         })
     }else{
         AsyncStorage.clear()

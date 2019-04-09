@@ -29,8 +29,7 @@ import axios from 'axios';
 import { FacebookAds } from 'expo';
 
 import moment from 'moment/min/moment-with-locales'
-import Ad from '../../components/Ad';
-import InterstitialAd from '../../components/InterstitialAd';
+import InterstitialAd from '../../components/Ads/InterstitialAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 
@@ -44,7 +43,6 @@ export default class HomeScreen extends React.Component {
             page: 1,
             y: 0,
             isScrollDown: false,
-
         }
     }
     // static navigationOptions = ({navigation}) => {
@@ -54,12 +52,10 @@ export default class HomeScreen extends React.Component {
     //     }
     // }
     componentWillMount() {
-        this.fetchNews(this.state.selectedCategory)
-    
+        this.fetchNews()
         // this.fetchCategories()
     }
-    fetchNews = (selectedCategory) => {
-        console.log("page: " + this.state.page);
+    fetchNews = () => {
         if(this.state.refreshing == true){
             this.setState({
                 page: 1,
@@ -91,16 +87,17 @@ export default class HomeScreen extends React.Component {
 
     handleRefresh = () => {
         this.setState({
-                refreshing: true
+                refreshing: true,
+                page: 1
             },
-            () => this.fetchNews(this.state.selectedCategory)
+            () => this.fetchNews()
         );
     }
     handleLoadMore = () => {
         console.log("loading more");
         this.setState({
             page: this.state.page + 1,
-        }, () => this.fetchNews(this.state.selectedCategory))
+        }, () => this.fetchNews())
     }
 
     setCategory = (id) => {
@@ -109,12 +106,13 @@ export default class HomeScreen extends React.Component {
             page: 1,
             articles: []
         }, () => {
-            this.fetchNews(this.state.selectedCategory);
+            this.fetchNews();
             // this.fetchCategories();
         })
     }
 
     handleOnScroll = (e) => {
+      console.log('throttle')
       this.setState({y: e.nativeEvent.contentOffset.y})
         if(this.state.y != 0){
            if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
@@ -135,13 +133,14 @@ export default class HomeScreen extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{flex: 1, backgroundColor: backGround}}>
+                        <InterstitialAd AdPosition="Khởi động ứng dụng"/>
                         <FlatList
                             onScroll={this.handleOnScroll}
                             initialNumToRender={5}
                             data={this.state.articles}
                             extraData={this.state.articles}
                             renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                            keyExtractor={item => item.id.toString()}
+                            keyExtractor={( item, index ) => index.toString()}
                             refreshing={this.state.refreshing}
                             onRefresh={this.handleRefresh}
                             onEndReached={() => this.handleLoadMore()}

@@ -25,7 +25,7 @@ import NotificationScreen from '../screens/NotificationScreen';
 import TermsScreen from '../screens/TermsScreen';
 import ExchangeGiftsScreen from '../screens/ExchangeGiftsScreen';
 import ExchangeHistoryScreen from '../screens/ExchangeHistoryScreen';
-
+import NotificationsDetail from '../screens/NotificationsDetail';
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -43,11 +43,13 @@ const HomeStack = createStackNavigator({
   UserProfileEdit: UserProfileEdit,
   Following: FollowingScreen,
   Notifications: NotificationScreen,
+  NotificationsDetail: NotificationsDetail,
   ExchangeGifts: ExchangeGiftsScreen,
   Source: SourceScreen,
   Terms: TermsScreen,
   ExchangeHistory: ExchangeHistoryScreen,
   WebView: OriginalWebView,
+
 },{
     headerMode: "float"
 });
@@ -164,6 +166,7 @@ class TabBarComponent extends Component {
 
   componentWillReceiveProps(props) {
     const oldState = this.props.navigation.state;
+    console.log("in!")
     const oldRoute = oldState.routes[oldState.index];
     var oldParams = oldRoute.routes[oldRoute.index].params;
     if(oldState.index === 0)
@@ -172,6 +175,7 @@ class TabBarComponent extends Component {
     oldParams = oldRouteChild.routes[oldRouteChild.index].params;
     }
     const wasVisible = !oldParams || oldParams.visible;
+    console.log(wasVisible)
 
 
     const newState = props.navigation.state;
@@ -183,11 +187,12 @@ class TabBarComponent extends Component {
     newParams = newRouteChild.routes[newRouteChild.index].params;
     }
     const isVisible = !newParams || newParams.visible;
+    console.log(isVisible)
 
     if (wasVisible && !isVisible) {
-      Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 500 }).start();
+      Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 1000 }).start();
     } else if (isVisible && !wasVisible) {
-      Animated.timing(this.state.offset, { toValue: 0, duration: 500 }).start();
+      Animated.timing(this.state.offset, { toValue: 0, duration: 1000 }).start();
     }
   }
 

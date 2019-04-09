@@ -12,13 +12,13 @@ import {Consumer} from '../../context/context.js'
 import { BaomoiText } from '../StyledText';
 import moment from 'moment/min/moment-with-locales'
 import spinner from '../../assets/images/spinner.gif';
-import Ad from '../Ad';
+import BannerAd from '../Ads/BannerAd';
 var { width, height } = Dimensions.get('window');
 
 moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
-export default class FeaturedPost extends React.Component {
+export default class FeaturedPost extends React.PureComponent {
     render(){
         const item = this.props.item
         const ui = this.props.ui
@@ -26,7 +26,7 @@ export default class FeaturedPost extends React.Component {
         return(
             <View>
 
-                <Ad/>
+
 
                 <TouchableOpacity
                     activeOpacity={0.5}

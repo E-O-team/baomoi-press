@@ -35,23 +35,23 @@ import vinaphone from '../../assets/images/ExchangeGiftsScreen/icon-vinaphone.pn
 import axios from 'axios';
 const Carriers = [
     {
-        name: "gmobile",
+        name: "Gmobile",
         source: gmobile
     },
     {
-        name: "mobiphone",
+        name: "Mobiphone",
         source: mobiphone
     },
     {
-        name: "vietnammobi",
+        name: "Vietnammobi",
         source: vietnammobi
     },
     {
-        name: "viettel",
+        name: "Viettel",
         source: viettel
     },
     {
-        name: "vinaphone",
+        name: "Vinaphone",
         source: vinaphone
     },
 ]
@@ -63,7 +63,8 @@ export default class ExchangeGiftsModal extends React.Component {
             modalVisible: this.props.visible,
             selectedCarrier: null,
             errorMessage: "",
-            loading: false
+            loading: false,
+            buttonTitle: "gửi yêu cầu"
         }
     }
 
@@ -78,12 +79,32 @@ export default class ExchangeGiftsModal extends React.Component {
             this.setState({
                 errorMessage: "",
                 loading: true,
-            }, () => {
-                const data = {
-                    carrier: this.state.selectedCarrier,
-                    ammount: this.props.value
-                }
-                console.log(data);
+            }, async() => {
+                const data = new FormData()
+                let user = JSON.parse(await AsyncStorage.getItem('user'))
+                data.append("fields[carrier]", this.state.selectedCarrier)
+                data.append("fields[price]", this.props.value)
+                data.append("title", user.name)
+                data.append("fields[userID]", user.id)
+                data.append("fields[request_status]", "Đang chờ duyệt")
+                data.append("fields[report]", "null")
+                data.append("status", "draft")
+                // console.log(data);
+                axios({
+                    method: "POST",
+                    url: 'https://baomoi.press/wp-json/wp/v2/cardrequest',
+                    headers: {'Authorization': 'Bearer ' + user.token},
+                    data: data
+                })
+                .then(res => {
+                    if(res.status == 201){
+                        this.setState({
+                            loading: false,
+                            buttonTitle: "Gửi yêu cầu thành công!"
+                        })
+                    }
+                })
+                .catch(err => console.log(err))
             })
         }else{
             this.setState({
@@ -167,7 +188,7 @@ export default class ExchangeGiftsModal extends React.Component {
                     </View>
                     <View style={{alignItems: "center", justifyContent: "space-around", width: 320}}>
                         <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
-                        <Button buttonStyle={{backgroundColor: "#e12f28", width: 300}} title="Gửi yêu cầu" onPress={this.handleSubmit} loading={this.state.loading}/>
+                        <Button buttonStyle={{backgroundColor: "#e12f28", width: 300}} title={this.state.buttonTitle} onPress={this.handleSubmit} loading={this.state.loading}/>
                     </View>
                 </View>
             </View>
