@@ -156,7 +156,6 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                             onRefresh={this.handleRefresh}
                             onEndReached={() => this.handleLoadMore()}
                             onEndReachedThreshold={0.7}
-                            scrollEventThrottle={16}
                         />
                   </View>
                 )}

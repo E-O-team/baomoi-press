@@ -107,7 +107,7 @@ export default class AuthorSubscription extends React.Component{
           <Image
           source={{uri: this.state.logo || defaultImg}}
           resizeMode='contain'
-          style={{width: 28, height: 28, borderRadius: 28/2}}
+          style={{width: 24, height: 24, borderRadius: 24/2}}
           />
         </View>
         {

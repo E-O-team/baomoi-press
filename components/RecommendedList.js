@@ -155,27 +155,7 @@ export default class RecommendedList extends React.Component{
   }
 
   render(){
-    Comments = (props) => {
-        // fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + props.id)
-        // .then(res => res.json())
-        // .then(json => {
-        //     if(json.length !== 0){
-        //         return(
-        //           <View style={{flexDirection: "row", alignItems: "center"}}>
-        //               <BaomoiText style={{color: '#696969', fontSize: 15}}> - {json.length} </BaomoiText>
-        //               <Icon containerStyle={{marginTop: -2}} name='comment' type="evilicon" color='#696969' size={20}/>
-        //           </View>
-        //         )
-        //     }else{
-        //         return null;
-        //     }
-        // }).catch(err => {
-        //   return null
-        // })
-        return <Text>shit</Text>
 
-
-    }
 
     return(
       <View style={{padding: 10}}>

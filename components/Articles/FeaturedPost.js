@@ -18,7 +18,7 @@ var { width, height } = Dimensions.get('window');
 moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
-export default class FeaturedPost extends React.Component {
+export default class FeaturedPost extends React.PureComponent {
     render(){
         const item = this.props.item
         const ui = this.props.ui
@@ -26,7 +26,7 @@ export default class FeaturedPost extends React.Component {
         return(
             <View>
 
-                
+
 
                 <TouchableOpacity
                     activeOpacity={0.5}
