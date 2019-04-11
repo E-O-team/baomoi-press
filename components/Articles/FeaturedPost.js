@@ -37,7 +37,7 @@ export default class FeaturedPost extends React.Component {
                     <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
                         <View style={{flexDirection: 'row', alignItems:'center'}}>
                             <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 4, marginBottom: 3}}></View>
-                            <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>Tiêu Điểm</BaomoiText>
+                            <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 20}}>TIÊU ĐIỂM</BaomoiText>
                         </View>
                         <Icon
                             name='angle-right'

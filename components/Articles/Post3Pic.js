@@ -20,7 +20,7 @@ export default class Post3Pic extends React.PureComponent {
         const ui = this.props.ui
         const index = this.props.index
         return(
-            <View style={{flex: 1, flexDirection: 'column', padding: 10}}>
+            <View style={{flex: 1, flexDirection: 'column', paddingHorizontal: 10, paddingVertical: 25}}>
                 <View style={{flex: 2}}>
                     <View style={{flexDirection: "row", marginBottom: 7}}>
                         <TouchableOpacity
@@ -80,7 +80,7 @@ export default class Post3Pic extends React.PureComponent {
                         }
                         <Comments id={item.id}/>
                     </View>
-                        <BaomoiText style={{fontSize: 20, fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
+                        <BaomoiText style={{fontSize: 17.3, fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
                     </TouchableOpacity>
                 </View>
             </View>

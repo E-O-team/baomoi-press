@@ -9,6 +9,7 @@ export default class AdmobInterstitialAd extends React.Component {
         this.state = {
             android: "",
             ios: "",
+            failed: false,
         }
         this.getAdUnitID()
     }
@@ -29,6 +30,12 @@ export default class AdmobInterstitialAd extends React.Component {
             })
         })
         .catch(err => console.log(err))
+    }
+
+    componentDidMount() {
+        AdMobInterstitial.addEventListener("interstitialDidFailToLoad", () =>
+            console.log("interstitialDidFailToLoad")
+        );
     }
 
     showAD = () => {

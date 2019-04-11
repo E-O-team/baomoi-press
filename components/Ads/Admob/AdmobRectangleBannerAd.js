@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import { AdMobBanner, AdMobInterstitial, AdMobRewarded, Notifications } from "expo";
 import axios from 'axios';
-export default class AdmobLargeBannerAd extends React.Component {
+export default class AdmobRectangleBannerAd extends React.Component {
 
     constructor(props) {
         super(props);
@@ -14,7 +14,7 @@ export default class AdmobLargeBannerAd extends React.Component {
     }
 
     getAdUnitID = () =>{
-        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=largeBanner")
+        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=rectangle")
         .then(res => {
             res.data.forEach(item => {
                 if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition){
@@ -40,20 +40,18 @@ export default class AdmobLargeBannerAd extends React.Component {
         if(Platform.OS == "ios" && this.state.ios !== ""){
             return (
                 <View style={styles.container}>
-                    {this.state.ios !== "" &&
-                        <AdMobBanner
-                            bannerSize="largeBanner"
-                            adUnitID={this.state.ios}
-                            didFailToReceiveAdWithError={this.bannerError}
-                        />
-                    }
+                    <AdMobBanner
+                        bannerSize="mediumRectangle"
+                        adUnitID={this.state.ios}
+                        didFailToReceiveAdWithError={this.bannerError}
+                    />
                 </View>
             );
         }else if (Platform.OS == "android" && this.state.android !== "") {
             return (
                 <View style={styles.container}>
                     <AdMobBanner
-                        bannerSize="largeBanner"
+                        bannerSize="mediumRectangle"
                         adUnitID={this.state.android}
                         didFailToReceiveAdWithError={this.bannerError}
                     />
@@ -66,7 +64,7 @@ export default class AdmobLargeBannerAd extends React.Component {
     }
 const styles = StyleSheet.create({
   container: {
-     height: 110,
+     height: 260,
      alignItems: "center",
      justifyContent: "center",
 

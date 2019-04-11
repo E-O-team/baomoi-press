@@ -41,10 +41,10 @@ export default class Header extends React.Component {
                     >
                     <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
                         <Icon
-                        name='menu'
+                        name='user'
+                        type='feather'
                         size={22}
                         color='#696969'
-                        type="material-community"
                         onPress={() => this.props.navigation.openDrawer()}
                         />
                     </View>
