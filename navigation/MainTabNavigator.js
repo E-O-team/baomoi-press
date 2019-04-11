@@ -190,9 +190,9 @@ class TabBarComponent extends Component {
     console.log(isVisible)
 
     if (wasVisible && !isVisible) {
-      Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 1000 }).start();
+      Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 500 }).start();
     } else if (isVisible && !wasVisible) {
-      Animated.timing(this.state.offset, { toValue: 0, duration: 1000 }).start();
+      Animated.timing(this.state.offset, { toValue: 0, duration: 500 }).start();
     }
   }
 

@@ -56,9 +56,9 @@ export default class FeaturedPost extends React.PureComponent {
 
                                 {
                                   (item.taxonomy_source[0])?
-                                     <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow()}</BaomoiText>
+                                     <BaomoiText style={{color: '#696969', fontSize: 15}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                   :
-                                      <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow()}</BaomoiText>
+                                      <BaomoiText style={{color: '#696969', fontSize: 15}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                 }
                                 <Comments id={item.id}/>
                             </View>

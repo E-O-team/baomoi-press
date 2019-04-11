@@ -112,7 +112,6 @@ export default class HomeScreen extends React.Component {
     }
 
     handleOnScroll = (e) => {
-      console.log('throttle')
       this.setState({y: e.nativeEvent.contentOffset.y})
         if(this.state.y != 0){
            if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {

@@ -69,8 +69,7 @@ export default class Articles extends React.Component {
             const item = prop.item
             const ui = prop.ui
             const index = prop.index
-            console.log(index);
-            if(this.props.video == true){
+            if(item.format === "video"){
                 // post with video format
                 return <Video item={item} ui={ui} index={index} navigation={this.props.navigation}/>
             }else if (this.props.notification == true) {

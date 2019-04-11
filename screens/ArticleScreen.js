@@ -11,7 +11,6 @@ import {Consumer, Provider} from '../context/context.js';
 import {Icon, Divider} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
 import { FacebookAds } from 'expo';
-import PreAdComponent from '../components/PreAdComponent'
 
 import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
@@ -123,28 +122,29 @@ export default class ArticleScreen extends React.Component {
     }
 
     fetchComment = () => {
-      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id)
+      const request_length = this.state.comments.length + 20
+      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id +"&per_page="+request_length.toString())
       .then(res => res.json())
-      .then(json => this.setState({
-          comments: json,
-      }))
+      .then(json => {
+        this.setState({comments : json}, () => {if(this.state.comments.length >= request_length) this.fetchComment()  })
+      })
       // .then(json => console.log(json))
       .catch(err => console.log(err))
     }
     ContentAds = () => {
       //Add advertising in the middle of content'
-      var article = this.state.Article
-      const string = this.state.Article.content.plaintext
-
-
-      var middle_position = Math.floor(string.length /2)
-      var match = /\r|\n/.exec(string.slice(middle_position));
-      console.log(match.index)
-
-      const new_content = [string.slice(0, middle_position+match.index), '<Ads></Ads>', string.slice(middle_position+match.index)].join('');
-      console.log(new_content)
-      article.content.plaintext = new_content
-      this.setState({Article: article}, ()=>console.log(this.state.Article.content.plaintext))
+      // var article = this.state.Article
+      // const string = this.state.Article.content.plaintext
+      //
+      //
+      // var middle_position = Math.floor(string.length /2)
+      // var match = /\r|\n/.exec(string.slice(middle_position));
+      // console.log(match.index)
+      //
+      // const new_content = [string.slice(0, middle_position+match.index), '<Ads></Ads>', string.slice(middle_position+match.index)].join('');
+      // console.log(new_content)
+      // article.content.plaintext = new_content
+      // this.setState({Article: article}, ()=>console.log(this.state.Article.content.plaintext))
 
     }
 
@@ -258,7 +258,7 @@ export default class ArticleScreen extends React.Component {
                     <View style={{padding: 10}}>
                       <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor, marginBottom: 5}}>{this.state.Article.title.plaintitle}</Text>
 
-                      <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} moment={moment(this.state.Article.modified).fromNow()}/>
+                      <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}/>
                     </View>
 
                   }
@@ -269,11 +269,11 @@ export default class ArticleScreen extends React.Component {
                 <View style={{marginTop: 10}}>
                 {
                   (this.state.Article.format === 'video')?
-                  <HyperText navigation={this.props.navigation} article={this.state.Article} moment={moment(this.state.Article.modified).fromNow()}>
+                  <HyperText navigation={this.props.navigation} article={this.state.Article} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}>
                   {this.state.Article.content.plaintext}
                   </HyperText> :
                   <View style={{padding: 10}}>
-                      <Text style={{fontSize: 19*fontSizeRatio, fontWeight:'500',fontFamily: 'baomoi-regular',lineHeight:23*fontSizeRatio, color: textColor}}>{this.state.Article.excerpt.custom_excerpt}</Text>
+                      <Text style={{fontSize: 19*fontSizeRatio, fontWeight:'500',fontFamily: 'baomoi-regular',lineHeight:23*fontSizeRatio, color: textColor, marginBottom: 15}}>{this.state.Article.excerpt.custom_excerpt}</Text>
                       <HTML
                         alterChildren = { (node) => {
                             if (node.name === 'iframe') {
@@ -294,7 +294,7 @@ export default class ArticleScreen extends React.Component {
                         }}
                         ignoredStyles={['width', 'height', 'max-width']}
                         staticContentMaxWidth={Dimensions.get('window').width-20}
-                        tagsStyles={{blockquote:{marginLeft: 50}}}
+                        tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
                         baseFontStyle={{fontSize: 20*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
                   </View>
 
@@ -336,11 +336,10 @@ export default class ArticleScreen extends React.Component {
             </View>
                 <BannderAd size="rectangle" AdPosition="Content(Cuối bài viết)"/>
                 <Divider style={{ backgroundColor: '#e0e0e0', height: 15}} />
-                <PreAdComponent position='Content(Cuối bài viết)'/>
 
                 <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
                 <BannderAd size="rectangle" AdPosition="Content(Cuối bài viết)"/>
-                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
+                <CommentList comments={this.state.comments} onFetch={this.fetchComment} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} />
 
           </ScrollView>
 
