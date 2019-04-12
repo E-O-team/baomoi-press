@@ -31,44 +31,33 @@ export default class SignInScreen extends React.Component {
 
     static navigationOptions = { header: null }
     signIn = async (email, id, name, picture) => {
-        // if (this.state.username !== "" && this.state.password !== ""){
-        //     this.setState({loading: true})
-        //     axios.post('https://baomoi.press/wp-json/jwt-auth/v1/token', {
-        //         email: this.state.username,
-        //         password: this.state.password
-        //     })
-        //     .then((response) => {
-        //         let user = response.data
-        //         this.signInApp(user)
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //         this.setState({
-        //             errorMessage: "The username or password you have entered is incorrect"
-        //         })
-        //     });
-        // }else {
-        //     this.setState({
-        //         errorMessage: "Please enter your username and password"
-        //     })
-        // }
-
+        this.cancelTokenSource = axios.CancelToken.source()
         this.setState({loading: true})
         axios.post('https://baomoi.press/wp-json/jwt-auth/v1/token', {
             username: name,
             password: id,
             email: email,
+        },{
+            cancelToken: this.cancelTokenSource.token
         })
         .then((response) => {
             let user = response.data
             this.signInApp(user, picture)
         })
-        .catch((err) => {
-            console.log(err.response.data);
-            this.setState({
-                errorMessage: "The username or password you have entered is incorrect"
-            })
-        });
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err.response.data);
+                this.setState({
+                    errorMessage: "The username or password you have entered is incorrect"
+                })
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     signInApp = (user, picture) => {
@@ -76,6 +65,7 @@ export default class SignInScreen extends React.Component {
             method: "GET",
             url: 'https://baomoi.press/wp-json/wp/v2/current_user',
             headers: {'Authorization': 'Bearer ' + user.token},
+            cancelToken: this.cancelTokenSource.token
         })
         .then(res => {
             console.log(user.token);
@@ -84,6 +74,7 @@ export default class SignInScreen extends React.Component {
                 method: "GET",
                 url: "https://baomoi.press/wp-json/wp/v2/users/" + id,
                 headers: {'Authorization': 'Bearer ' + user.token},
+                cancelToken: this.cancelTokenSource.token
             })
         })
         .then(res => {
@@ -97,7 +88,8 @@ export default class SignInScreen extends React.Component {
                 method: "POST",
                 url: 'https://baomoi.press/wp-json/wp/v2/update_user_avatar',
                 headers: {'Authorization': 'Bearer ' + user.token},
-                data: data
+                data: data,
+                cancelToken: this.cancelTokenSource.token
             })
             .then(() => {
                 AsyncStorage.setItem('user', JSON.stringify(res.data))
@@ -105,7 +97,13 @@ export default class SignInScreen extends React.Component {
             })
 
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
     }
 
     FBLogin = async() => {
@@ -141,7 +139,7 @@ export default class SignInScreen extends React.Component {
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/wp/v2/users/register',
-            data: data
+            data: data,
         })
         .then(res => {
             // NEW ACCOUNT

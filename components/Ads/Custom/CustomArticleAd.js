@@ -45,14 +45,27 @@ export default class CustomArticleAd extends Component {
     }
 
     getAD = () => {
-        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=article")
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=article", {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => {
             const data = this.shuffle(res.data)
             this.setState({
                 data: data[0]
             })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     render() {

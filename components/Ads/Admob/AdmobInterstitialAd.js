@@ -15,7 +15,10 @@ export default class AdmobInterstitialAd extends React.Component {
     }
 
     getAdUnitID = () => {
-        axios.get("https://baomoi.press/wp-json/wp/v2/quangcao?filter[meta_key]=type&filter[meta_value]=Interstitial")
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press/wp-json/wp/v2/quangcao?filter[meta_key]=type&filter[meta_value]=Interstitial", {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => {
             res.data.forEach(item => {
                 if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Admob"){
@@ -29,7 +32,17 @@ export default class AdmobInterstitialAd extends React.Component {
                 }
             })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     componentDidMount() {

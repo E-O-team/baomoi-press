@@ -39,30 +39,50 @@ export default class OtherCategoriesScreens extends React.PureComponent {
     }
 
     fetchNews = (selectedCategory) => {
-        console.log("page: " + this.state.page);
+        this.cancelTokenSource = axios.CancelToken.source()
         if(this.state.refreshing == true){
             this.setState({
                 page: 1,
                 articles: [],
             }, () => {
-                axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
+                axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page, {
+                    cancelToken: this.cancelTokenSource.token,
+                })
                 .then(res => this.setState({
                     articles: [...this.state.articles,...res.data],
                     refreshing: false,
                 }))
                 // .then(json => console.log(json))
-                .catch(err => console.log(err))
+                .catch(err => {
+                    if(axios.isCancel(err)){
+                        return
+                    }else{
+                        console.log(err)
+                    }
+                })
             })
         }else{
-            axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page)
+            axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page, {
+                cancelToken: this.cancelTokenSource.token,
+            })
             .then(res => this.setState({
                 articles: [...this.state.articles,...res.data],
                 refreshing: false,
             }))
             // .then(json => console.log(json))
-            .catch(err => console.log(err))
+            .catch(err => {
+                if(axios.isCancel(err)){
+                    return
+                }else{
+                    console.log(err)
+                }
+            })
         }
 
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     handleRefresh = () => {

@@ -23,6 +23,7 @@ import spinner from '../../assets/images/spinner.gif';
 import BannerAd from '../Ads/BannerAd';
 import Notification from './Notification';
 import ArticleAd from '../Ads/ArticleAd';
+import axios from 'axios';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
 moment.locale('vi');
@@ -35,12 +36,26 @@ export default class Articles extends React.Component {
         }
     }
     componentDidMount() {
-        fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id)
-        .then(res => res.json())
-        .then(json => this.setState({
-            numberOfComments: json.length,
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id, {
+            cancelToken: this.cancelTokenSource.token
+        })
+        .then(res => this.setState({
+            numberOfComments: res.data.length
         }))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
     }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if(this.state.numberOfComments !== nextState.numberOfComments){
             return true

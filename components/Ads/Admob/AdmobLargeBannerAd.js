@@ -14,7 +14,10 @@ export default class AdmobLargeBannerAd extends React.Component {
     }
 
     getAdUnitID = () =>{
-        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=largeBanner")
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=largeBanner", {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => {
             res.data.forEach(item => {
                 if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition){
@@ -28,7 +31,17 @@ export default class AdmobLargeBannerAd extends React.Component {
                 }
             })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     bannerError = () => {
