@@ -254,7 +254,7 @@ export default class ArticleScreen extends React.Component {
 
                 <View onLayout={(event) => {
                                   var {x, y, width, height} = event.nativeEvent.layout;
-                                  this.setState({TopViewHeight : height},()=> console.log(this.state.TopViewHeight))
+                                  this.setState({TopViewHeight : height})
                                 }} >
                   {
                     (this.state.Article.format === 'video')? <View style={{marginTop: 10}}></View>

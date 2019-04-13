@@ -136,7 +136,6 @@ export default class HomeScreen extends React.Component {
     }
 
     handleOnScroll = (e) => {
-      this.setState({y: e.nativeEvent.contentOffset.y})
         if(this.state.y != 0){
            if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
              this.props.navigation.setParams({ visible: true })
@@ -147,9 +146,9 @@ export default class HomeScreen extends React.Component {
              this.props.navigation.setParams({ visible: false })
              this.setState({isScrollDown : true})
            }
+        }
+        this.setState({y: e.nativeEvent.contentOffset.y})
 
-
-       }
     }
     render() {
         return(

@@ -31,7 +31,7 @@ export default class AuthorSubscription extends React.Component{
     .then(json => {
       if(json.length != 0){
         var source_array = json.filter(e => e.title.toUpperCase() === this.state.source.name.toUpperCase())
-          if(source_array.length != 0) this.setState({logo : source_array[0].img}, () => console.log(this.state.logo))
+          if(source_array.length != 0) this.setState({logo : source_array[0].img})
 
       }
     })
