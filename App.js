@@ -5,6 +5,7 @@ import { AppLoading, Asset, Font, Icon, Permissions, Notifications } from 'expo'
 import AppNavigator from './navigation/AppNavigator';
 import { Provider } from './context/context.js'
 import dateFormat from 'dateformat';
+import splashLogo from './assets/images/logo-splash.png';
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
@@ -86,14 +87,15 @@ export default class App extends React.Component {
         </Provider>
       );
     }
+    return(
+        <View style={{flex: 1}}>
+            <Image source={splashLogo} style={{height: 300, width: 300}}/>
+        </View>
+    )
   }
 
   _loadResourcesAsync = async () => {
     return Promise.all([
-      Asset.loadAsync([
-        require('./assets/images/robot-dev.png'),
-        require('./assets/images/robot-prod.png'),
-      ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
         ...Icon.Ionicons.font,

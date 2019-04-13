@@ -29,12 +29,25 @@ export default class VideoScreen extends React.Component{
       this.fetchVideos()
   }
   fetchVideos = () => {
-      axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=5&page=" + this.state.page)
+      this.cancelTokenSource = axios.CancelToken.source()
+      axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=5&page=" + this.state.page, {
+          cancelToken: this.cancelTokenSource.token
+      })
       .then(res => this.setState({
           articles: [...this.state.articles,...res.data],
           refreshing: false,
       }))
-      .catch(err => console.log(err))
+      .catch(err => {
+          if(axios.isCancel(err)){
+              return
+          }else{
+              console.log(err)
+          }
+      })
+  }
+
+  componentWillUnmount() {
+      this.cancelTokenSource && this.cancelTokenSource.cancel()
   }
 
   handleRefresh = () => {

@@ -48,33 +48,35 @@ export default class AuthLoadingScreen extends React.Component {
   _bootstrapAsync = async () => {
     let user = JSON.parse(await AsyncStorage.getItem('user'));
     let ExpoToken = await Notifications.getExpoPushTokenAsync();
-    // console.log(user.token);
     if(user){
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',
             headers: {'Authorization': 'Bearer ' + user.token},
         })
-        .then(() => {
-            const data = new FormData()
-            data.append("fields[deviceToken]", ExpoToken)
-            axios({
-                method: "POST",
-                url: 'https://baomoi.press/wp-json/acf/v3/users/' + user.id,
-                headers: {'Authorization': 'Bearer ' + user.token},
-                data: data
-            })
-            .then((res) => {
-                if(res.status == 200){
-                    // this.showInterstitialAd()
-                    this.props.navigation.navigate("App")
-                }
-            })
-            .catch(err => {
-                // AsyncStorage.clear()
-                // this.props.navigation.navigate("App")
-                console.log("here:" + err);
-            })
+        .then((res) => {
+            if(res.status == 200){
+                const data = new FormData()
+                data.append("fields[deviceToken]", ExpoToken)
+                axios({
+                    method: "POST",
+                    url: 'https://baomoi.press/wp-json/acf/v3/users/' + user.id,
+                    headers: {'Authorization': 'Bearer ' + user.token},
+                    data: data
+                })
+                .then((res) => {
+                    if(res.status == 200){
+                        // this.showInterstitialAd()
+                        this.props.navigation.navigate("App")
+                    }
+                })
+                .catch(err => {
+                    // AsyncStorage.clear()
+                    // this.props.navigation.navigate("App")
+                    console.log("here:" + err.message);
+                })
+            }
+
 
         })
         .catch(err => {
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     image:{
-        height: 300,
-        width: 300
+        height: 200,
+        width: 200
     }
 })

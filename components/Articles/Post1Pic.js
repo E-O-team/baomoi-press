@@ -22,12 +22,13 @@ export default class Post1Pic extends React.PureComponent {
         const index = this.props.index
 
         return(
-            <View style={{padding: 10}}>
+            <View style={{padding: 10, height: 130}}>
                 <TouchableOpacity
                     activeOpacity={0.5}
                     onPress={() => this.props.navigation.navigate("Article", {
                         Article: item
                     })}
+                    style={{flex: 1}}
                 >
                     <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
                         <View style={{flex: 2}}>
@@ -40,7 +41,7 @@ export default class Post1Pic extends React.PureComponent {
                                 }
                                 <Comments id={item.id}/>
                             </View>
-                            <BaomoiText style={{fontSize: 20, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                            <BaomoiText style={{fontSize: 17.3, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                         </View>
                         <Image
                             source={{uri :item.thumb || defaultImg}}

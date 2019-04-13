@@ -15,7 +15,7 @@ import { FacebookAds } from 'expo';
 import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
 import { BaomoiText } from '../components/StyledText';
-import BannderAd from '../components/Ads/BannerAd';
+import BannerAd from '../components/Ads/BannerAd';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 moment.locale('vi');
@@ -288,7 +288,7 @@ export default class ArticleScreen extends React.Component {
                         tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
                         baseFontStyle={{fontSize: 19*fontSizeRatio, fontWeight:'500', fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
 
-                      <View style={{height: 15}}></View>   
+                      <View style={{height: 15}}></View>
 
                       <HTML
                         alterChildren = { (node) => {
@@ -350,12 +350,12 @@ export default class ArticleScreen extends React.Component {
 
 
             </View>
-                <BannderAd size="rectangle" AdPosition="Content(Cuối bài viết)"/>
+
                 <Divider style={{ backgroundColor: '#e0e0e0', height: 15}} />
 
                 <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
-                <BannderAd size="rectangle" AdPosition="Content(Cuối bài viết)"/>
-                <CommentList comments={this.state.comments} onFetch={this.fetchComment} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} />
+
+                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
 
           </ScrollView>
 

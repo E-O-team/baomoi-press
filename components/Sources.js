@@ -28,10 +28,15 @@ export default class Sources extends React.Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount(){
+        this.cancelTokenSource = axios.CancelToken.source()
         axios.all([
-            axios.get("https://baomoi.press/wp-json/wp/v2/source/" + this.props.item),
-            axios.get("https://baomoi.press/wp-json/wp/v2/get_source_logo")
+            axios.get("https://baomoi.press/wp-json/wp/v2/source/" + this.props.item, {
+                cancelToken: this.cancelTokenSource.token
+            }),
+            axios.get("https://baomoi.press/wp-json/wp/v2/get_source_logo", {
+                cancelToken: this.cancelTokenSource.token
+            })
         ])
         .then(axios.spread((sourceRes, allSourcesRes) => {
             this.setState({
@@ -51,7 +56,13 @@ export default class Sources extends React.Component {
 
             })
         }))
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
 
         AsyncStorage.getItem('user')
         .then(res => {
@@ -63,6 +74,11 @@ export default class Sources extends React.Component {
             }
         })
     }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
+    }
+
     render(){
         const {source} = this.state
         return(
