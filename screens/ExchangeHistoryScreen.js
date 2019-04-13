@@ -69,6 +69,7 @@ export default class ExchangeHistory extends React.PureComponent {
     getUserID = async() => {
         // let user = JSON.parse(await AsyncStorage.getItem('user'))
         // console.log(user);
+        this.cancelTokenSource = axios.CancelToken.source()
         let id = JSON.parse(await AsyncStorage.getItem('user')).id
         let token = JSON.parse(await AsyncStorage.getItem('user')).token
         console.log(token);
@@ -76,30 +77,32 @@ export default class ExchangeHistory extends React.PureComponent {
             method: "GET",
             url: "https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]="+ id +"&status=publish, draft",
             headers: {'Authorization': 'Bearer ' + token},
+            cancelToken: this.cancelTokenSource.token
         })
-        // axios.get("https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]="+ id +"&status=publish, draft")
         .then(res => this.setState({data: res.data}, () => console.log(this.state.data)))
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     render(){
         CardRequest = (props) => {
             const {date, id,} = props.data
             const {card_code, carrier, price, request_status, series_number} = props.data.acf
-            // const carrierPic = Carriers.filter(item => {
-            //     if(carrier == item.name){
-            //         console.log(carrier + "=" + item.name);
-            //         return item
-            //     }
-            // })
             var carrierPic
             Carriers.forEach(item => {
                 if(carrier == item.name){
                     carrierPic = item.source
                 }
             })
-
-
             return(
                 <View style={{
                     marginBottom: 10,

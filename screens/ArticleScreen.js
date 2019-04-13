@@ -13,7 +13,7 @@ import {SafeAreaView} from 'react-navigation';
 import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
 import { BaomoiText } from '../components/StyledText';
-import BannderAd from '../components/Ads/BannerAd';
+import BannerAd from '../components/Ads/BannerAd';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 moment.locale('vi');
@@ -307,11 +307,11 @@ export default class ArticleScreen extends React.Component {
 
 
             </View>
-                <BannderAd size="rectangle" AdPosition="Content(Cuối bài viết)"/>
+
                 <Divider style={{ backgroundColor: '#e0e0e0', height: 15}} />
 
                 <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
-                <BannderAd size="rectangle" AdPosition="Content(Cuối bài viết)"/>
+        
                 <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
 
           </ScrollView>

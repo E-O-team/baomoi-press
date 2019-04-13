@@ -174,15 +174,21 @@ export default class SiderBar extends React.Component {
                                     </View>
                                 </TouchableOpacity>
                             ) : (
-                                <View style={{flexDirection: "row", alignItems: "center"}}>
-                                    <Icon
-                                        name='user'
-                                        type='feather'
-                                        reverse
-                                        color="#a6122b"
-                                    />
-                                <Button buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} onPress={() => this.setModalVisible(!this.state.modalVisible)} />
-                                </View>
+
+                                    <TouchableOpacity
+                                        onPress={() => this.setModalVisible(!this.state.modalVisible)}
+                                    >
+                                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                                            <Icon
+                                                name='user'
+                                                type='feather'
+                                                reverse
+                                                color="#a6122b"
+                                            />
+                                            <Button onPress={() => this.setModalVisible(!this.state.modalVisible)} buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} />
+                                        </View>
+                                    </TouchableOpacity>
+
                             )}
 
                             <View>
@@ -199,7 +205,7 @@ export default class SiderBar extends React.Component {
                                         underlayColor="#e12f28"
                                     />
                                 </View>
-                                <View style={{backgroundColor:"#3a5685", height: 40, width: 150, marginBottom: 5, alignItems: "center", borderTopLeftRadius: 60, borderBottomLeftRadius: 60, alignItems: "flex-start", paddingLeft: 15, justifyContent: "space-around" }}>
+                                <View style={{backgroundColor:"#3a5685", height: 50, width: 150, marginBottom: 5, alignItems: "center", borderTopLeftRadius: 60, borderBottomLeftRadius: 60, alignItems: "flex-start", paddingLeft: 15, justifyContent: "space-around" }}>
                                     <Text style={{color: "white"}}>MỜI BẠN, KHUI QUÀ</Text>
                                     {user ? (
                                         <View style={{flexDirection: "row", alignItems: "center"}}>

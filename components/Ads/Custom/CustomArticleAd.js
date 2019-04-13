@@ -45,31 +45,49 @@ export default class CustomArticleAd extends Component {
     }
 
     getAD = () => {
-        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=source&filter[meta_value]=custom")
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=article", {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => {
             const data = this.shuffle(res.data)
             this.setState({
                 data: data[0]
-            }, () => console.log(this.state.data))
+            })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     render() {
         // return null
-        if(this.state.data !== "" ){
+        if(this.state.data){
             return(
-                <View style={{padding: 10}}>
+                <View style={{height: 130}}>
                     <TouchableOpacity
                         activeOpacity={0.5}
                         onPress={() => Linking.openURL(this.state.data.acf.customAdURL)}
+                        style={{padding: 10, flex: 1}}
                     >
                         <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
-                            <View style={{flex: 2, justifyContent: "center"}}>
+                            <View style={{flex: 2}}>
+                                <View style={{flexDirection: "row", alignItems: "center"}}>
+                                    <View style={{borderRadius: 8, borderWidth: 1, width: 70, borderColor: '#696969', alignItems: "center", justifyContent: "center"}}>
+                                        <Text style={{fontSize: 15, color: '#696969'}}>Tài Trợ</Text>
+                                    </View>
+                                    <Text style={{color: '#696969'}}> {this.state.data.acf.sponsor_name}</Text>
+                                </View>
                                 <BaomoiText style={{fontSize: 20, fontWeight: '500',color: "black"}}>{this.state.data.acf.custom_title}</BaomoiText>
-                                <Badge containerStyle={{ backgroundColor: "white", borderColor: "black", borderWidth: 1, width: 100}}>
-                                    <Text style={{color: "black"}}>Tài Trợ</Text>
-                                </Badge>
+
                             </View>
                             <Image
                                 source={{uri :this.state.data.acf.customAdImageURL || defaultImg}}

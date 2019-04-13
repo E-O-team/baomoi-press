@@ -40,28 +40,6 @@ export default class SignInModal extends React.Component {
     }
 
     signIn = async (email, id, name, picture) => {
-        // if (this.state.username !== "" && this.state.password !== ""){
-        //     this.setState({loading: true})
-        //     axios.post('https://baomoi.press/wp-json/jwt-auth/v1/token', {
-        //         email: this.state.username,
-        //         password: this.state.password
-        //     })
-        //     .then((response) => {
-        //         let user = response.data
-        //         this.signInApp(user)
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //         this.setState({
-        //             errorMessage: "The username or password you have entered is incorrect"
-        //         })
-        //     });
-        // }else {
-        //     this.setState({
-        //         errorMessage: "Please enter your username and password"
-        //     })
-        // }
-
         this.props.setLoading(true)
         axios.post('https://baomoi.press/wp-json/jwt-auth/v1/token', {
             username: name,

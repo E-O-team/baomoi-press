@@ -63,12 +63,25 @@ export default class SourceScreen extends React.Component {
         }
     }
 
-    componentWillMount() {
-        axios.get("https://baomoi.press//wp-json/wp/v2/posts?filter[taxonomy]=source&filter[term]=" + this.state.source.slug)
+    componentDidMount() {
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press//wp-json/wp/v2/posts?filter[taxonomy]=source&filter[term]=" + this.state.source.slug, {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => this.setState({
             articles: res.data
         }))
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
 

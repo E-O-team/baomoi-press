@@ -54,6 +54,7 @@ export default class HomeScreen extends React.Component {
         // this.fetchCategories()
     }
     fetchNews = () => {
+        this.cancelTokenSource = axios.CancelToken.source()
         if(this.state.refreshing == true){
             this.setState({
                 page: 1,
@@ -63,8 +64,12 @@ export default class HomeScreen extends React.Component {
         // Home
             if(this.state.page == 1){
                 axios.all([
-                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on&per_page=4"),
-                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on&per_page=4",{
+                        cancelToken: this.cancelTokenSource.token
+                    }),
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page,{
+                        cancelToken: this.cancelTokenSource.token
+                    })
                 ])
                 .then(axios.spread((featuredPostRes, articlesRes) => {
                     const featuredPost = Object.create(featuredPostRes.data[0])
@@ -74,13 +79,32 @@ export default class HomeScreen extends React.Component {
                         refreshing: false,
                     })
                 }))
-                .catch(err => console.log("there have been error: " + err))
+                .catch(err => {
+                    if(axios.isCancel(err)){
+                        return
+                    }else{
+                        console.log(err)
+                    }
+                })
             }else{
-                axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page)
+                axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page,{
+                    cancelToken: this.cancelTokenSource.token
+                })
                 .then(res => this.setState({
                     articles: [...this.state.articles, ...res.data],
                 }))
+                .catch(err => {
+                    if(axios.isCancel(err)){
+                        return
+                    }else{
+                        console.log(err)
+                    }
+                })
             }
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     handleRefresh = () => {

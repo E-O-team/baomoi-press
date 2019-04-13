@@ -42,9 +42,22 @@ export default class NotificationScreen extends React.Component {
     }
 
     getNotifications = () => {
-        axios.get("https://baomoi.press/wp-json/wp/v2/thong_bao")
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press/wp-json/wp/v2/thong_bao", {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => this.setState({data: res.data}))
-        .catch(err => console.log(err))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     setModalVisible = (visible, value) => {
