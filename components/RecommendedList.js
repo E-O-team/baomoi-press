@@ -33,20 +33,27 @@ class Comment extends React.Component {
     }
 
     componentDidMount() {
-        fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id)
-        .then(res => res.json())
-        .then(json => this.setState({
-            numberOfComments: json.length,
-        }))
+        this.fetchComment()
+
+    }
+    fetchComment = () => {
+      const request_length = this.state.numberOfComments + 20
+      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.item.id +"&per_page="+request_length.toString())
+      .then(res => res.json())
+      .then(json => {
+        this.setState({numberOfComments : json.length}, () => {if(this.state.numberOfComments >= request_length) this.fetchComment()  })
+      })
+      // .then(json => console.log(json))
+      .catch(err => console.log(err))
     }
     render(){
         const item = this.props.item
 
-        return(               <View style={{flexDirection: "row", alignItems: "center"}}>
+        return(               <View style={{justifyContent:'center'}}>
                                 {
                                   (this.state.numberOfComments !== 0)?
-                                  <View>
-                                      <BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText>                                  :
+                                  <View style={{flexDirection: "row", alignItems: "center"}}>
+                                      <Text style={{fontSize: 12, color: '#696969'}}> - {this.state.numberOfComments}</Text>
                                       <Icon containerStyle={{marginTop: -2}} name='comment' type="evilicon" color='#696969' size={20}/>
                                   </View> : <View></View>
                                 }

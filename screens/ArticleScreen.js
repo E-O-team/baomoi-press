@@ -53,11 +53,10 @@ export default class ArticleScreen extends React.Component {
         },() => {
           this.fetchComment()
           this.ContentAds()
+          this.updateUser()
         })
 
-        this.setState({
-            user: JSON.parse(await AsyncStorage.getItem('user'))
-        })
+
         if(this.props.navigation.getParam("currentCount", "ERR") === "ERR")
         {
         const value = await AsyncStorage.getItem('seconds')
@@ -131,6 +130,11 @@ export default class ArticleScreen extends React.Component {
       // .then(json => console.log(json))
       .catch(err => console.log(err))
     }
+    updateUser = async () => {
+      this.setState({
+          user: JSON.parse(await AsyncStorage.getItem('user'))
+      })
+    }
     ContentAds = () => {
       //Add advertising in the middle of content'
       // var article = this.state.Article
@@ -181,7 +185,7 @@ export default class ArticleScreen extends React.Component {
                 />
               </View>
               <Animated.View style={{opacity: headerSource, flex: 5}}>
-                <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user}/>
+                <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user} updateUser={this.updateUser}/>
               </Animated.View>
 
               <View style={{flex:1, alignItems: 'flex-end', justifyContent: 'center'}}>
@@ -258,7 +262,7 @@ export default class ArticleScreen extends React.Component {
                     <View style={{padding: 10}}>
                       <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor, marginBottom: 5}}>{this.state.Article.title.plaintitle}</Text>
 
-                      <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}/>
+                      <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} updateUser={this.updateUser} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}/>
                     </View>
 
                   }
@@ -273,7 +277,19 @@ export default class ArticleScreen extends React.Component {
                   {this.state.Article.content.plaintext}
                   </HyperText> :
                   <View style={{padding: 10}}>
-                      <Text style={{fontSize: 19*fontSizeRatio, fontWeight:'500',fontFamily: 'baomoi-regular',lineHeight:23*fontSizeRatio, color: textColor, marginBottom: 15}}>{this.state.Article.excerpt.custom_excerpt}</Text>
+                      <HTML
+                        html={this.state.Article.excerpt.custom_excerpt}
+                        imagesMaxWidth={Dimensions.get('window').width-20}
+                        onLinkPress={(event, href)=>{
+                          Linking.openURL(href)
+                        }}
+                        ignoredStyles={['width', 'height', 'max-width']}
+                        staticContentMaxWidth={Dimensions.get('window').width-20}
+                        tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
+                        baseFontStyle={{fontSize: 19*fontSizeRatio, fontWeight:'500', fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
+
+                      <View style={{height: 15}}></View>   
+
                       <HTML
                         alterChildren = { (node) => {
                             if (node.name === 'iframe') {

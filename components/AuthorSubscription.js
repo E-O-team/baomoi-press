@@ -16,6 +16,12 @@ export default class AuthorSubscription extends React.Component{
       logo: '',
     }
   }
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.user !== prevProps.user) {
+      this.checkSubscription();
+    }
+  }
 
   componentWillMount(){
     this.setState({source : this.props.taxonomy_source})
@@ -25,7 +31,8 @@ export default class AuthorSubscription extends React.Component{
     .then(json => {
       if(json.length != 0){
         var source_array = json.filter(e => e.title.toUpperCase() === this.state.source.name.toUpperCase())
-          this.setState({logo : source_array[0].img}, () => console.log(this.state.logo))
+          if(source_array.length != 0) this.setState({logo : source_array[0].img}, () => console.log(this.state.logo))
+
       }
     })
     // .then(json => console.log(json))
@@ -42,17 +49,19 @@ export default class AuthorSubscription extends React.Component{
 
     var bodyFormData = new FormData();
     bodyFormData.append('source', this.state.source.term_id.toString());
-    axios({
+    await axios({
         method: 'post',
         url: 'https://baomoi.press/wp-json/wp/v2/update_user_subscription',
         data: bodyFormData,
         headers: {'Authorization': 'Bearer ' + this.props.user.token},
     }).then(res => {
-      this.setState({isSubscribed: true})
       if(!this.props.user.subscribed) this.props.user.subscribed = []
       this.props.user.subscribed.push(this.state.source.term_id.toString())
-       AsyncStorage.setItem('user', JSON.stringify(this.props.user))
+      AsyncStorage.setItem('user', JSON.stringify(this.props.user))
+
     }).catch(err => console.log(err))
+    await this.props.updateUser()
+    this.setState({needCheckSubscribe : true})
 
   }
 
@@ -60,25 +69,26 @@ export default class AuthorSubscription extends React.Component{
   onUnSubscribe = async () => {
     var bodyFormData = new FormData();
     bodyFormData.append('source', this.state.source.term_id.toString());
-    axios({
+    await axios({
         method: 'post',
         url: 'https://baomoi.press/wp-json/wp/v2/delete_user_subscription',
         data: bodyFormData,
         headers: {'Authorization': 'Bearer ' + this.props.user.token},
     }).then(res => {
       this.props.user.subscribed = this.props.user.subscribed.filter(item => item !== this.state.source.term_id.toString())
-      this.setState({isSubscribed: false})
-       AsyncStorage.setItem('user', JSON.stringify(this.props.user))
+      AsyncStorage.setItem('user', JSON.stringify(this.props.user))
     }).catch(err => console.log(err))
+    await this.props.updateUser()
+    this.setState({needCheckSubscribe : true})
 
+  }
+  checkSubscription = () => {
+    this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
+      if(source === this.state.source.term_id.toString()) this.isSubscribed()
+    })
   }
   render(){
 
-    if(this.props.user && !this.state.isSubscribed){
-      this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
-        if(source === this.state.source.term_id.toString()) this.isSubscribed()
-      })
-    }
 
     var icon = (this.state.isSubscribed)?
     <View style={[styles.IconView, {backgroundColor : 'red'}]}>

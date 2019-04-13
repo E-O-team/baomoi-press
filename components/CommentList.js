@@ -105,18 +105,19 @@ export default class CommentList extends React.Component{
       );
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.comments.length !== prevProps.comments.length) {
+      this.setState({ comments: this.props.comments }, () => {
+        if(this.props.user) this.FetchAsync()
+      })
+    }
+    if (this.props.user !== prevProps.user){
+      if (this.props.comments.length > 0) this.FetchAsync()
+    }
 
+  }
 
   render(){
-    if(this.state.comments.length !== this.props.comments.length )
-      {
-        this.setState({ comments: this.props.comments, isLoadedAvatar: false})
-      }
-    if(this.props.user && !this.state.isLoadedAvatar)
-      {
-        this.setState({isLoadedAvatar: true})
-        this.FetchAsync()
-      }
     return(
         <View>
 
