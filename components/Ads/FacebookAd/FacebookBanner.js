@@ -16,7 +16,10 @@ export default class FacebookBanner extends React.Component {
     }
 
     getAdUnitID = () =>{
-        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=banner")
+        this.cancelTokenSource = axios.CancelToken.source()
+        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=banner", {
+            cancelToken: this.cancelTokenSource.token
+        })
         .then(res => {
             res.data.forEach(item => {
                 if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Facebook"){
@@ -37,16 +40,33 @@ export default class FacebookBanner extends React.Component {
         console.log("An error");
         return;
     }
-
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
+    }
     render() {
-        return (
-          <FacebookAds.BannerAd
-            placementId={this.props.Ad.acf.unitID}
-            type="banner"
-            onPress={() => console.log('click')}
-            onError={(error) => console.log('error', error)}
-          />
-        );
+
+          if(Platform.OS == "android" && this.state.android !== ""){
+              return (
+                  <FacebookAds.BannerAd
+                      placementId={this.state.android}
+                      type="standard"
+                      onPress={() => console.log('click')}
+                      onError={(error) => console.log('error', error)}
+                  />
+              );
+          }else if (Platform.OS == "ios" && this.state.ios !== "") {
+              return (
+                  <FacebookAds.BannerAd
+                      placementId={this.state.ios}
+                      type="standard"
+                      onPress={() => console.log('click')}
+                      onError={(error) => console.log('error', error)}
+                  />
+              );
+          }else{
+              return null
+          }
+
     }
 }
 const styles = StyleSheet.create({

@@ -1,9 +1,9 @@
 import React from "react";
 import { Button, StyleSheet, Text, View, Platform, AsyncStorage } from "react-native";
-import { AdMobBanner, AdMobInterstitial, AdMobRewarded } from "expo";
+import { FacebookAds } from "expo";
 import axios from 'axios';
 
-export default class AdmobInterstitialAd extends React.Component {
+export default class FacebookInterstitial extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,11 +21,11 @@ export default class AdmobInterstitialAd extends React.Component {
         })
         .then(res => {
             res.data.forEach(item => {
-                if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Admob"){
+                if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Facebook"){
                     this.setState({
                         android: item.acf.unitID
                     }, () => this.showAD())
-                }else if (item.acf.os == "ios" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Admob") {
+                }else if (item.acf.os == "ios" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Facebook") {
                     this.setState({
                         ios: item.acf.unitID
                     }, () => this.showAD())
@@ -46,35 +46,31 @@ export default class AdmobInterstitialAd extends React.Component {
     }
 
     componentDidMount() {
-        AdMobInterstitial.addEventListener("interstitialDidFailToLoad", () =>
-            console.log("interstitialDidFailToLoad")
-        );
+      FacebookAds.AdSettings.addTestDevice(FacebookAds.AdSettings.currentDeviceHash)
+
     }
 
     showAD = () => {
         if(Platform.OS == "ios"){
-            AdMobInterstitial.setAdUnitID(this.state.ios);
+            this.showInterstitial(this.state.ios);
         }else if (Platform.OS == "android") {
-            AdMobInterstitial.setAdUnitID(this.state.android);
+            this.showInterstitial(this.state.android);
         }
-        this.showInterstitial()
     }
 
-componentWillUnmount() {
-    AdMobInterstitial.removeAllListeners();
-  }
-bannerError() {
-    console.log("An error");
-    return;
-  }
-showInterstitial = async() => {
-    await AdMobInterstitial.requestAdAsync();
-    await AdMobInterstitial.showAdAsync();
+    bannerError() {
+        console.log("An error");
+        return;
+      }
+    showInterstitial = async(placementId) => {
+          FacebookAds.InterstitialAdManager.showAd(placementId)
+            .then(didClick => {})
+            .catch(error => console.log(error))
 
-  }
-render() {
-    return null
-  }
+      }
+    render() {
+        return null
+      }
 }
 const styles = StyleSheet.create({
   interstitialBanner: {

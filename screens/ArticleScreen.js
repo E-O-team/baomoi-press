@@ -16,6 +16,7 @@ import moment from 'moment/min/moment-with-locales'
 import axios from 'axios';
 import { BaomoiText } from '../components/StyledText';
 import BannerAd from '../components/Ads/BannerAd';
+import FacebookRectangle from '../components/Ads/FacebookAd/FacebookRectangle'
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 moment.locale('vi');
@@ -30,11 +31,12 @@ export default class ArticleScreen extends React.Component {
         super(props)
         this.state = {
             Article: {},
-            currentCount : 0,
+            currentCount : 1,
             intervalId: undefined,
             user: undefined,
             comments: [],
             scrollY: new Animated.Value(0),
+            PopUpAds: [],
             TopViewHeight: 100,
             settingModalVisible: false
         }
@@ -46,41 +48,51 @@ export default class ArticleScreen extends React.Component {
             header: null
         }
     }
-    componentWillMount = async () => {
-
+    componentWillMount() {
+        this.cancelTokenSource = axios.CancelToken.source()
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
         },() => {
           this.fetchComment()
-          this.ContentAds()
+          this.setAds()
           this.updateUser()
+          this.getTimeCount()
         })
 
+
+
+    }
+    getTimeCount = async() => {
 
         if(this.props.navigation.getParam("currentCount", "ERR") === "ERR")
         {
         const value = await AsyncStorage.getItem('seconds')
         if(value !== null) this.setState({currentCount: Number.parseInt(value)})
         var intervalId = setInterval(this.timer, 1000)
-   // store intervalId in the state so it can be accessed later:
+        // store intervalId in the state so it can be accessed later:
         this.setState({intervalId: intervalId})
         }
+
     }
     timer = async () =>  {
       // setState method is used to update the state
        this.setState({ currentCount: this.state.currentCount + 1 })
-       if(this.state.currentCount >= 180)
+       if(this.state.currentCount % 180 == 0)
        {
-         this.setState({ currentCount: 0 })
-         if(this.state.user !== null){
+         //add point for user
+
+         if(this.state.user !== null)
+         {
              axios({
                  method: "GET",
                  url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
                  headers: {'Authorization': 'Bearer ' + this.state.user.token},
-             })
+             },{cancelToken: this.cancelTokenSource.token})
          }
-
        }
+
+       if(this.state.currentCount >= 7200) this.setState({currentCount: 1})
+
 
     }
 
@@ -90,6 +102,7 @@ export default class ArticleScreen extends React.Component {
       // use intervalId from the state to clear the interval
        clearInterval(this.state.intervalId)
        AsyncStorage.setItem('seconds', this.state.currentCount.toString())
+       this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     onShare = () => {
@@ -122,7 +135,9 @@ export default class ArticleScreen extends React.Component {
 
     fetchComment = () => {
       const request_length = this.state.comments.length + 20
-      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id +"&per_page="+request_length.toString())
+      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id +"&per_page="+request_length.toString(), {
+          cancelToken: this.cancelTokenSource.token
+      })
       .then(res => res.json())
       .then(json => {
         this.setState({comments : json}, () => {if(this.state.comments.length >= request_length) this.fetchComment()  })
@@ -135,22 +150,26 @@ export default class ArticleScreen extends React.Component {
           user: JSON.parse(await AsyncStorage.getItem('user'))
       })
     }
-    ContentAds = () => {
-      //Add advertising in the middle of content'
-      // var article = this.state.Article
-      // const string = this.state.Article.content.plaintext
-      //
-      //
-      // var middle_position = Math.floor(string.length /2)
-      // var match = /\r|\n/.exec(string.slice(middle_position));
-      // console.log(match.index)
-      //
-      // const new_content = [string.slice(0, middle_position+match.index), '<Ads></Ads>', string.slice(middle_position+match.index)].join('');
-      // console.log(new_content)
-      // article.content.plaintext = new_content
-      // this.setState({Article: article}, ()=>console.log(this.state.Article.content.plaintext))
+    setAds = () => {
+      //Get PopUpAds
+      //this.setState({PopUpAds : AsyncStorage.getItem('pop-up-Ads')})
 
+      //Add Ads in the middle of content'
+      var article = this.state.Article
+      const string = this.state.Article.content.plaintext
+      if(string.indexOf('<ads>') == -1) {
+        var middle_position = Math.floor(string.length /2)
+        var match = /\r|\n/.exec(string.slice(middle_position));
+        if(match)
+        {
+          const new_content = [string.slice(0, middle_position+match.index), ' <ads></ads> ', string.slice(middle_position+match.index)].join('');
+          article.content.plaintext = new_content
+          this.setState({Article: article})
+        }
+      }
+      //
     }
+
 
     render(){
       const headerSource = this.state.scrollY.interpolate({
@@ -298,10 +317,12 @@ export default class ArticleScreen extends React.Component {
                             }
                             return node.children;
                         }}
-                        renderers={
+                        renderers= {
                           {
-                             Ads: () => <View style={{ width: 100, height: 100, borderRadius: 30, backgroundColor: 'blue' }} />
-                           }
+
+                               ads: (index) => <BannerAd key={index} size='rectangle' AdPosition='Content(Giữa bài viết)'/>
+
+                          }
                           }
                         html={this.state.Article.content.plaintext}
                         imagesMaxWidth={Dimensions.get('window').width-20}
@@ -350,8 +371,9 @@ export default class ArticleScreen extends React.Component {
 
 
             </View>
+                <BannerAd size='rectangle' AdPosition='Content(Cuối bài viết)'/>
 
-                <Divider style={{ backgroundColor: '#e0e0e0', height: 15}} />
+                <Divider style={{ backgroundColor: '#e0e0e0', height: 15, marginTop: 10}} />
 
                 <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
 
@@ -412,51 +434,4 @@ export default class ArticleScreen extends React.Component {
             }
          }
      }
-    renderNode(node, index, siblings, parent, defaultRenderer) {
-
-      if (node.name === 'img') {
-      const{ src, height } = node.attribs;
-      console.log(src)
-      Image.getSize(src, (w, h) => {
-        if( h < w )
-          h = 300
-        const imageWidth = screenWidth - 20;
-        return (
-          <View>
-            <Image
-              key={index}
-              style={{ width: imageWidth, height: h }}
-              source={{ uri: src }}
-              resizeMode='contain'/>
-          </View>
-        );
-
-      },(err) => {
-          console.log('err', err)
-          return (
-            <View>
-            <Image
-              key={index}
-              style={{ width: screenWidth-20, height: 300 }}
-              source={{ uri: src }}
-              resizeMode='cover'/>
-            </View>
-          )
-        })
-
-      }
-
-        if (node.children && node.children.length > 0 && node.children[0].name === 'iframe') {
-          return (
-            <View>
-              <WebView source={{uri : node.children[0].attribs.src}} style={{width:screenWidth-20, height: 300}}/>
-            </View>
-          )
-        }
-
-   }
 };
-
-const styles = StyleSheet.create({
-
-});

@@ -6,7 +6,7 @@ import axios from 'axios';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-export default class CommentModal extends React.Component{
+export default class CommentModal extends React.PureComponent{
   constructor(){
     super()
     this.state = {

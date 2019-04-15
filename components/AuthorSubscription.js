@@ -7,7 +7,7 @@ import {Consumer} from '../context/context.js'
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 
-export default class AuthorSubscription extends React.Component{
+export default class AuthorSubscription extends React.PureComponent{
   constructor(props) {
     super(props)
     this.state={
@@ -25,9 +25,13 @@ export default class AuthorSubscription extends React.Component{
 
   componentWillMount(){
     this.setState({source : this.props.taxonomy_source})
+    this.cancelTokenSource = axios.CancelToken.source()
 
-    fetch("https://baomoi.press/wp-json/wp/v2/get_source_logo")
-    .then(res => res.json())
+
+    axios.get("https://baomoi.press/wp-json/wp/v2/get_source_logo",{
+        cancelToken: this.cancelTokenSource.token
+    })
+    .then(res => res.data)
     .then(json => {
       if(json.length != 0){
         var source_array = json.filter(e => e.title.toUpperCase() === this.state.source.name.toUpperCase())
@@ -54,14 +58,15 @@ export default class AuthorSubscription extends React.Component{
         url: 'https://baomoi.press/wp-json/wp/v2/update_user_subscription',
         data: bodyFormData,
         headers: {'Authorization': 'Bearer ' + this.props.user.token},
-    }).then(res => {
+      },{
+          cancelToken: this.cancelTokenSource.token
+      }).then(res => {
       if(!this.props.user.subscribed) this.props.user.subscribed = []
       this.props.user.subscribed.push(this.state.source.term_id.toString())
       AsyncStorage.setItem('user', JSON.stringify(this.props.user))
 
     }).catch(err => console.log(err))
     await this.props.updateUser()
-    this.setState({needCheckSubscribe : true})
 
   }
 
@@ -74,18 +79,24 @@ export default class AuthorSubscription extends React.Component{
         url: 'https://baomoi.press/wp-json/wp/v2/delete_user_subscription',
         data: bodyFormData,
         headers: {'Authorization': 'Bearer ' + this.props.user.token},
-    }).then(res => {
+      },{
+          cancelToken: this.cancelTokenSource.token
+      }).then(res => {
       this.props.user.subscribed = this.props.user.subscribed.filter(item => item !== this.state.source.term_id.toString())
       AsyncStorage.setItem('user', JSON.stringify(this.props.user))
     }).catch(err => console.log(err))
     await this.props.updateUser()
-    this.setState({needCheckSubscribe : true})
+    this.setState({ isSubscribed: false})
 
   }
   checkSubscription = () => {
     this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
       if(source === this.state.source.term_id.toString()) this.isSubscribed()
     })
+  }
+  componentWillUnmount() {
+
+     this.cancelTokenSource && this.cancelTokenSource.cancel()
   }
   render(){
 

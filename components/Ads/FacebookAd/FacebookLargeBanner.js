@@ -5,7 +5,7 @@ import axios from 'axios';
 
 FacebookAds.AdSettings.addTestDevice(FacebookAds.AdSettings.currentDeviceHash)
 
-export default class FacebookRectangle extends React.Component {
+export default class FacebookLargeBanner extends React.Component {
 
     constructor(props) {
         super(props);
@@ -18,7 +18,7 @@ export default class FacebookRectangle extends React.Component {
 
     getAdUnitID = () =>{
         this.cancelTokenSource = axios.CancelToken.source()
-        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=rectangle", {
+        axios.get("https://baomoi.press/wp-json/acf/v3/quangcao?filter[meta_key]=type&filter[meta_value]=largeBanner", {
             cancelToken: this.cancelTokenSource.token
         })
         .then(res => {
@@ -49,7 +49,7 @@ export default class FacebookRectangle extends React.Component {
             return (
                 <FacebookAds.BannerAd
                     placementId={this.state.android}
-                    type="rectangle"
+                    type="large"
                     onPress={() => console.log('click')}
                     onError={(error) => console.log('error', error)}
                 />
@@ -58,7 +58,7 @@ export default class FacebookRectangle extends React.Component {
             return (
                 <FacebookAds.BannerAd
                     placementId={this.state.ios}
-                    type="rectangle"
+                    type="large"
                     onPress={() => console.log('click')}
                     onError={(error) => console.log('error', error)}
                 />

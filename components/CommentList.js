@@ -23,6 +23,8 @@ export default class CommentList extends React.Component{
       this.state = {comments: [], isLoadingComments: false}
   }
   componentWillMount(){
+    this.cancelTokenSource = axios.CancelToken.source()
+
   }
   FetchAsync = async () => {
       const results = this.state.comments.map(async (obj) => this.fetchFBAvatar(obj));
@@ -33,16 +35,19 @@ export default class CommentList extends React.Component{
     if(obj.author == 0) {return obj}
     else{
 
+
     return  axios({
                   method: "GET",
                   url: "https://baomoi.press/wp-json/wp/v2/users/" + obj.author,
                   headers: {'Authorization': 'Bearer ' + this.props.user.token},
+              },{
+                  cancelToken: this.cancelTokenSource.token
               }).then(res => {
                 if(res.data.custom_avatar.length != 0) {
                   obj.author_avatar_urls['96'] = res.data.custom_avatar
                 }
                 return obj
-              }).catch(err => {return obj})
+              }).catch(err => {console.log(err) ; return obj})
     }
   }
   renderComment = (item) => {
@@ -116,7 +121,10 @@ export default class CommentList extends React.Component{
     }
 
   }
+  componentWillUnmount() {
 
+     this.cancelTokenSource && this.cancelTokenSource.cancel()
+  }
   render(){
     return(
         <View>

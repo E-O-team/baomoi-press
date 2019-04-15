@@ -25,7 +25,7 @@ const screenWidth = Dimensions.get('window').width;
  * 'This will turn into a link: http://www.facebook.com'
  * Use HTMLView for actual HTML.
  */
-export default class HyperText extends React.Component {
+export default class HyperText extends React.PureComponent {
   constructor(){
     super()
     this.state={
