@@ -161,7 +161,7 @@ export default class HomeScreen extends React.Component {
                             data={this.state.articles}
                             extraData={this.state.articles}
                             renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                            keyExtractor={item => item.id.toString()}
+                            keyExtractor={(item, index) => index.toString()}
                             refreshing={this.state.refreshing}
                             onRefresh={this.handleRefresh}
                             onEndReached={() => this.handleLoadMore()}

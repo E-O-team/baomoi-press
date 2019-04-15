@@ -8,6 +8,7 @@ import {
   Image,
   NetInfo,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import splashLogo from '../assets/images/logo-splash.png';
 import {
@@ -93,12 +94,17 @@ export default class AuthLoadingScreen extends React.Component {
 
   // Render any loading content that you like here
   render() {
-    return (
-      <View style={styles.container}>
-        <Image source={splashLogo} style={styles.image}/>
-        <ActivityIndicator/>
-      </View>
-    );
+      return(
+          <ImageBackground source={splashLogo} style={styles.image}>
+              <ActivityIndicator/>
+          </ImageBackground>
+      )
+    // return (
+    //   <View style={styles.container}>
+    //     <Image source={splashLogo} style={styles.image}/>
+    //     <ActivityIndicator/>
+    //   </View>
+    // );
   }
 }
 const styles = StyleSheet.create({
@@ -108,7 +114,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     image:{
-        height: 200,
-        width: 200
+        resizeMode: "cover",
+        flex: 1,
+        // height: 200,
+        // width: 200
     }
 })
