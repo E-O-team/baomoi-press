@@ -95,7 +95,7 @@ export default class CustomArticleAd extends Component {
                             />
                         </View>
                     </TouchableOpacity>
-                    <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10}} />
+                    <Divider style={{ backgroundColor: '#e0e0e0'}} />
                 </View>
             )
         }else {

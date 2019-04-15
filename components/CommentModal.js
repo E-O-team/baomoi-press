@@ -10,14 +10,13 @@ export default class CommentModal extends React.PureComponent{
   constructor(){
     super()
     this.state = {
-      modalVisible: false,
       registerVisible: false,
       text: '',
-      numberOfComments: 0,
       keyboardHeight: 0,
     }
   }
-  componentDidMount() {
+  componentWillMount() {
+    this.cancelTokenSource = axios.CancelToken.source()
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this._keyboardDidShow.bind(this),
@@ -26,12 +25,12 @@ export default class CommentModal extends React.PureComponent{
       'keyboardDidHide',
       this._keyboardDidHide.bind(this),
     );
-    this.fetchComment()
   }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.cancelTokenSource && this.cancelTokenSource.cancel()
   }
 
   _keyboardDidShow(e) {
@@ -41,16 +40,8 @@ export default class CommentModal extends React.PureComponent{
   _keyboardDidHide() {
 
   }
-  fetchComment(){
-    fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.article.id)
-    .then(res => res.json())
-    .then(json => this.setState({
-        numberOfComments: json.length,
-    }))
-  }
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
+
+
 
   submitComment = () => {
     if(this.props.user)
@@ -64,12 +55,15 @@ export default class CommentModal extends React.PureComponent{
                     url: 'https://baomoi.press/wp-json/wp/v2/comments',
                     data: {
                       post: this.props.article.id,
-                      content: this.state.text
+                      content: this.state.text,
+                      parent : this.props.commentParent
                     },
                     headers: {'Authorization': 'Bearer ' + this.props.user.token},
+                },{
+                    cancelToken: this.cancelTokenSource.token
                 })
                 .then(res => {
-                  this.setState({text: '', modalVisible: false})
+                  this.setState({text: ''}, () => this.props.setModalVisible(false, 0))
                   this.props.onFetch()
                 })
                 .catch(err => console.log(err))
@@ -78,12 +72,15 @@ export default class CommentModal extends React.PureComponent{
                     method: "GET",
                     url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
                     headers: {'Authorization': 'Bearer ' + this.props.user.token},
+                },{
+                    cancelToken: this.cancelTokenSource.token
                 })
 
             }
 
      } else {
-            this.setState({ modalVisible: false, registerVisible: true})
+            this.props.setModalVisible(false, 0)
+            this.setState({ registerVisible: true})
      }
 
   }
@@ -110,7 +107,7 @@ export default class CommentModal extends React.PureComponent{
 
             </View>
             <View style={{flex : 3}}>
-              <TouchableOpacity style={styles.commentButton} onPress={() => this.setModalVisible(true)}>
+              <TouchableOpacity style={styles.commentButton} onPress={() => this.props.setModalVisible(true, 0)}>
                 <Text style={{color: '#C0C0C0', fontSize: 14}}>Nhập bình luận ...</Text>
               </TouchableOpacity>
             </View>
@@ -135,7 +132,7 @@ export default class CommentModal extends React.PureComponent{
 
           <Modal
              transparent={true}
-             visible={this.state.modalVisible}
+             visible={this.props.modalVisible}
              onRequestClose={() => {}}
              >
             <View>
@@ -143,7 +140,7 @@ export default class CommentModal extends React.PureComponent{
                    backgroundColor:'black',
                    opacity: 0.7,
                    height: screenHeight - this.state.keyboardHeight- (Platform.OS == "ios" ? 150 : 170)}}
-                   onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                   onPress={() => this.props.setModalVisible(!this.props.modalVisible, 0)}>
 
                  </TouchableOpacity>
                  <View style={{

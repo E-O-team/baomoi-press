@@ -100,7 +100,7 @@ export default class CommentList extends React.Component{
                     tagsStyles={{info:{fontSize: 12*this.props.ui.fontSizeRatio, color:'#808080'}, p: {margin: 0}}}
                     baseFontStyle={{fontSize: 18*this.props.ui.fontSizeRatio, fontFamily: 'baomoi-regular', color: this.props.ui.textColor}}/>
 
-                    <TouchableOpacity style={{marginTop:5 }} onPress={() => {}}>
+                    <TouchableOpacity style={{marginTop:5 }} onPress={() => this.props.setModalVisible(true, item.id)}>
                       <Text style={{color: '#808080', fontSize: 14}}>Trả lời</Text>
                     </TouchableOpacity>
 

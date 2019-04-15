@@ -38,7 +38,9 @@ export default class ArticleScreen extends React.Component {
             scrollY: new Animated.Value(0),
             PopUpAds: [],
             TopViewHeight: 100,
-            settingModalVisible: false
+            settingModalVisible: false,
+            commentModalVisible: false,
+            commentParent: 0
         }
     }
     static navigationOptions = ({navigation}) => {
@@ -144,6 +146,9 @@ export default class ArticleScreen extends React.Component {
       })
       // .then(json => console.log(json))
       .catch(err => console.log(err))
+    }
+    setCommentModalVisible = (visible, parent) => {
+      this.setState({commentModalVisible: visible, commentParent: parent})
     }
     updateUser = async () => {
       this.setState({
@@ -377,12 +382,12 @@ export default class ArticleScreen extends React.Component {
 
                 <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
 
-                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
+                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
 
           </ScrollView>
 
 
-          <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} navigation={this.props.navigation}/>
+          <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} commentParent={this.state.commentParent} modalVisible={this.state.commentModalVisible} setModalVisible={this.setCommentModalVisible} navigation={this.props.navigation}/>
 
 
 
