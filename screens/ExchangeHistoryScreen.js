@@ -73,6 +73,7 @@ export default class ExchangeHistory extends React.PureComponent {
         let id = JSON.parse(await AsyncStorage.getItem('user')).id
         let token = JSON.parse(await AsyncStorage.getItem('user')).token
         console.log(token);
+        console.log(id);
         axios({
             method: "GET",
             url: "https://baomoi.press/wp-json/wp/v2/cardrequest?filter[meta_key]=userID&filter[meta_value]="+ id +"&status=publish, draft",
