@@ -118,7 +118,6 @@ export default class HomeScreen extends React.Component {
         );
     }
     handleLoadMore = () => {
-        console.log("loading more");
         this.setState({
             page: this.state.page + 1,
         }, () => this.fetchNews())

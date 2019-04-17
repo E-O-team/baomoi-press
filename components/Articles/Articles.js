@@ -156,7 +156,7 @@ export default class Articles extends React.Component {
                 {(index == 0 && !this.props.notification) &&
                     <View>
                         <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 10}}>
-                            <Text style={{fontSize: 20, fontWeight: "bold"}}>SỰ KIỆN NÓNG</Text>
+                            <Text style={{fontSize: 18, fontWeight: "bold"}}>SỰ KIỆN NÓNG</Text>
                             <Icon
                                 name='share-google'
                                 type='evilicon'
