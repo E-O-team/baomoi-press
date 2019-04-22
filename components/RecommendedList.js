@@ -241,7 +241,7 @@ export default class RecommendedList extends React.PureComponent{
                                       currentCount: this.props.currentCount,
 
                                     })
-
+                                    this.props.ShowPopUpAd()
                                   }}
                             >
 

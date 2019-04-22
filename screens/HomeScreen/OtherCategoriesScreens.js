@@ -23,16 +23,16 @@ export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)
         const categories = this.props.navigation.getParam('categories')
-        this.state = {
-            selectedCategory: categories[0].id,
-            categories: categories,
-            styles: styles,
-            refreshing: true,
-            loading: false,
-            page: 1,
-            y: 0,
-            isScrollDown: false,
-        }
+    }
+    state = {
+        selectedCategory: categories[0].id,
+        categories: categories,
+        styles: styles,
+        refreshing: true,
+        loading: false,
+        page: 1,
+        y: 0,
+        isScrollDown: false,
     }
 
     componentWillMount() {

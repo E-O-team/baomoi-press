@@ -20,6 +20,8 @@ export default class AdmobInterstitialAd extends React.Component {
             cancelToken: this.cancelTokenSource.token
         })
         .then(res => {
+            AsyncStorage.setItem('PopUpAds', JSON.stringify(res.data))
+
             res.data.forEach(item => {
                 if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Admob"){
                     this.setState({

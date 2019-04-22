@@ -51,10 +51,11 @@ export default class HomeScreen extends React.Component {
     //         header: <Header navigation={navigation}/>
     //     }
     // }
-    componentWillMount() {
+    componentWillMount() { // componentDidMount
         this.fetchNews()
         // this.fetchCategories()
     }
+
     fetchNews = () => {
         this.cancelTokenSource = axios.CancelToken.source()
         if(this.state.refreshing == true){
@@ -106,6 +107,7 @@ export default class HomeScreen extends React.Component {
     }
 
     componentWillUnmount() {
+        console.log('Home unmounted')
         this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
@@ -137,13 +139,16 @@ export default class HomeScreen extends React.Component {
 
     handleOnScroll = (e) => {
         if(this.state.y != 0){
+            console.log("scroll")
            if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
              this.props.navigation.setParams({ visible: true })
+              console.log("set1")
              this.setState({isScrollDown : false})
            }
            if(this.state.y < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
 
              this.props.navigation.setParams({ visible: false })
+             console.log("set2")
              this.setState({isScrollDown : true})
            }
         }
@@ -154,7 +159,10 @@ export default class HomeScreen extends React.Component {
         return(
             <Consumer>
                 {({textColor, backGround}) => (
-                    <View style={{flex: 1, backgroundColor: backGround}}>
+                    <View style={{
+                      flex: 1,
+                      backgroundColor: backGround
+                    }}>
                         <InterstitialAd AdPosition="Khởi động ứng dụng"/>
                         <FlatList
                             onScroll={this.handleOnScroll}
@@ -167,7 +175,6 @@ export default class HomeScreen extends React.Component {
                             onRefresh={this.handleRefresh}
                             onEndReached={() => this.handleLoadMore()}
                             onEndReachedThreshold={0.5}
-                            scrollEventThrottle={16}
                         />
                   </View>
                 )}

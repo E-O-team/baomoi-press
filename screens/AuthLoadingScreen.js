@@ -85,7 +85,6 @@ export default class AuthLoadingScreen extends React.Component {
             this.props.navigation.navigate("App")
         })
     }else{
-        AsyncStorage.clear()
         this.props.navigation.navigate("App")
     }
     // This will switch to the App screen or Auth screen and this loading

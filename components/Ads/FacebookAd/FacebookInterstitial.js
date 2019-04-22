@@ -15,11 +15,13 @@ export default class FacebookInterstitial extends React.Component {
     }
 
     getAdUnitID = () => {
+
         this.cancelTokenSource = axios.CancelToken.source()
         axios.get("https://baomoi.press/wp-json/wp/v2/quangcao?filter[meta_key]=type&filter[meta_value]=Interstitial", {
             cancelToken: this.cancelTokenSource.token
         })
         .then(res => {
+            AsyncStorage.setItem('PopUpAds', JSON.stringify(res.data))
             res.data.forEach(item => {
                 if(item.acf.os == "android" && item.acf.AdPosition == this.props.AdPosition && item.acf.source == "Facebook"){
                     this.setState({
