@@ -543,34 +543,27 @@ export default class ArticleScreen extends React.Component {
               </TouchableOpacity>
 
             </View>
-            <BannerAd size='rectangle' AdPosition='Content(Cuối bài viết)'/>
+                <BannerAd size='rectangle' AdPosition='Content(Cuối bài viết)'/>
 
-            <Divider style={{
-                backgroundColor: '#e0e0e0',
-                height: 15,
-                marginTop: 10
-              }}/> {
-              this.state.Article && <View>
-                  <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{
-                      textColor,
-                      backGround,
-                      fontSizeRatio
-                    }} currentCount={this.state.currentCount} ShowPopUpAd={this.ShowPopUpAd}/>
+                <Divider style={{ backgroundColor: '#e0e0e0', height: 15, marginTop: 10}} />
 
-                  <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{
-                      textColor,
-                      backGround,
-                      fontSizeRatio
-                    }} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
-                </View>
-            }
+                <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
+
+                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user}/>
+
           </ScrollView>
 
           {this.state.Article && <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} commentParent={this.state.commentParent} modalVisible={this.state.commentModalVisible} setModalVisible={this.setCommentModalVisible} navigation={this.props.navigation}/>}
 
-        </View>)
-      }
-    </Consumer>);
-  }
+          <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} navigation={this.props.navigation}/>
+
+
+
+
+        </View>
+
+        )}
+      </Consumer>
+
 
 };

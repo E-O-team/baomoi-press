@@ -241,12 +241,12 @@ export default class RecommendedList extends React.PureComponent{
                                       currentCount: this.props.currentCount,
 
                                     })
-                                    this.props.ShowPopUpAd()
+
                                   }}
                             >
 
                                   {(item.format === 'video') ?
-                                          <View style={{flex: 1, flexDirection: "column", justifyContent: 'center', marginTop: 10, marginBottom: 10}}>
+                                          <View style={{flex: 1, flexDirection: "column", justifyContent: 'center', marginTop: 20}}>
                                               <View style={{alignItems: 'center', justifyContent:'center'}}>
                                                   <Image
                                                     style={{ width: screenWidth-20, height: ((screenWidth-20) * 9/16), borderRadius: 10}}
@@ -277,7 +277,7 @@ export default class RecommendedList extends React.PureComponent{
                                               </View>
                                           </View> :
 
-                                          <View style={{flex: 1, flexDirection: "row", alignItems:'center', marginTop: 10, marginBottom: 10}}>
+                                          <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
                                               <View style={{flex: 2}}>
                                                   <View style={{flexDirection: "row", alignItems:'center'}}>
                                                       {
@@ -297,7 +297,7 @@ export default class RecommendedList extends React.PureComponent{
                                           </View>
                                     }
 
-                                    <Divider style={{ backgroundColor: '#e0e0e0'}} />
+                                    <Divider style={{ backgroundColor: '#e0e0e0', marginTop: 10, marginBottom: 10}} />
 
                             </TouchableOpacity>
                             {(index == 1 || index == 7 ) &&

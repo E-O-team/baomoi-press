@@ -37,24 +37,19 @@ export default class Articles extends React.Component {
     }
     componentDidMount() {
         this.cancelTokenSource = axios.CancelToken.source()
-        this.fetchComment()
-    }
-
-    fetchComment = () => {
-      const request_length = this.state.numberOfComments + 20
-      axios.get('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id +"&per_page=" + request_length, {
-          cancelToken: this.cancelTokenSource.token
-      })
-      .then(res => this.setState({
-          numberOfComments: res.data.length
-      },() => { if(this.state.numberOfComments >= request_length) this.fetchComment() }) )
-      .catch(err => {
-          if(axios.isCancel(err)){
-              return
-          }else{
-              console.log(err)
-          }
-      })
+        axios.get('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.item.id, {
+            cancelToken: this.cancelTokenSource.token
+        })
+        .then(res => this.setState({
+            numberOfComments: res.data.length
+        }))
+        .catch(err => {
+            if(axios.isCancel(err)){
+                return
+            }else{
+                console.log(err)
+            }
+        })
     }
 
     componentWillUnmount() {
