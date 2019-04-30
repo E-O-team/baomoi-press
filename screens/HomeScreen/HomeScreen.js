@@ -32,8 +32,11 @@ import moment from 'moment/min/moment-with-locales'
 import InterstitialAd from '../../components/Ads/InterstitialAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
+import Post1Pic from '../../components/Articles/Post1Pic'
 
+var scrollPosition = 0;
 
+const ITEM_HEIGHT = 200
 export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -53,7 +56,6 @@ export default class HomeScreen extends React.Component {
     // }
     componentWillMount() { // componentDidMount
         this.fetchNews()
-        // this.fetchCategories()
     }
 
     fetchNews = () => {
@@ -110,6 +112,26 @@ export default class HomeScreen extends React.Component {
         console.log('Home unmounted')
         this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
+    handleOnScroll = (e) => {
+        if(this.state.y != 0){
+           if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
+             this.props.navigation.setParams({ visible: true })
+             this.setState({isScrollDown : false})
+           }
+           if(this.state.y < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
+
+             this.props.navigation.setParams({ visible: false })
+             this.setState({isScrollDown : true})
+           }
+        }
+        this.setState({y : e.nativeEvent.contentOffset.y})
+
+    }
+
+
+    renderItem = ({ item, index }) => ( <Articles item={item} navigation={this.props.navigation} index={index} ui={{textColor: 'black', backGround:'white'}}/>);
+
+    keyExtractor = (item, index) => item.id.toString()
 
     handleRefresh = () => {
         this.setState({
@@ -119,6 +141,7 @@ export default class HomeScreen extends React.Component {
             () => this.fetchNews()
         );
     }
+
     handleLoadMore = () => {
         console.log("loading more");
         this.setState({
@@ -126,35 +149,6 @@ export default class HomeScreen extends React.Component {
         }, () => this.fetchNews())
     }
 
-    setCategory = (id) => {
-        this.setState({
-            selectedCategory: id,
-            page: 1,
-            articles: []
-        }, () => {
-            this.fetchNews();
-            // this.fetchCategories();
-        })
-    }
-
-    handleOnScroll = (e) => {
-        if(this.state.y != 0){
-            console.log("scroll")
-           if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
-             this.props.navigation.setParams({ visible: true })
-              console.log("set1")
-             this.setState({isScrollDown : false})
-           }
-           if(this.state.y < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
-
-             this.props.navigation.setParams({ visible: false })
-             console.log("set2")
-             this.setState({isScrollDown : true})
-           }
-        }
-        this.setState({y: e.nativeEvent.contentOffset.y})
-
-    }
     render() {
         return(
             <Consumer>
@@ -166,15 +160,19 @@ export default class HomeScreen extends React.Component {
                         <InterstitialAd AdPosition="Khởi động ứng dụng"/>
                         <FlatList
                             onScroll={this.handleOnScroll}
+                            scrollEventThrottle={16}
                             initialNumToRender={5}
                             data={this.state.articles}
                             extraData={this.state.articles}
-                            renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={this.renderItem}
+                            keyExtractor={this.keyExtractor}
                             refreshing={this.state.refreshing}
                             onRefresh={this.handleRefresh}
+                            removeClippedSubviews={true}
+                            windowSize={15}
                             onEndReached={() => this.handleLoadMore()}
                             onEndReachedThreshold={0.5}
+
                         />
                   </View>
                 )}

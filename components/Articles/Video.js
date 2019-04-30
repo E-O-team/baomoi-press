@@ -15,19 +15,23 @@ var { width, height } = Dimensions.get('window');
 moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
+
 export default class Video extends React.PureComponent {
+
+    navigate = () => this.props.navigation.navigate("Article", {
+                        Article: this.props.item
+                    })
+
     render(){
         const item = this.props.item
         const ui = this.props.ui
         const index = this.props.index
         if(index == 0){
             return(
-                <View>
+                <View style={{padding: 10}}>
                     <TouchableOpacity
                         activeOpacity={1}
-                        onPress={() => this.props.navigation.navigate("Article", {
-                            Article: item
-                        })}
+                        onPress={this.navigate}
                     >
                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
                               <View style={{alignItems: 'center', justifyContent:'center'}}>
@@ -57,7 +61,6 @@ export default class Video extends React.PureComponent {
                                 </View>
                                 <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
-                            <Divider style={{ backgroundColor: '#e0e0e0', height: 1, marginTop: 5}} />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -66,9 +69,8 @@ export default class Video extends React.PureComponent {
             return(
                 <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => this.props.navigation.navigate("Article", {
-                        Article: item
-                    })}
+                    onPress={this.navigate}
+                    style={{padding: 10}}
                 >
                     <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
                           <View style={{alignItems: 'center', justifyContent:'center'}}>
@@ -98,7 +100,6 @@ export default class Video extends React.PureComponent {
                             </View>
                             <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                         </View>
-                        <Divider style={{ backgroundColor: '#e0e0e0', height: 1, marginTop: 5}} />
                     </View>
                 </TouchableOpacity>
             )

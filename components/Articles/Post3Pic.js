@@ -15,6 +15,11 @@ moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 export default class Post3Pic extends React.PureComponent {
+
+    navigate = () => this.props.navigation.navigate("Article", {
+                        Article: this.props.item
+                    })
+
     render(){
         const item = this.props.item
         const ui = this.props.ui
@@ -25,9 +30,7 @@ export default class Post3Pic extends React.PureComponent {
                     <View style={{flexDirection: "row", marginBottom: 7}}>
                         <TouchableOpacity
                             activeOpacity={1}
-                            onPress={() => this.props.navigation.navigate("Article", {
-                                Article: item
-                            })}
+                            onPress={this.navigate}
                             style={{flex: 1}}
                         >
                             <Image
@@ -38,9 +41,7 @@ export default class Post3Pic extends React.PureComponent {
                         </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={1}
-                            onPress={() => this.props.navigation.navigate("Article", {
-                                Article: item
-                            })}
+                            onPress={this.navigate}
                             style={{flex: 1}}
                         >
                             <Image
@@ -51,9 +52,7 @@ export default class Post3Pic extends React.PureComponent {
                         </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={1}
-                            onPress={() => this.props.navigation.navigate("Article", {
-                                Article: item
-                            })}
+                            onPress={this.navigate}
                             style={{flex: 1}}
                         >
                             <Image
@@ -67,9 +66,7 @@ export default class Post3Pic extends React.PureComponent {
                 <View style={{flex: 1}}>
                     <TouchableOpacity
                         activeOpacity={0.5}
-                        onPress={() => this.props.navigation.navigate("Article", {
-                            Article: item
-                        })}
+                        onPress={this.navigate}
                     >
                     <View style={{flexDirection: "row", alignItems:'center'}}>
                         {

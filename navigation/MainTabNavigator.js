@@ -165,7 +165,6 @@ class TabBarComponent extends Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log("receive")
     const oldState = this.props.navigation.state;
     const oldRoute = oldState.routes[oldState.index];
     var oldParams = oldRoute.routes[oldRoute.index].params;

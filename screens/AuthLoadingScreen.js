@@ -22,7 +22,6 @@ export default class AuthLoadingScreen extends React.Component {
     constructor(props) {
       super(props);
       this.checkConnect()
-
     }
 
     checkConnect = () => {
@@ -48,8 +47,9 @@ export default class AuthLoadingScreen extends React.Component {
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
     let user = JSON.parse(await AsyncStorage.getItem('user'));
-    let ExpoToken = await Notifications.getExpoPushTokenAsync();
+
     if(user){
+        let ExpoToken = await Notifications.getExpoPushTokenAsync();
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/jwt-auth/v1/token/validate',

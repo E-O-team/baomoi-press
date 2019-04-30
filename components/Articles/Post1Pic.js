@@ -16,6 +16,10 @@ const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_
 
 export default class Post1Pic extends React.PureComponent {
 
+    navigate = () => this.props.navigation.navigate("Article", {
+                        Article: this.props.item
+                    })
+
     render(){
         const item = this.props.item
         const ui = this.props.ui
@@ -25,9 +29,7 @@ export default class Post1Pic extends React.PureComponent {
             <View style={{padding: 10, height: 130}}>
                 <TouchableOpacity
                     activeOpacity={0.5}
-                    onPress={() => this.props.navigation.navigate("Article", {
-                        Article: item
-                    })}
+                    onPress={this.navigate}
                     style={{flex: 1}}
                 >
                     <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>

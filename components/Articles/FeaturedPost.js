@@ -19,6 +19,11 @@ moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 
 export default class FeaturedPost extends React.PureComponent {
+
+    navigate = () => this.props.navigation.navigate("Article", {
+                        Article: this.props.item
+                    })
+
     render(){
         const item = this.props.item
         const ui = this.props.ui
@@ -30,9 +35,7 @@ export default class FeaturedPost extends React.PureComponent {
 
                 <TouchableOpacity
                     activeOpacity={0.5}
-                    onPress={() => this.props.navigation.navigate("Article", {
-                        Article: item
-                    })}
+                    onPress={this.navigate}
                 >
                     <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
                         <View style={{flexDirection: 'row', alignItems:'center'}}>
@@ -71,9 +74,7 @@ export default class FeaturedPost extends React.PureComponent {
                         data={item.otherFeaturedPosts}
                         renderItem={({ item, index }) =>
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate("Article", {
-                                    Article: item
-                                })}
+                                onPress={this.navigate}
                                 key={item.id}
                                 activeOpacity={0.8}
                             >

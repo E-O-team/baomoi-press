@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     textAlign: 'left',
-    fontSize: 17,
+    fontSize: 16,
     marginLeft: 5,
   },
   IconView:{

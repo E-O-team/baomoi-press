@@ -23,16 +23,16 @@ export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)
         const categories = this.props.navigation.getParam('categories')
-    }
-    state = {
-        selectedCategory: categories[0].id,
-        categories: categories,
-        styles: styles,
-        refreshing: true,
-        loading: false,
-        page: 1,
-        y: 0,
-        isScrollDown: false,
+        this.state = {
+            selectedCategory: categories[0].id,
+            categories: categories,
+            styles: styles,
+            refreshing: true,
+            loading: false,
+            page: 1,
+            y: 0,
+            isScrollDown: false,
+        }
     }
 
     componentWillMount() {
@@ -85,6 +85,10 @@ export default class OtherCategoriesScreens extends React.PureComponent {
     componentWillUnmount() {
         this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
+
+    renderItem = ({ item, index }) => ( <Articles item={item} navigation={this.props.navigation} index={index} ui={{textColor: 'black', backGround:'white'}}/>);
+
+    keyExtractor = (item, index) => item.id.toString()
 
     handleRefresh = () => {
         this.setState({
@@ -163,15 +167,19 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                                   </Consumer>
 
                                 }
-                                keyExtractor={item => item.id.toString()}
+                                keyExtractor={this.keyExtractor}
                             />
                         </View>
                         <FlatList
                             onScroll={this.handleOnScroll}
                             data={this.state.articles}
                             extraData={this.state.articles}
-                            renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                            keyExtractor={item => item.id.toString()}
+                            scrollEventThrottle={16}
+                            initialNumToRender={5}
+                            removeClippedSubviews={true}
+                            windowSize={15}
+                            renderItem={this.renderItem}
+                            keyExtractor={this.keyExtractor}
                             refreshing={this.state.refreshing}
                             onRefresh={this.handleRefresh}
                             onEndReached={() => this.handleLoadMore()}
