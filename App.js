@@ -95,12 +95,6 @@ export default class App extends React.Component {
   }
 
   _loadResourcesAsync = async () => {
-    //set starting time count to show ad
-    const startTime = await AsyncStorage.getItem('seconds')
-    console.log(startTime)
-    AsyncStorage.setItem('StartingAdTime', startTime)
-    console.log('start')
-    AsyncStorage.setItem('PopUpAdShowedTimes', '0')
     return Promise.all([
       Font.loadAsync({
         // This is the font that we are using for our tab bar

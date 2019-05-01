@@ -35,7 +35,7 @@ export default class OtherCategoriesScreens extends React.PureComponent {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.fetchNews(this.state.selectedCategory)
     }
 

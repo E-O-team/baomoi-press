@@ -54,7 +54,7 @@ export default class HomeScreen extends React.Component {
     //         header: <Header navigation={navigation}/>
     //     }
     // }
-    componentWillMount() { // componentDidMount
+    componentDidMount() { // componentDidMount
         this.fetchNews()
     }
 
