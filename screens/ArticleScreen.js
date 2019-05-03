@@ -5,9 +5,9 @@ import HTML from 'react-native-render-html';
 import CommentList from '../components/CommentList';
 import RecommendedList from '../components/RecommendedList';
 import AuthorSubscription from '../components/AuthorSubscription';
-import CommentModal from '../components/CommentModal';
-import HyperText from '../components/HyperText'
-import {Consumer, Provider} from '../context/context.js';
+import CommentModal from '../components/Modals/CommentModal';
+import VideoPlay from '../components/VideoPlay'
+import {Consumer} from '../context/context.js';
 import {Icon, Divider} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
 import { FacebookAds } from 'expo';
@@ -27,17 +27,18 @@ HEADER_MIN_HEIGHT = 50;
 
 
 export default class ArticleScreen extends React.Component {
-
+    _isMounted = false;
+    _timeCount = 1;
     state = {
         Article: undefined,
         user: undefined,
         comments: [],
         scrollY: new Animated.Value(0),
-        PopUpAds: [],
         TopViewHeight: 100,
         settingModalVisible: false,
         commentModalVisible: false,
-        commentParent: 0
+        commentParent: 0,
+        intervalId : undefined
     }
     static navigationOptions = ({navigation}) => {
         return {
@@ -47,13 +48,15 @@ export default class ArticleScreen extends React.Component {
         }
     }
     componentDidMount() {
+        this._isMounted = true;
         this.cancelTokenSource = axios.CancelToken.source()
         this.setState({
             Article: this.props.navigation.getParam("Article", "ERR"),
         },() => {
           this.fetchComment()
-          this.setAds()
           this.updateUser()
+          this.getTimeCount()
+          if(!this.state.Article.format === 'video') this.setAds()
         })
     }
     shouldComponentUpdate(nextProps, nextState) {
@@ -63,16 +66,16 @@ export default class ArticleScreen extends React.Component {
         return (this.state.Article !== nextState.Article || this.state.comments !== nextState.comments ||
                 this.state.TopViewHeight !== nextState.TopViewHeight || this.state.settingModalVisible !== nextState.settingModalVisible ||
                 this.state.commentModalVisible !== nextState.commentModalVisible || this.state.commentParent !== nextState.commentParent ||
-                this.state.user !== nextState.user)
+                this.state.user !== nextState.user || this.state.intervalId !== nextState.intervalId)
     }
 
 
     getTimeCount = async() => {
 
-        if(this.props.navigation.getParam("currentCount", "ERR") === "ERR")
+        if(this.props.navigation.getParam("isCounting", "ERR") === "ERR")
         {
         const value = await AsyncStorage.getItem('seconds')
-        if(value !== null) this.setState({currentCount: Number.parseInt(value)})
+        if(value !== null) this._timeCount = Number.parseInt(value)
         var intervalId = setInterval(this.timer, 1000)
         // store intervalId in the state so it can be accessed later:
         this.setState({intervalId: intervalId})
@@ -81,8 +84,8 @@ export default class ArticleScreen extends React.Component {
     }
     timer = async () =>  {
       // setState method is used to update the state
-       this.setState({ currentCount: this.state.currentCount + 1 })
-       if(this.state.currentCount % 180 == 0)
+       this._timeCount++
+       if(this._timeCount % 180 == 0)
        {
          //add point for user
 
@@ -96,7 +99,7 @@ export default class ArticleScreen extends React.Component {
          }
        }
 
-       if(this.state.currentCount >= 7200) this.setState({currentCount: 1})
+       if(this._timeCount >= 7200) this._timeCount = 1
 
 
     }
@@ -105,8 +108,9 @@ export default class ArticleScreen extends React.Component {
 
     componentWillUnmount() {
       // use intervalId from the state to clear the interval
-       // clearInterval(this.state.intervalId)
-       // AsyncStorage.setItem('seconds', this.state.currentCount.toString())
+        clearInterval(this.state.intervalId)
+        AsyncStorage.setItem('seconds', this._timeCount.toString())
+       this._isMounted = false;
        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
@@ -145,17 +149,18 @@ export default class ArticleScreen extends React.Component {
       })
       .then(res => res.json())
       .then(json => {
-        this.setState({comments : json}, () => {if(this.state.comments.length >= request_length) this.fetchComment()  })
+        if(this._isMounted) this.setState({comments : json}, () => {if(this.state.comments.length >= request_length) this.fetchComment()  })
       })
       // .then(json => console.log(json))
       .catch(err => console.log(err))
     }
     setCommentModalVisible = (visible, parent) => {
-      this.setState({commentModalVisible: visible, commentParent: parent})
+      if(this._isMounted) this.setState({commentModalVisible: visible, commentParent: parent})
     }
     updateUser = async () => {
-      this.setState({
-          user: JSON.parse(await AsyncStorage.getItem('user'))
+      const json = await JSON.parse(await AsyncStorage.getItem('user'))
+      if(this._isMounted) this.setState({
+          user: json
       })
     }
     setAds = () => {
@@ -172,12 +177,12 @@ export default class ArticleScreen extends React.Component {
         {
           const new_content = [string.slice(0, middle_position+match.index), ' <ads></ads> ', string.slice(middle_position+match.index)].join('');
           article.content.plaintext = new_content
-          this.setState({Article: article})
+          if(this._isMounted) this.setState({Article: article})
         }
       }
       //
     }
-
+    renderMidAd =(index) => <BannerAd key={index} size='rectangle' AdPosition='Content(Giữa bài viết)'/>
     navigateBack = () => this.props.navigation.goBack()
 
 
@@ -214,12 +219,12 @@ export default class ArticleScreen extends React.Component {
                     />
                 </TouchableOpacity>
               </View>
-              <Animated.View style={{opacity: headerSource, flex: 5}}>
-                { this.state.Article && <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user} updateUser={this.updateUser}/> }
+              <Animated.View style={{opacity: (this.state.Article && this.state.Article.format === 'video') ? 1 : headerSource, flex: 5}}>
+                { (this.state.Article) && <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user} updateUser={this.updateUser}/> }
               </Animated.View>
 
               <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity style={{}} onPress={()=>this.setState({settingModalVisible: true})}>
+                    <TouchableOpacity  onPress={()=>this.setState({settingModalVisible: true})}>
                         <Icon
                           name='dots-three-vertical'
                           type='entypo'
@@ -277,129 +282,123 @@ export default class ArticleScreen extends React.Component {
 
           </Animated.View>
 
-          {this.state.Article &&
-              <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 70}}
-                            scrollEventThrottle={16}
-                            onScroll={Animated.event(
-                            [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
-                            )}>
+          {(this.state.Article && this.state.Article.format === 'standard') &&
+                  <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 70}}
+                                scrollEventThrottle={16}
+                                onScroll={Animated.event(
+                                [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
+                                )}>
 
 
-                <View onLayout={(event) => {
-                                  var {x, y, width, height} = event.nativeEvent.layout;
-                                  this.setState({TopViewHeight : height})
+                    <View onLayout={(event) => {
+                                      var {x, y, width, height} = event.nativeEvent.layout;
+                                      if(this._isMounted) this.setState({TopViewHeight : height})
 
-                                }} >
-                  {
-                    (this.state.Article.format === 'video')? <View style={{marginTop: 10}}></View>
-                    :
-                    <View style={{padding: 10}}>
-                      <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor, marginBottom: 5}}>{this.state.Article.title.plaintitle}</Text>
+                                    }} >
 
-                      <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} updateUser={this.updateUser} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}/>
+                        <View style={{padding: 10}}>
+                          <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor, marginBottom: 5}}>{this.state.Article.title.plaintitle}</Text>
+
+                          <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} updateUser={this.updateUser} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}/>
+                        </View>
+
+
+                      </View>
+
+
+                    <View style={{marginTop: 10}}>
+
+                      <View style={{padding: 10}}>
+                          <HTML
+                            html={this.state.Article.excerpt.custom_excerpt}
+                            imagesMaxWidth={Dimensions.get('window').width-20}
+                            onLinkPress={(event, href)=>{
+                              Linking.openURL(href)
+                            }}
+                            ignoredStyles={['width', 'height', 'max-width']}
+                            staticContentMaxWidth={Dimensions.get('window').width-20}
+                            tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
+                            baseFontStyle={{fontSize: 19*fontSizeRatio, fontWeight:'500', fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
+
+                          <View style={{height: 15}}></View>
+
+                          <HTML
+                            alterChildren = { (node) => {
+                                if (node.name === 'iframe') {
+                                    delete node.attribs.width;
+                                    delete node.attribs.height;
+                                }
+                                return node.children;
+                            }}
+                            renderers= {
+                              {
+
+                                   ads: this.renderMidAd
+
+                              }
+                              }
+                            html={this.state.Article.content.plaintext}
+                            imagesMaxWidth={Dimensions.get('window').width-20}
+                            onLinkPress={(event, href)=>{
+                              Linking.openURL(href)
+                            }}
+                            ignoredStyles={['width', 'height', 'max-width']}
+                            staticContentMaxWidth={Dimensions.get('window').width-20}
+                            tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
+                            baseFontStyle={{fontSize: 21*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
+                      </View>
                     </View>
 
-                  }
 
-                  </View>
+                <View style={{flexDirection: 'row', marginTop : 20, marginBottom: 10}}>
 
-
-                <View style={{marginTop: 10}}>
-                {
-                  (this.state.Article.format === 'video')?
-                  <HyperText navigation={this.props.navigation} article={this.state.Article} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}>
-                  {this.state.Article.content.plaintext}
-                  </HyperText> :
-                  <View style={{padding: 10}}>
-                      <HTML
-                        html={this.state.Article.excerpt.custom_excerpt}
-                        imagesMaxWidth={Dimensions.get('window').width-20}
-                        onLinkPress={(event, href)=>{
-                          Linking.openURL(href)
-                        }}
-                        ignoredStyles={['width', 'height', 'max-width']}
-                        staticContentMaxWidth={Dimensions.get('window').width-20}
-                        tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
-                        baseFontStyle={{fontSize: 19*fontSizeRatio, fontWeight:'500', fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
-
-                      <View style={{height: 15}}></View>
-
-                      <HTML
-                        alterChildren = { (node) => {
-                            if (node.name === 'iframe') {
-                                delete node.attribs.width;
-                                delete node.attribs.height;
-                            }
-                            return node.children;
-                        }}
-                        renderers= {
-                          {
-
-                               ads: (index) => <BannerAd key={index} size='rectangle' AdPosition='Content(Giữa bài viết)'/>
-
-                          }
-                          }
-                        html={this.state.Article.content.plaintext}
-                        imagesMaxWidth={Dimensions.get('window').width-20}
-                        onLinkPress={(event, href)=>{
-                          Linking.openURL(href)
-                        }}
-                        ignoredStyles={['width', 'height', 'max-width']}
-                        staticContentMaxWidth={Dimensions.get('window').width-20}
-                        tagsStyles={{blockquote:{marginLeft: 50}, p: {margin: 5}}}
-                        baseFontStyle={{fontSize: 21*fontSizeRatio, fontFamily: 'baomoi-regular', color:textColor, lineHeight:23*fontSizeRatio }}/>
-                  </View>
-
-                }
-                </View>
-
-
-            <View style={{flexDirection: 'row', marginTop : 20, marginBottom: 10}}>
-
-                  <TouchableOpacity style={{height: 40, alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#cc0000'}}
-                                    onPress={() => Linking.openURL(this.state.Article.source_link)}>
-                      <Icon
-                        name='share-2'
-                        type='feather'
-                        color='white'
-                        size={30}
-
-                      />
-                      <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>LINK GỐC</BaomoiText>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={{height: 40, alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#3b5998'}}
-                                    onPress={this.onShare}>
-                      <View style={{borderColor: 'white', backgroundColor: '#3b5998', width:30 , height: 30, borderRadius: 15, borderWidth: 1,
-                                    alignItems:'center', justifyContent:'center'}}>
+                      <TouchableOpacity style={{height: 40, alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#cc0000'}}
+                                        onPress={() => Linking.openURL(this.state.Article.source_link)}>
                           <Icon
-                            name='sc-facebook'
-                            type='evilicon'
+                            name='share-2'
+                            type='feather'
                             color='white'
                             size={30}
 
-
                           />
-                      </View>
-                      <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>CHIA SẺ</BaomoiText>
-                  </TouchableOpacity>
+                          <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>LINK GỐC</BaomoiText>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={{height: 40, alignItems: 'center', justifyContent:'center', alignItems:'center',flex: 1, flexDirection: 'row', backgroundColor:'#3b5998'}}
+                                        onPress={this.onShare}>
+                          <View style={{borderColor: 'white', backgroundColor: '#3b5998', width:30 , height: 30, borderRadius: 15, borderWidth: 1,
+                                        alignItems:'center', justifyContent:'center'}}>
+                              <Icon
+                                name='sc-facebook'
+                                type='evilicon'
+                                color='white'
+                                size={30}
 
 
-            </View>
-                <BannerAd size='rectangle' AdPosition='Content(Cuối bài viết)'/>
+                              />
+                          </View>
+                          <BaomoiText style={{color:'#ffffff',fontSize: 22, marginLeft: 5}}>CHIA SẺ</BaomoiText>
+                      </TouchableOpacity>
 
-                <Divider style={{ backgroundColor: '#e0e0e0', height: 15, marginTop: 10}} />
 
-                <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} currentCount={this.state.currentCount}/>
+                </View>
+                    <BannerAd size='rectangle' AdPosition='Content(Cuối bài viết)'/>
 
-                <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
+                    <Divider style={{ backgroundColor: '#e0e0e0', height: 15, marginTop: 10}} />
 
-          </ScrollView>
+                    <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}}/>
+
+                    <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
+
+              </ScrollView>
             }
 
-         {this.state.Article &&
+            {(this.state.Article && this.state.Article.format === 'video') &&
+              <VideoPlay navigation={this.props.navigation} article={this.state.Article} />
+            }
+
+
              <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} commentParent={this.state.commentParent} modalVisible={this.state.commentModalVisible} setModalVisible={this.setCommentModalVisible} navigation={this.props.navigation}/>
-         }
 
 
 

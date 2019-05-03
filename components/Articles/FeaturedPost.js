@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
     Image,
     Dimensions,
@@ -33,50 +34,50 @@ export default class FeaturedPost extends React.PureComponent {
 
 
 
-                <TouchableOpacity
-                    activeOpacity={0.5}
+                <TouchableWithoutFeedback
                     onPress={this.navigate}
                 >
-                    <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
-                        <View style={{flexDirection: 'row', alignItems:'center'}}>
-                            <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 4, marginBottom: 3}}></View>
-                            <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 18}}>TIÊU ĐIỂM</BaomoiText>
-                        </View>
-                        <Icon
-                            name='angle-right'
-                            type='font-awesome'
-                            color='#696969'
-                        />
-                    </View>
-                    <View style={{marginTop: 5}}>
-                        <Image
-                            source={{uri: item.thumb || defaultImg}}
-                            style= {{height: 180, width: width}}
-                            loadingIndicatorSource={spinner}
-                        />
-                        <View style={{padding: 10}}>
-                            <View style={{flexDirection: "row", alignItems:'center'}}>
-
-                                {
-                                  (item.taxonomy_source[0])?
-                                     <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
-                                  :
-                                      <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
-                                }
-                                <Comments id={item.id}/>
+                    <View>
+                        <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
+                            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                                <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 4, marginBottom: 3}}></View>
+                                <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 18}}>TIÊU ĐIỂM</BaomoiText>
                             </View>
-                            <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                            <Icon
+                                name='angle-right'
+                                type='font-awesome'
+                                color='#696969'
+                            />
+                        </View>
+                        <View style={{marginTop: 5}}>
+                            <Image
+                                source={{uri: item.thumb || defaultImg}}
+                                style= {{height: 180, width: width}}
+                                loadingIndicatorSource={spinner}
+                            />
+                            <View style={{padding: 10}}>
+                                <View style={{flexDirection: "row", alignItems:'center'}}>
+
+                                    {
+                                      (item.taxonomy_source[0])?
+                                         <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                      :
+                                          <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                    }
+                                    <Comments id={item.id}/>
+                                </View>
+                                <BaomoiText style={{fontSize: 22, fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                            </View>
                         </View>
                     </View>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
                 <View style={{padding: 10}}>
                     <FlatList
                         data={item.otherFeaturedPosts}
                         renderItem={({ item, index }) =>
-                            <TouchableOpacity
+                            <TouchableWithoutFeedback
                                 onPress={this.navigate}
                                 key={item.id}
-                                activeOpacity={0.8}
                             >
                                 <View style={{flexDirection: "row", marginBottom: 3, alignItems: "flex-start"}}>
                                     <Icon
@@ -85,7 +86,7 @@ export default class FeaturedPost extends React.PureComponent {
                                     />
                                 <BaomoiText style={{fontSize: 16, textAlign: "justify", color: '#696969', marginLeft: 5,flex: 1, flexWrap: 'wrap'}}>{item.title.plaintitle}</BaomoiText>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableWithoutFeedback>
                         }
                         keyExtractor={item => item.id.toString()}
                     />

@@ -7,7 +7,7 @@ import {Consumer} from '../context/context.js';
 import BannerAd from '../components/Ads/BannerAd';
 
 
-export default class VideoScreen extends React.Component{
+export default class VideoListScreen extends React.Component{
   constructor(props){
     super(props)
     this.state={
@@ -90,12 +90,13 @@ export default class VideoScreen extends React.Component{
                 {({textColor, backGround}) => (
                 <View>
                     <FlatList
-                    onScrollBeginDrag={this.handleBeginDrag}
-                    onScrollEndDrag={this.handleEndDrag}
                     onScroll={this.handleOnScroll}
                     data={this.state.articles}
+                    extraData={this.state.articles}
                     renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
                     keyExtractor={item => item.id.toString()}
+                    removeClippedSubviews={true}
+                    windowSize={15}
                     refreshing={this.state.refreshing}
                     ListFooterComponent={() => <ActivityIndicator size="large" animating />}
                     onRefresh={this.handleRefresh}

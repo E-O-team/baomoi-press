@@ -29,7 +29,6 @@ export default class Post3Pic extends React.PureComponent {
                 <View style={{flex: 2}}>
                     <View style={{flexDirection: "row", marginBottom: 7}}>
                         <TouchableOpacity
-                            activeOpacity={1}
                             onPress={this.navigate}
                             style={{flex: 1}}
                         >
@@ -40,7 +39,6 @@ export default class Post3Pic extends React.PureComponent {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            activeOpacity={1}
                             onPress={this.navigate}
                             style={{flex: 1}}
                         >
@@ -51,7 +49,6 @@ export default class Post3Pic extends React.PureComponent {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            activeOpacity={1}
                             onPress={this.navigate}
                             style={{flex: 1}}
                         >
@@ -65,7 +62,6 @@ export default class Post3Pic extends React.PureComponent {
                 </View>
                 <View style={{flex: 1}}>
                     <TouchableOpacity
-                        activeOpacity={0.5}
                         onPress={this.navigate}
                     >
                     <View style={{flexDirection: "row", alignItems:'center'}}>

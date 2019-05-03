@@ -17,12 +17,11 @@ import axios from 'axios';
 import moment from 'moment/min/moment-with-locales'
 moment.locale('vi');
 import HTML from 'react-native-render-html';
-export default class CommentList extends React.Component{
-  constructor(props){
-      super(props);
-      this.state = {comments: [], isLoadingComments: false}
-  }
-  componentWillMount(){
+export default class CommentList extends React.PureComponent{
+
+    state = {comments: [], isLoadingComments: false}
+
+  componentDidMount(){
     this.cancelTokenSource = axios.CancelToken.source()
 
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
     Image,
     Dimensions
@@ -27,8 +28,7 @@ export default class Post1Pic extends React.PureComponent {
 
         return(
             <View style={{padding: 10, height: 130}}>
-                <TouchableOpacity
-                    activeOpacity={0.5}
+                <TouchableWithoutFeedback
                     onPress={this.navigate}
                     style={{flex: 1}}
                 >
@@ -50,7 +50,7 @@ export default class Post1Pic extends React.PureComponent {
                             style={{height: 90, flex: 1, marginLeft: 5, borderRadius: 5}}
                         />
                     </View>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
             </View>
         )
     }

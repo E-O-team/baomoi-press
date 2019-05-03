@@ -51,7 +51,13 @@ const HomeStack = createStackNavigator({
   WebView: OriginalWebView,
 
 },{
-    headerMode: "float"
+    headerMode: "float",
+    transitionConfig: () => ({
+     transitionSpec: {
+       duration: 0,
+       timing: Animated.timing,
+     },
+   }),
 });
 const highlightTab = (tabName, focused) => {
 
@@ -108,6 +114,13 @@ const VideoStack = createStackNavigator({
   Settings: SettingsScreen,
   UserProfile: UserProfile,
   UserProfileEdit: UserProfileEdit,
+},{
+    transitionConfig: () => ({
+     transitionSpec: {
+       duration: 0,
+       timing: Animated.timing,
+     },
+   }),
 });
 
 

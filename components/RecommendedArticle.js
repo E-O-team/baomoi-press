@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
     FlatList,
     SafeAreaView,
@@ -60,6 +61,7 @@ export default class RecommendedArticle extends React.PureComponent{
   navigate = () => {
       this.props.navigation.push("Article", {
                         Article: this.props.item,
+                        isCounting : true
                       })
     }
 
@@ -73,10 +75,10 @@ export default class RecommendedArticle extends React.PureComponent{
     return(
         <Consumer>
           {({textColor, backGround, fontSizeRatio}) => (
-                            <TouchableOpacity
-                                activeOpacity={0.5}
+                            <TouchableWithoutFeedback
                                 onPress={this.navigate}
                             >
+                                <View>
                                   {(item.format === 'video') ?
                                           <View style={{flex: 1, flexDirection: "column", justifyContent: 'center', marginTop: 20}}>
                                               <View style={{alignItems: 'center', justifyContent:'center'}}>
@@ -146,8 +148,9 @@ export default class RecommendedArticle extends React.PureComponent{
                                     }
 
                                     <Divider style={{ backgroundColor: '#e0e0e0'}} />
+                                </View>
 
-                            </TouchableOpacity>
+                            </TouchableWithoutFeedback>
                             )}
                         </Consumer>
         )

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View,Keyboard,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform,Image,Modal } from 'react-native';
-import { BaomoiText } from '../components/StyledText';
+import { BaomoiText } from '../StyledText';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
 const screenWidth = Dimensions.get('window').width;
@@ -13,11 +13,11 @@ export default class CommentModal extends React.PureComponent{
       modalVisible: false,
       registerVisible: false,
       text: '',
-      numberOfComments: 0,
       keyboardHeight: 0,
     }
   }
   componentDidMount() {
+    this.cancelTokenSource = axios.CancelToken.source()
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this._keyboardDidShow.bind(this),
@@ -26,12 +26,12 @@ export default class CommentModal extends React.PureComponent{
       'keyboardDidHide',
       this._keyboardDidHide.bind(this),
     );
-    this.fetchComment()
   }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.cancelTokenSource && this.cancelTokenSource.cancel()
   }
 
   _keyboardDidShow(e) {
@@ -41,13 +41,7 @@ export default class CommentModal extends React.PureComponent{
   _keyboardDidHide() {
 
   }
-  fetchComment(){
-    fetch('https://baomoi.press/wp-json/wp/v2/comments?post=' + this.props.article.id)
-    .then(res => res.json())
-    .then(json => this.setState({
-        numberOfComments: json.length,
-    }))
-  }
+
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
@@ -67,6 +61,8 @@ export default class CommentModal extends React.PureComponent{
                       content: this.state.text
                     },
                     headers: {'Authorization': 'Bearer ' + this.props.user.token},
+                },{
+                    cancelToken: this.cancelTokenSource.token
                 })
                 .then(res => {
                   this.setState({text: '', modalVisible: false})
@@ -78,6 +74,8 @@ export default class CommentModal extends React.PureComponent{
                     method: "GET",
                     url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
                     headers: {'Authorization': 'Bearer ' + this.props.user.token},
+                },{
+                    cancelToken: this.cancelTokenSource.token
                 })
 
             }

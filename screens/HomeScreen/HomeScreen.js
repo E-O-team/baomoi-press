@@ -38,6 +38,7 @@ var scrollPosition = 0;
 
 const ITEM_HEIGHT = 200
 export default class HomeScreen extends React.Component {
+    _scrollPosition = 0
     constructor(props) {
         super(props);
         this.state = {
@@ -92,7 +93,7 @@ export default class HomeScreen extends React.Component {
                     }
                 })
             }else{
-                axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page,{
+                axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=off&page=" + this.state.page,{
                     cancelToken: this.cancelTokenSource.token
                 })
                 .then(res => this.setState({
@@ -113,18 +114,18 @@ export default class HomeScreen extends React.Component {
         this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
     handleOnScroll = (e) => {
-        if(this.state.y != 0){
-           if(this.state.y > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
+        if(this._scrollPosition != 0){
+           if(this._scrollPosition > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
              this.props.navigation.setParams({ visible: true })
              this.setState({isScrollDown : false})
            }
-           if(this.state.y < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
+           if(this._scrollPosition < e.nativeEvent.contentOffset.y && !this.state.isScrollDown) {
 
              this.props.navigation.setParams({ visible: false })
              this.setState({isScrollDown : true})
            }
         }
-        this.setState({y : e.nativeEvent.contentOffset.y})
+        this._scrollPosition =  e.nativeEvent.contentOffset.y
 
     }
 

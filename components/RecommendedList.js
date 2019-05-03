@@ -208,14 +208,12 @@ export default class RecommendedList extends React.PureComponent{
           {({textColor, backGround, fontSizeRatio}) => (
             <View>
               <BaomoiText style={{fontSize: 16* this.props.ui.fontSizeRatio,color:'#003333', marginBottom: 15, fontWeight:'500'}}>TIN KHÁC</BaomoiText>
-              {this.state.Articles &&
                   <FlatList
                     data={this.state.Articles}
                     extraData={this.state}
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => item.id.toString()}
                 />
-              }
               </View>
               )}
             </Consumer>
