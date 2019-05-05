@@ -18,31 +18,33 @@ export default class AuthorSubscription extends React.PureComponent{
   }
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if (this.props.user != prevProps.user) {
-      this.checkSubscription();
-    }
+    if (this.props.user != prevProps.user) this.checkSubscription()
+    if(this.props.taxonomy_source !=  prevProps.taxonomy_source) this.updateSource()
   }
 
   componentWillMount(){
-    this.setState({source : this.props.taxonomy_source})
+
     this.cancelTokenSource = axios.CancelToken.source()
+    this.updateSource()
 
 
-    axios.get("https://baomoi.press/wp-json/wp/v2/get_source_logo",{
-        cancelToken: this.cancelTokenSource.token
-    })
-    .then(res => res.data)
-    .then(json => {
-      if(json.length != 0){
-        var source_array = json.filter(e => e.title.toUpperCase() === this.state.source.name.toUpperCase())
-          if(source_array.length != 0) this.setState({logo : source_array[0].img})
 
-      }
-    })
-    // .then(json => console.log(json))
-    .catch(err => console.log(err))
+  }
+  updateSource = () => {
+      this.setState({source : this.props.taxonomy_source})
+      axios.get("https://baomoi.press/wp-json/wp/v2/get_source_logo",{
+          cancelToken: this.cancelTokenSource.token
+      })
+      .then(res => res.data)
+      .then(json => {
+        if(json.length != 0){
+          var source_array = json.filter(e => e.title.toUpperCase() === this.state.source.name.toUpperCase())
+            if(source_array.length != 0) this.setState({logo : source_array[0].img})
 
-
+        }
+      })
+      // .then(json => console.log(json))
+      .catch(err => console.log(err))
 
   }
   isSubscribed = () =>{

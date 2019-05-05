@@ -12,7 +12,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   Image,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import {Icon, Divider} from 'react-native-elements';
 import _ from 'lodash';
@@ -45,8 +45,9 @@ export default class VideoPlay extends React.PureComponent {
                 article : undefined,
                 uri: undefined,
                 shouldPlay : true,
+                isLoading : true,
                 otherVideos : [],
-                isDirectFileExtensions : true
+                isYoutubeVideo : false
                 }
   }
 
@@ -61,7 +62,7 @@ export default class VideoPlay extends React.PureComponent {
           }
         }
       )
-    this.setState({article : this.props.article}, () => this.getUri())
+
     this.fetchVideos()
   }
   componentWillUnmount () {
@@ -69,72 +70,97 @@ export default class VideoPlay extends React.PureComponent {
     this.cancelTokenSource && this.cancelTokenSource.cancel()
   }
 
+  getUri = (content) => {
+      const { width } = Dimensions.get('window');
+      // Check if nested content is a plain string
+      if (typeof content.content.plaintext === 'string') {
+        var result;
+        // Split the content on space characters
+        var words = content.content.plaintext.split(/\s/);
+
+        // Loop through the words
+        var contents = words.map((word,i) => {
+
+          // Space if the word isn't the very last in the set, thus not requiring a space after it
+          var separator = i < (words.length - 1) ? ' ' : '';
+
+          // The word is a URL, return the URL wrapped in a custom <Link> component
+          if (word.match(/^https?\:\//)) {
+              if(word.includes('youtu.be'))
+              {
+                  word = word.replace("youtu.be/", "youtube.com/embed/")
+                 result = word
+                 if(!this.state.isYoutubeVideo) this.setState({isYoutubeVideo : true})
+              }
+
+
+          // The word is not a URL, return the word as-is
+          }
+          if (word.includes('mp4=')) {
+             const string=  word.replace(new RegExp('mp4=', 'g'), '')
+                            .replace("][/video]",'')
+                            .replace(new RegExp('"', 'g'), '')
+                result = string
+
+              if(this.state.isYoutubeVideo) this.setState({isYoutubeVideo : false})
+          }
+
+        });
+
+        return result
+      // The nested content was something else than a plain string
+      // Return the original content wrapped in a <Text> component
+      } else {
+          console.log("can't find video source")
+          return null
+      }
+  }
+
+  fetchVideos = async() => {
+      var Article = []
+      axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=10",{
+         cancelToken: this.cancelTokenSource.token
+     })
+     .then(res => res.data)
+     .then(json => {
+       // while(this.state.Articles.length < 5){
+       //
+       //     var is_duplicated = false;
+       //     var new_article = json[Math.floor(Math.random() * json.length)]
+       //     Articles.forEach((article) => {
+       //         if(article){
+       //               if(article.id === new_article.id || this.props.article.id === new_article.id) is_duplicated = true
+       //           }
+       //     })
+       //     if(!is_duplicated){
+       //        Articles.push(new_article)
+       //     }
+       // }
+       this.setState({otherVideos : json})
+     })
+
+   }
+
+   _handleVideoRef = component => {
+       this._videoRef = component;
+       const uri = this.getUri(this.props.article)
+       if(uri && this._videoRef && !uri.includes('youtu')){
+        this._videoRef.loadAsync({uri : uri}, {}).then(res => { this.setState({isLoading: false})
+                                                                this._videoRef.playAsync() })
+                                                            }
+
+
+
+    }
+
   handlePlayAndPause = () => {
+        if(this._videoRef) this._videoRef.stopAsync()
 		this.setState(prevState => ({
 			shouldPlay: !prevState.shouldPlay
 		}));
 	}
 
-    getUri = () => {
-        const component = this
-        const { width } = Dimensions.get('window');
-        // Check if nested content is a plain string
-        if (typeof this.state.article.content.plaintext === 'string') {
 
-          // Split the content on space characters
-          var words = this.state.article.content.plaintext.split(/\s/);
-
-          // Loop through the words
-          var contents = words.map(function(word, i) {
-
-            // Space if the word isn't the very last in the set, thus not requiring a space after it
-            var separator = i < (words.length - 1) ? ' ' : '';
-
-            // The word is a URL, return the URL wrapped in a custom <Link> component
-            if (word.match(/^https?\:\//)) {
-                if(word.includes('youtu.be')) word = word.replace("youtu.be/", "youtube.com/embed/")
-                component.setState({uri :word, isDirectFileExtensions : false})
-            // The word is not a URL, return the word as-is
-            }
-            if (word.includes('mp4=')) {
-               word = word.replace(new RegExp('mp4=', 'g'), '')
-                          .replace("][/video]",'')
-                          .replace(new RegExp('"', 'g'), '')
-                component.setState({uri: word, isDirectFileExtensions: true})
-            }
-
-          });
-        // The nested content was something else than a plain string
-        // Return the original content wrapped in a <Text> component
-        } else {
-            console.log("can't find video source")
-        }
-    }
-
-    fetchVideos = async() => {
-        var Article = []
-        axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=10",{
-           cancelToken: this.cancelTokenSource.token
-       })
-       .then(res => res.data)
-       .then(json => {
-         // while(this.state.Articles.length < 5){
-         //
-         //     var is_duplicated = false;
-         //     var new_article = json[Math.floor(Math.random() * json.length)]
-         //     Articles.forEach((article) => {
-         //         if(article){
-         //               if(article.id === new_article.id || this.props.article.id === new_article.id) is_duplicated = true
-         //           }
-         //     })
-         //     if(!is_duplicated){
-         //        Articles.push(new_article)
-         //     }
-         // }
-         this.setState({otherVideos : json})
-       })
-
-     }
 
      renderItem = ({item, index}) => (
          <View style={{padding: 10}}>
@@ -175,27 +201,36 @@ export default class VideoPlay extends React.PureComponent {
          </View>
      )
 
-  changeVideo = (item) => {
-      if(this._videoRef) {
-          this._videoRef.setPositionAsync(0)
-          this._videoRef.unloadAsync()
+  changeVideo = async(item) => {
+      this.props.updateArticle(item)
+      this.setState({isLoading : true})
+      const uri = this.getUri(item)
+
+      if(this._videoRef && !uri.includes('youtu')){
+        await  this._videoRef.pauseAsync()
+        await  this._videoRef.unloadAsync()
+
+         this._videoRef.loadAsync({uri : uri}, {}).then(res => { this.setState({isLoading: false})
+                                                                 this._videoRef.playAsync() })
       }
-      this.setState({article : item}, () => this.getUri() )
+
+  }
+  onRequestClose = () =>{
+      this.setState({isLoading: false})
   }
 
   render() {
-        console.log(this.state.uri)
-        const videoContent = (this.state.uri && this.state.shouldPlay && !this.state.isDirectFileExtensions)?
+        const videoContent = (this.props.article && this.state.shouldPlay && this.state.isYoutubeVideo)?
                             <WebView
                                   style={{flex:1}}
                                   scalesPageToFit={true}
-                                  source={{html: '<html><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /><iframe src="'+this.state.uri+'?autoplay=1&modestbranding=1&playsinline=1&showinfo=0&rel=0" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe></html>'}}
+                                  source={{html: '<html><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /><iframe src="'+this.getUri(this.props.article)+'?autoplay=1&modestbranding=1&playsinline=1&showinfo=0&rel=0" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe></html>'}}
                                   allowsInlineMediaPlayback={true}
                                   mediaPlaybackRequiresUserAction={false}
                                   onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest} //for iOS
                                   onNavigationStateChange ={this.onShouldStartLoadWithRequest} //for Android
                               />
-                          : (this.state.uri && !this.state.isDirectFileExtensions) ?
+                          : (this.props.article && this.state.isYoutubeVideo) ?
                           <View style={{backgroundColor:'black', flex: 1, alignItems:'center', justifyContent:'center'}}>
                               <Icon
                                   size={50}
@@ -205,13 +240,9 @@ export default class VideoPlay extends React.PureComponent {
                                   onPress={()=> this.handlePlayAndPause()}
                               />
                             </View>
-                          : (this.state.uri) &&
+                          : (this.props.article) &&
                           <Video
-                              source={{ uri: this.state.uri }}
-                              ref = { ref => this._videoRef = ref}
-                              shouldPlay={this.state.shouldPlay}
-                              posterSource={{uri: 'https://i.ytimg.com/vi/n_ZvkrLkQxY/hqdefault.jpg'}}
-                              usePoster={true}
+                              ref = {this._handleVideoRef}
                               resizeMode="cover"
                               style={{flex: 1}}
                               useNativeControls={true}
@@ -221,17 +252,30 @@ export default class VideoPlay extends React.PureComponent {
 
     return (
            <View style={styles.container}>
+              <Modal
+               transparent={true}
+               visible={(this.state.isLoading && !this.state.isYoutubeVideo)}
+               onRequestClose={this.onRequestClose}>
+                   <View style={{width: screenWidth, height: (screenWidth*9/16)+5, marginTop: 45}}>
+                       <Image
+                           source={{uri : 'https://ak6.picdn.net/shutterstock/videos/3374606/thumb/10.jpg'}}
+                           style={{flex: 1}}
+                           resizeMode='cover'/>
+                   </View>
+               </Modal>
+
                 <View style={styles.videoContainer}>
                 {videoContent}
                 </View>
+
                 <Consumer>
                   {({textColor, backGround, fontSizeRatio}) => (
                       <ScrollView style={{padding: 10}}>
 
-                              {this.state.article &&
+                              {this.props.article &&
                                 <View>
-                                  <Text style={{color: '#C0C0C0', fontSize: 16*fontSizeRatio, marginBottom: 5, fontFamily: 'baomoi-regular'}}>{this.state.article.taxonomy_source[0].name} - {moment(this.state.article.modified).fromNow().replace("trước", "").replace("một", "1")}</Text>
-                                  <Text style={{fontSize: 18*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor}}>{this.state.article.title.plaintitle}</Text>
+                                  <Text style={{color: '#C0C0C0', fontSize: 16*fontSizeRatio, marginBottom: 5, fontFamily: 'baomoi-regular'}}>{this.props.article.taxonomy_source[0].name} - {moment(this.props.article.modified).fromNow().replace("trước", "").replace("một", "1")}</Text>
+                                  <Text style={{fontSize: 18*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor}}>{this.props.article.title.plaintitle}</Text>
                                 </View>
                                }
                               <Divider style={{marginTop: 10, marginBottom: 10}}/>

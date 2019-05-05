@@ -163,6 +163,9 @@ export default class ArticleScreen extends React.Component {
           user: json
       })
     }
+    updateArticle = (article) => {
+        this.setState({Article : article})
+    }
     setAds = () => {
       //Get PopUpAds
       //this.setState({PopUpAds : AsyncStorage.getItem('pop-up-Ads')})
@@ -394,7 +397,7 @@ export default class ArticleScreen extends React.Component {
             }
 
             {(this.state.Article && this.state.Article.format === 'video') &&
-              <VideoPlay navigation={this.props.navigation} article={this.state.Article} />
+              <VideoPlay navigation={this.props.navigation} article={this.state.Article} updateArticle={this.updateArticle}/>
             }
 
 
