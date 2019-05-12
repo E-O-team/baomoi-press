@@ -22,7 +22,7 @@ import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import VideoArticle from './Articles/Video';
 import { BaomoiText } from './StyledText';
 import {Consumer} from '../context/context.js';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales'
 
 moment.locale('vi');
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
@@ -163,7 +163,8 @@ export default class VideoPlay extends React.PureComponent {
 
 
      renderItem = ({item, index}) => (
-         <View style={{padding: 10}}>
+
+         <View style={{paddingHorizontal: 10, paddingVertical: 20, borderBottomWidth: 1 , borderColor: '#e0e0e0'}}>
              <TouchableWithoutFeedback
                  onPress={() => this.changeVideo(item)}
              >
@@ -171,10 +172,19 @@ export default class VideoPlay extends React.PureComponent {
                        <View style={{alignItems: 'center', justifyContent:'center'}}>
                            <Image
                              key={index}
-                             style={{ width: screenWidth, height: screenWidth * 9/16}}
+                             style={{ width: screenWidth -40, height: (screenWidth - 40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: 'white'}}
                              source={{ uri: item.thumb || defaultImg }}
-                             resizeMode='cover'/>
-                           <View style={{position:'absolute', opacity:0.6}}>
+                             />
+
+                             <View style={{position:'absolute', opacity:0.6}}>
+                               <Icon
+                                   size={125}
+                                   name='controller-play'
+                                   type='entypo'
+                                   color='white'
+                               />
+                             </View>
+                           <View style={{position:'absolute', opacity:0.8}}>
                              <Icon
                                  size={120}
                                  name='controller-play'
@@ -187,12 +197,12 @@ export default class VideoPlay extends React.PureComponent {
                          <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
                              {
                                (item.taxonomy_source[0])?
-                                  <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                  <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                :
-                                   <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                   <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                              }
                          </View>
-                         <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: 'black'}}>{item.title.plaintitle}</BaomoiText>
+                         <BaomoiText style={{fontSize: 18, fontWeight: '500', fontFamily: 'baomoi-regular', color: 'black'}}>{item.title.plaintitle}</BaomoiText>
                      </View>
                  </View>
              </TouchableWithoutFeedback>

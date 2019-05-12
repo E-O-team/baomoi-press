@@ -81,12 +81,12 @@ export default class CustomArticleAd extends Component {
                         <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
                             <View style={{flex: 2}}>
                                 <View style={{flexDirection: "row", alignItems: "center"}}>
-                                    <View style={{borderRadius: 8, borderWidth: 1, width: 70, borderColor: '#696969', alignItems: "center", justifyContent: "center"}}>
-                                        <Text style={{fontSize: 15, color: '#696969'}}>Tài Trợ</Text>
+                                    <View style={{borderRadius: 5, borderWidth: 1, width: 40, borderColor: '#C0C0C0', alignItems: "center", justifyContent: "center"}}>
+                                        <Text style={{fontSize: 10, color: '#C0C0C0'}}>Tài Trợ</Text>
                                     </View>
-                                    <Text style={{color: '#696969'}}> {this.state.data.acf.sponsor_name}</Text>
+                                    <Text style={{color: '#C0C0C0', fontSize: 14}}> {this.state.data.acf.sponsor_name}</Text>
                                 </View>
-                                <BaomoiText style={{fontSize: 20, fontWeight: '500',color: "black"}}>{this.state.data.acf.custom_title}</BaomoiText>
+                                <BaomoiText style={{fontSize: 18, fontWeight: '500',color: "black", marginTop: 5}}>{this.state.data.acf.custom_title}</BaomoiText>
 
                             </View>
                             <Image
@@ -95,7 +95,6 @@ export default class CustomArticleAd extends Component {
                             />
                         </View>
                     </TouchableOpacity>
-                    <Divider style={{ backgroundColor: '#e0e0e0'}} />
                 </View>
             )
         }else {

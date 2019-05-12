@@ -27,19 +27,28 @@ export default class Video extends React.PureComponent {
         const ui = this.props.ui
         const index = this.props.index
             return(
-                <View style={{padding: 10}}>
+                <View style={{paddingHorizontal: 10, paddingVertical: 20}}>
                     <TouchableOpacity
                         activeOpacity={1}
                         onPress={this.navigate}
                     >
-                        <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
+                        <View style={{flex: 1, flexDirection: "column"}}>
                               <View style={{alignItems: 'center', justifyContent:'center'}}>
                                   <Image
                                     key={index}
-                                    style={{ width: width, height: width * 9/16}}
+                                    style={{ width: width - 40, height: (width-40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: 'white'}}
                                     source={{ uri: item.thumb || defaultImg }}
-                                    resizeMode='cover'/>
+
+                                    />
                                   <View style={{position:'absolute', opacity:0.6}}>
+                                    <Icon
+                                        size={125}
+                                        name='controller-play'
+                                        type='entypo'
+                                        color='white'
+                                    />
+                                  </View>
+                                  <View style={{position:'absolute', opacity:0.8}}>
                                     <Icon
                                         size={120}
                                         name='controller-play'
@@ -49,16 +58,16 @@ export default class Video extends React.PureComponent {
                                   </View>
                               </View>
                             <View>
-                                <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
+                                <View style={{flexDirection: "row", alignItems:'flex-start', marginTop: 8, justifyContent:'flex-start'}}>
                                     {
                                       (item.taxonomy_source[0])?
-                                         <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                         <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                       :
-                                          <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                          <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                     }
                                     <Comments id={item.id}/>
                                 </View>
-                                <BaomoiText style={{fontSize: 20, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 18, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -69,16 +78,4 @@ export default class Video extends React.PureComponent {
     }
 }
 const styles = StyleSheet.create({
-  triangleShape: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 120,
-    borderTopWidth: 60,
-    borderBottomWidth: 60,
-    borderStyle: 'solid',
-    backgroundColor: 'transparent',
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderLeftColor: 'black'
-  }
 })

@@ -24,6 +24,9 @@ export default class FeaturedPost extends React.PureComponent {
     navigate = () => this.props.navigation.navigate("Article", {
                         Article: this.props.item
                     })
+    navigateOtherPosts = (item) => this.props.navigation.navigate("Article", {
+                        Article: item
+                    })
 
     render(){
         const item = this.props.item
@@ -41,7 +44,7 @@ export default class FeaturedPost extends React.PureComponent {
                         <View style={{flexDirection: "row", justifyContent: 'space-between', padding: 10, alignItems: "center"}}>
                             <View style={{flexDirection: 'row', alignItems:'center'}}>
                                 <View style={{backgroundColor: 'red', width: 8, height: 8, borderRadius: 4, marginBottom: 3}}></View>
-                                <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 18}}>TIÊU ĐIỂM</BaomoiText>
+                                <BaomoiText style={{fontWeight: "bold",marginLeft:5, color: ui.textColor, fontSize: 15}}>TIÊU ĐIỂM</BaomoiText>
                             </View>
                             <Icon
                                 name='angle-right'
@@ -76,7 +79,7 @@ export default class FeaturedPost extends React.PureComponent {
                         data={item.otherFeaturedPosts}
                         renderItem={({ item, index }) =>
                             <TouchableWithoutFeedback
-                                onPress={this.navigate}
+                                onPress={() => this.navigateOtherPosts(item)}
                                 key={item.id}
                             >
                                 <View style={{flexDirection: "row", marginBottom: 3, alignItems: "flex-start"}}>

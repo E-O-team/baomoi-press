@@ -31,14 +31,16 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
         super(props)
         this.state ={
             modalVisible: false,
-            value: null
+            value: null,
+            coin: null
         }
     }
 
-    setModalVisible = (visible, value) => {
+    setModalVisible = (visible, value, coin) => {
         this.setState({
             modalVisible: visible,
-            value: value
+            value: value,
+            coin : coin
         });
     }
 
@@ -97,7 +99,7 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                 return(
                     <TouchableOpacity
                         activeOpacity={0.5}
-                        onPress={() => this.setModalVisible(!this.state.modalVisible, props.value)}
+                        onPress={() => this.setModalVisible(!this.state.modalVisible, props.value, props.coin)}
                     >
                         <Image
                             style={{height: (width/2-15)/2.217, width: width/2-15}}
@@ -128,7 +130,7 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                     return(
                         <ScrollView style={{flex: 1, backgroundColor: "#f3f3f3"}}>
                             <View style={{paddingBottom: 10}}>
-                                {this.state.modalVisible && <ExchangeGiftsModal visible={this.state.modalVisible} value={this.state.value} setModalVisible={this.setModalVisible}/>}
+                                {this.state.modalVisible && <ExchangeGiftsModal visible={this.state.modalVisible} value={this.state.value} coin={this.state.coin} updateUser={this.props.navigation.getParam("updateUser")} setModalVisible={this.setModalVisible} navigation={this.props.navigation}/>}
                                 <View style={{backgroundColor: "#dd273e", height: 110, alignItems: "center", justifyContent: "center"}}>
                                     <Text style={{color: "white", fontSize: 25}}>Mời bạn ngay</Text>
                                     <Text style={{color: "white", fontSize: 25}}>Nhận quà mỏi tay</Text>
@@ -190,13 +192,13 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingTop: 5}}>
-                                        <Cards source={VND50K} value="50000 VND"/>
-                                        <Cards source={VND100K} value="100000 VND"/>
+                                        <Cards source={VND50K} value="50000 VND" coin={500}/>
+                                        <Cards source={VND100K} value="100000 VND" coin={1000}/>
                                     </View>
 
                                     <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingTop: 5}}>
-                                        <Cards source={VND200K} value="200000 VND"/>
-                                        <Cards source={VND500K} value="500000 VND"/>
+                                        <Cards source={VND200K} value="200000 VND" coin={1600}/>
+                                        <Cards source={VND500K} value="500000 VND" coin={4000}/>
                                     </View>
 
                                     <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingTop: 5}}>

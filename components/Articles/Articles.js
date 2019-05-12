@@ -112,7 +112,10 @@ export default class Articles extends React.Component {
             }else{
                 if(item.featured_post == "on"){
                     if(index === 0){
-                        return <FeaturedPost item={item} ui={ui} index={index} navigation={this.props.navigation}/>
+                        return (
+                                <FeaturedPost item={item} ui={ui} index={index} navigation={this.props.navigation}/>
+                        )
+
                     }else{
                         // return null after first render of featured post
                         return null
@@ -151,7 +154,7 @@ export default class Articles extends React.Component {
                 {(index == 0 && !this.props.notification) &&
                     <View>
                         <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 10}}>
-                            <Text style={{fontSize: 18, fontWeight: "bold"}}>SỰ KIỆN NÓNG</Text>
+                            <Text style={{fontSize: 15, fontWeight: "bold"}}>SỰ KIỆN NÓNG</Text>
                             <Icon
                                 name='share-google'
                                 type='evilicon'
@@ -159,16 +162,21 @@ export default class Articles extends React.Component {
                             />
                         </View>
                         <Divider style={{ backgroundColor: '#e0e0e0'}}/>
-                        <BannerAd size="small" AdPosition="List Home"/>
+                        <BannerAd size="small" AdPosition="Sự kiện nóng"/>
                         <View style={{backgroundColor: "#e0e0e0", height: 10, width: width}}></View>
                     </View>
                 }
-                {(index % 6 == 0 && index !== 0 && !this.props.notification) &&
-                    <ChoosenAd/>
-                }
+
                 <Post item={item} ui={{textColor}} index={index} notification={this.props.notification}/>
 
                 <Divider style={{ backgroundColor: '#e0e0e0'}} />
+
+                {(index % 6 == 0 && !this.props.notification) &&
+                    <View>
+                        <ChoosenAd/>
+                        <Divider style={{ backgroundColor: '#e0e0e0'}} />
+                    </View>
+                }
             </View>
           )}
           </Consumer>

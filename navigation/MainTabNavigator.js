@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, Text, View, Image, Animated, StyleSheet } from 'react-native';
+import { Platform, Text, View, Image, Animated, StyleSheet, Dimensions, TouchableOpacity, Easing, Share } from 'react-native';
 import { createStackNavigator} from 'react-navigation';
 import {createBottomTabNavigator, BottomTabBar} from 'react-navigation-tabs';
 import ArticleScreen from '../screens/ArticleScreen';
@@ -10,6 +10,7 @@ import OriginalWebView from '../screens/OriginalWebView';
 import SearchScreen from '../screens/SearchScreen';
 import {MultiBar, MultiBarToggle} from 'react-native-multibar';
 import {Icon} from 'react-native-elements';
+import { Ionicons  } from '@expo/vector-icons';
 import UserProfile from '../screens/UserProfileScreen';
 import VideoScreen from '../screens/VideoScreen';
 import SignInScreen from '../screens/SignInScreen';
@@ -26,6 +27,9 @@ import TermsScreen from '../screens/TermsScreen';
 import ExchangeGiftsScreen from '../screens/ExchangeGiftsScreen';
 import ExchangeHistoryScreen from '../screens/ExchangeHistoryScreen';
 import NotificationsDetail from '../screens/NotificationsDetail';
+
+var { width, height } = Dimensions.get('window');
+const baomoi_app_url = 'https://baomoi.press/'
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -170,15 +174,22 @@ VideoStack.navigationOptions = ({ navigation }) => {
 const TAB_BAR_OFFSET = -60;
 
 class TabBarComponent extends Component {
+    _isClickedHomeBtn = false
   constructor(props) {
     super(props);
     this.state = {
       offset: new Animated.Value(0),
+      animating: false,
+      left: new Animated.Value(width/2),
+      bottom: new Animated.Value(30),
+      bottomCenter: new Animated.Value(30),
     };
   }
 
   componentWillReceiveProps(props) {
     const oldState = this.props.navigation.state;
+
+
     const oldRoute = oldState.routes[oldState.index];
     var oldParams = oldRoute.routes[oldRoute.index].params;
     if(oldState.index === 0)
@@ -201,14 +212,132 @@ class TabBarComponent extends Component {
 
     if (wasVisible && !isVisible) {
       Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 500 }).start();
+
     } else if (isVisible && !wasVisible) {
       Animated.timing(this.state.offset, { toValue: 0, duration: 500 }).start();
+
     }
+
+    this._isClickedHomeBtn = newState.routes[1].params.onClickBtn;
+    if(this._isClickedHomeBtn) this.animating()
+  }
+
+  animating = () =>{
+
+    this.setState({
+      left:  new Animated.Value(width/2),
+      bottom: new Animated.Value(30),
+      bottomCenter:new Animated.Value(30)})
+
+
+    setTimeout(() => {
+      Animated.timing(this.state.left, {
+        toValue: width/2 + 100,
+        duration: 300,
+        easing: Easing.linear,
+      }).start();
+
+      Animated.timing(this.state.bottom, {
+        toValue: 130,
+        duration: 300,
+        easing: Easing.linear,
+      }).start();
+      Animated.timing(this.state.bottomCenter, {
+        toValue: 230,
+        duration: 300,
+        easing: Easing.linear,
+      }).start();
+
+
+    }, 100)
+
+  }
+
+  onShareApp = () => {
+      Share.share({
+        ...Platform.select({
+          ios: {
+            message: 'Have a look on : ',
+            url: baomoi_app_url,
+          },
+          android: {
+            message: 'Have a look on : \n' + baomoi_app_url
+          }
+        }),
+        title: 'Wow, did you see that?'
+      }, {
+        ...Platform.select({
+          ios: {
+            // iOS only:
+            excludedActivityTypes: [
+              'com.apple.UIKit.activity.PostToTwitter'
+            ]
+          },
+          android: {
+            // Android only:
+            dialogTitle: 'Share : ' + baomoi_app_url
+          }
+        })
+      });
   }
 
   render() {
+    const blackScreen = (this._isClickedHomeBtn) ? <View style={styles.overlayscreen}></View> : <View></View>
+    const expandedView = (this._isClickedHomeBtn) ?
+                                    <View>
+                                        <Animated.View style={{     right:this.state.left,
+                                                                     bottom:this.state.bottom,
+                                                                     position:'absolute',
+                                                                     zIndex: 1001
+                                                                    }}>
+                                          <TouchableOpacity onPress={()=> this.props.navigation.navigate('Home') } style={{alignItems: 'center', width: 60, height: 60, borderRadius:60/2}}>
+                                            <View style={styles.IconView}>
+                                              <Ionicons name={"ios-paper"} size={20} color={"#fff"} style={styles.buttonIcon}  />
+                                            </View>
+                                            <Text style={styles.iconText}>News</Text>
+                                          </TouchableOpacity>
+
+                                        </Animated.View>
+
+                                        <Animated.View style={{left:this.state.left,
+                                                               bottom:this.state.bottom,
+                                                               position:'absolute',
+                                                               zIndex: 1001
+                                                               }}>
+                                           <TouchableOpacity onPress={this.onShareApp} style={{alignItems: 'center', width: 60, height: 60, borderRadius:60/2}}>
+                                             <View style={styles.IconView}>
+                                               <Ionicons name={"ios-share"} size={20} color={"#fff"} style={styles.buttonIcon}  />
+                                             </View>
+                                             <Text style={styles.iconText}>Share</Text>
+                                           </TouchableOpacity>
+                                        </Animated.View>
+
+                                        <Animated.View style={{
+                                                                   bottom:this.state.bottomCenter,
+                                                                   left: width/2-30,
+                                                                    position:'absolute',
+                                                                    zIndex: 1001,
+
+                                                                    }}>
+                                          <TouchableOpacity onPress={()=> this.props.navigation.openDrawer()} style={{alignItems: 'center',width: 60, height: 60, borderRadius:60/2}}>
+                                            <View style={styles.IconView}>
+                                                <Icon
+                                              name='credit-card'
+                                              color='#fff'
+                                              size={20}
+                                              style={styles.buttonIcon}
+                                               />
+                                            </View>
+                                            <Text style={styles.iconText}>Xu</Text>
+                                          </TouchableOpacity>
+                                        </Animated.View>
+                                </View> : <View></View>
     return (
-        <BottomTabBar {...this.props} style={[styles.container, { bottom: this.state.offset }]}/>
+        <View>
+            {blackScreen}
+            {expandedView}
+            <BottomTabBar {...this.props} style={[styles.container, { bottom: this.state.offset }]}/>
+        </View>
     );
   }
 }
@@ -222,7 +351,35 @@ const styles = {
     backgroundColor: 'black',
     height: 50,
     elevation: 8,
+    zIndex: 1000
   },
+  overlayscreen:{
+    backgroundColor:'black',
+    opacity: 0.5,
+    width: width,
+    height:height-70,
+    right: 0,
+    bottom: 0,
+    justifyContent:'center',
+    zIndex:999,
+    position:'absolute'
+},
+    buttonIcon: {
+      textAlign: "center",
+    },
+    IconView:{
+      backgroundColor:'#CC0000',
+       width: 40,
+       height:40,
+       borderRadius: 40/2,
+       justifyContent:'center',
+
+    },
+    iconText: {
+      fontSize: 12,
+      color: '#fff',
+      fontWeight: 'bold',
+    }
 };
 //const TabBarComponent = (props) => (<BottomTabBar {...props} />);
 

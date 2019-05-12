@@ -30,11 +30,10 @@ import {
 import axios from 'axios';
 import logo from '../../assets/images/logo.png';
 const FBAppID = "418043712281827"
-export default class SignInModal extends React.Component {
+export default class SignInModal extends React.PureComponent {
     constructor(props){
         super(props)
-        this.state={
-            modalVisible: this.props.visible,
+        this.state ={
             loading: false,
         }
     }
@@ -48,7 +47,7 @@ export default class SignInModal extends React.Component {
         })
         .then((response) => {
             let user = response.data
-            this.signInApp(user, picture)
+            this.signInApp(user, picture, name)
         })
         .catch((err) => {
             console.log(err.response.data);
@@ -58,7 +57,7 @@ export default class SignInModal extends React.Component {
         });
     }
 
-    signInApp = (user, picture) => {
+    signInApp = async(user, picture, fbName) => {
         axios({
             method: "GET",
             url: 'https://baomoi.press/wp-json/wp/v2/current_user',
@@ -75,8 +74,10 @@ export default class SignInModal extends React.Component {
         })
         .then(res => {
             res.data.token = user.token
-            const data = new FormData()
-            data.append("avatar_url", picture.data.url)
+            const avatar_data = new FormData()
+            avatar_data.append("avatar_url", picture.data.url)
+
+
             // const data = {
             //     avatar_url: picture.data.url
             // }
@@ -84,11 +85,27 @@ export default class SignInModal extends React.Component {
                 method: "POST",
                 url: 'https://baomoi.press/wp-json/wp/v2/update_user_avatar',
                 headers: {'Authorization': 'Bearer ' + user.token},
-                data: data
+                data: avatar_data
             })
             .then(() => {
-                AsyncStorage.setItem('user', JSON.stringify(res.data))
-                this.props.navigation.navigate('AuthLoadingScreen')
+
+                const fbDisplayName_data = new FormData()
+                fbDisplayName_data.append("name", fbName)
+
+                axios({
+                    method: "POST",
+                    url: 'https://baomoi.press/wp-json/wp/v2/users/' + res.data.id,
+                    headers: {'Authorization': 'Bearer ' + user.token},
+                    data: fbDisplayName_data
+                })
+                .then(result => {
+                    result.data.token = user.token
+                    AsyncStorage.setItem('user', JSON.stringify(result.data))
+                    this.props.updateUser()
+                })
+                .catch(error => console.log(error))
+
+
             })
 
         })
@@ -96,9 +113,7 @@ export default class SignInModal extends React.Component {
     }
 
     FBLogin = async() => {
-        this.setState({
-            modalVisible: !this.state.modalVisible
-        })
+        this.props.setModalVisible(!this.props.visible)
         try {
             const {
                 type,
@@ -152,8 +167,8 @@ export default class SignInModal extends React.Component {
             <Modal
                 animationType="fade"
                 transparent={true}
-                visible={this.state.modalVisible}
-                onRequestClose={() => this.props.setModalVisible(!this.state.modalVisible)}
+                visible={this.props.visible}
+                onRequestClose={() => this.props.setModalVisible(!this.props.visible)}
             >
             <View style={{alignItems: "center", justifyContent:"center", flex:1, backgroundColor: 'rgba(0,0,0,0.5)'}}
 
@@ -167,7 +182,7 @@ export default class SignInModal extends React.Component {
                                     type='evilicon'
                                     size={30}
                                     color="black"
-                                    onPress={() => this.props.setModalVisible(!this.state.modalVisible, null)}
+                                    onPress={() => this.props.setModalVisible(!this.props.visible, null)}
                                 />
                             </View>
                             <View style={{flex: 2, alignItems: "center"}}>

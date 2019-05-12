@@ -26,9 +26,10 @@ import { MonoText } from '../../components/StyledText';
 import {Consumer} from '../../context/context.js';
 import { BaomoiText } from '../../components/StyledText';
 import axios from 'axios';
-import { FacebookAds } from 'expo';
-
+import { FacebookAds, Notifications} from 'expo';
+import NotificationPopup from 'react-native-push-notification-popup';
 import moment from 'moment/min/moment-with-locales'
+import dateFormat from 'dateformat';
 import InterstitialAd from '../../components/Ads/InterstitialAd';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 var { width, height } = Dimensions.get('window');
@@ -57,6 +58,7 @@ export default class HomeScreen extends React.Component {
     // }
     componentDidMount() { // componentDidMount
         this.fetchNews()
+        this.notificationSubscription = Notifications.addListener(this._handleNotification);
     }
 
     fetchNews = () => {
@@ -109,10 +111,40 @@ export default class HomeScreen extends React.Component {
             }
     }
 
+    _handleNotification = notification => {
+        const {title, body, slug} = notification.data
+        const findArticleFunc = this.findNotificationArticle
+        this.popup.show({
+            onPress: function() {findArticleFunc(slug)},
+            appIconSource: require('../../assets/images/logo-256x256.png'),
+            appTitle: 'Baomoi.press',
+            timeText: dateFormat(new Date(), "dd-mm-yyyy"),
+            title: title,
+            body: body,
+        });
+        if(notification.origin === 'selected') findArticleFunc(slug)
+    };
+
+    findNotificationArticle = (slug) => {
+        axios.get("https://baomoi.press/wp-json/wp/v2/posts?slug=" + slug,{
+            cancelToken: this.cancelTokenSource.token
+        })
+        .then(res => {
+                if(res.data[0]){
+                    this.props.navigation.navigate("Article", {
+                                       Article: res.data[0]
+                                   })
+                }
+        })
+        .catch(err => console.log(err))
+    }
+
     componentWillUnmount() {
         console.log('Home unmounted')
         this.cancelTokenSource && this.cancelTokenSource.cancel()
+        this.notificationSubscription.remove()
     }
+
     handleOnScroll = (e) => {
         if(this._scrollPosition != 0){
            if(this._scrollPosition > e.nativeEvent.contentOffset.y && this.state.isScrollDown) {
@@ -159,6 +191,7 @@ export default class HomeScreen extends React.Component {
                       backgroundColor: backGround
                     }}>
                         <InterstitialAd AdPosition="Khởi động ứng dụng"/>
+                        <NotificationPopup ref={ref => this.popup = ref} />
                         <FlatList
                             onScroll={this.handleOnScroll}
                             scrollEventThrottle={16}

@@ -23,9 +23,9 @@ export default class OtherCategoriesScreens extends React.PureComponent {
     constructor(props){
         super(props)
         const categories = this.props.navigation.getParam('categories')
+        const category_id_arr = categories.map(category => category.id)
         this.state = {
-            selectedCategory: categories[0].id,
-            categories: categories,
+            categories:  category_id_arr,
             styles: styles,
             refreshing: true,
             loading: false,
@@ -36,17 +36,18 @@ export default class OtherCategoriesScreens extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.fetchNews(this.state.selectedCategory)
+        this.cancelTokenSource = axios.CancelToken.source()
+        this.fetchNews()
     }
 
-    fetchNews = (selectedCategory) => {
-        this.cancelTokenSource = axios.CancelToken.source()
+    fetchNews = () => {
+
         if(this.state.refreshing == true){
             this.setState({
                 page: 1,
                 articles: [],
             }, () => {
-                axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page, {
+                axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + this.state.categories.toString() + "&per_page=10&page=" + this.state.page, {
                     cancelToken: this.cancelTokenSource.token,
                 })
                 .then(res => this.setState({
@@ -63,7 +64,7 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                 })
             })
         }else{
-            axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + selectedCategory + "&page=" + this.state.page, {
+            axios.get("https://baomoi.press/wp-json/wp/v2/posts?categories=" + this.state.categories.toString() + "&per_page=10&page=" + this.state.page, {
                 cancelToken: this.cancelTokenSource.token,
             })
             .then(res => this.setState({
@@ -105,15 +106,6 @@ export default class OtherCategoriesScreens extends React.PureComponent {
         }, () => this.fetchNews(this.state.selectedCategory))
     }
 
-    setCategory = (id) => {
-        this.setState({
-            selectedCategory: id,
-            page: 1,
-            articles: []
-        }, () => {
-            this.fetchNews(this.state.selectedCategory);
-        })
-    }
     handleOnScroll = (e) => {
       this.setState({y: e.nativeEvent.contentOffset.y})
         if(this.state.y != 0){
@@ -135,57 +127,22 @@ export default class OtherCategoriesScreens extends React.PureComponent {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{flex: 1, backgroundColor: backGround}}>
-                        <View style={{height: 37}}>
                             <FlatList
-                                showsHorizontalScrollIndicator={false}
-                                horizontal={true}
-                                keyExtractor={item => item.id.toString()}
-                                data={this.state.categories}
-                                extraData={this.state.selectedCategory}
-                                renderItem={({item}) =>
-                                <Consumer>
-                                {({textColor, backGround}) => (
-                                    <TouchableOpacity
-                                        onPress={() => this.setCategory(item.id)}
-                                        style={{
-                                            backgroundColor: backGround,
-                                            padding: 10,
-                                        }}
-                                        underlayColor="white"
-                                        activeOpacity={1}
-                                    >
-                                      {
-                                        (item.id === this.state.selectedCategory)?
-                                        <View>
-                                          <Text style={{color: "red"}}>{item.name}</Text>
-                                          <View style={{height: 1, backgroundColor: 'red'}}></View>
-                                        </View> : <Text style={{color: textColor}}>{item.name}</Text>
-                                      }
-
-                                    </TouchableOpacity>
-                                  )}
-                                  </Consumer>
-
-                                }
+                                onScroll={this.handleOnScroll}
+                                data={this.state.articles}
+                                extraData={this.state.articles}
+                                scrollEventThrottle={16}
+                                initialNumToRender={5}
+                                removeClippedSubviews={true}
+                                windowSize={15}
+                                renderItem={this.renderItem}
                                 keyExtractor={this.keyExtractor}
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.handleRefresh}
+                                onEndReached={() => this.handleLoadMore()}
+                                onEndReachedThreshold={0.7}
                             />
-                        </View>
-                        <FlatList
-                            onScroll={this.handleOnScroll}
-                            data={this.state.articles}
-                            extraData={this.state.articles}
-                            scrollEventThrottle={16}
-                            initialNumToRender={5}
-                            removeClippedSubviews={true}
-                            windowSize={15}
-                            renderItem={this.renderItem}
-                            keyExtractor={this.keyExtractor}
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.handleRefresh}
-                            onEndReached={() => this.handleLoadMore()}
-                            onEndReachedThreshold={0.7}
-                        />
-                  </View>
+                   </View>
                 )}
             </Consumer>
         )

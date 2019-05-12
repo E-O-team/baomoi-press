@@ -75,7 +75,13 @@ export default class ExchangeGiftsModal extends React.Component {
     }
 
     handleSubmit = () => {
-        if(this.state.selectedCarrier !== null){
+        const current_xu = this.props.navigation.getParam("xu")
+        if(current_xu < this.props.coin) {
+            this.setState({
+                errorMessage: "Xu của bạn không đủ để thực hiện yêu cầu"
+            })
+        }
+        else if(this.state.selectedCarrier !== null){
             this.setState({
                 errorMessage: "",
                 loading: true,
@@ -102,6 +108,13 @@ export default class ExchangeGiftsModal extends React.Component {
                             loading: false,
                             buttonTitle: "Gửi yêu cầu thành công!"
                         })
+
+                        axios({
+                            method: "GET",
+                            url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=-'+this.props.coin.toString(),
+                            headers: {'Authorization': 'Bearer ' + user.token},
+                        })
+                        .then(() => this.props.updateUser())
                     }
                 })
                 .catch(err => console.log(err))
@@ -137,7 +150,7 @@ export default class ExchangeGiftsModal extends React.Component {
                 <View style={{backgroundColor: "#edefee" ,height: 210, width: 320, justifyContent: "space-between", paddingBottom: 5, opacity: 2}}>
                     <View>
                         <View style={{flexDirection: "row", alignItems: "center", height: 32, justifyContent: "space-between", backgroundColor:"#555358"}}>
-                            <Text style={{color: "white", marginLeft: 3}}>{this.props.value}</Text>
+                            <Text style={{color: "white", marginLeft: 3}}>{this.props.coin} xu</Text>
 
                             <Icon
                                 name='close'

@@ -187,10 +187,13 @@ export default class RecommendedList extends React.PureComponent{
 
       return(
           <View>
-              {(index == 2 || index == 8 ) &&
-                  <ChoosenAd/>
-              }
             <RecommendedArticle item={item} navigation={this.props.navigation}/>
+            {(index == 1 || index == 7 ) &&
+                <View>
+                    <ChoosenAd/>
+                    <Divider style={{ backgroundColor: '#e0e0e0'}} />
+                </View>
+            }
           </View>
       )
 

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View,Keyboard,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform,Image,Modal } from 'react-native';
+import { Text, View,Keyboard,TextInput, Dimensions, WebView, StyleSheet, TouchableOpacity, TouchableHighlight, Platform,Image,Modal, Alert} from 'react-native';
 import { BaomoiText } from '../StyledText';
+import SignInModal from './SignInModal'
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
 const screenWidth = Dimensions.get('window').width;
@@ -10,8 +11,7 @@ export default class CommentModal extends React.PureComponent{
   constructor(){
     super()
     this.state = {
-      modalVisible: false,
-      registerVisible: false,
+      signInVisible : false,
       text: '',
       keyboardHeight: 0,
     }
@@ -42,8 +42,12 @@ export default class CommentModal extends React.PureComponent{
 
   }
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+  setSignInModalVisible = (visible) => {
+    this.setState({signInVisible : visible})
+  }
+
+  setSignInLoading = (isLoading) => {
+    //don't need to do now
   }
 
   submitComment = () => {
@@ -58,15 +62,17 @@ export default class CommentModal extends React.PureComponent{
                     url: 'https://baomoi.press/wp-json/wp/v2/comments',
                     data: {
                       post: this.props.article.id,
-                      content: this.state.text
+                      content: this.state.text,
+                      parent : this.props.commentParent
                     },
                     headers: {'Authorization': 'Bearer ' + this.props.user.token},
                 },{
                     cancelToken: this.cancelTokenSource.token
                 })
                 .then(res => {
-                  this.setState({text: '', modalVisible: false})
-                  this.props.onFetch()
+                    this._showAlert('Thành công', 'Bình luận đang được kiểm duyệt')
+                    this.setState({text: ''}, () => this.props.setModalVisible(false, 0))
+                    this.props.onFetch()
                 })
                 .catch(err => console.log(err))
 
@@ -81,10 +87,23 @@ export default class CommentModal extends React.PureComponent{
             }
 
      } else {
-            this.setState({ modalVisible: false, registerVisible: true})
+            this.props.setModalVisible(false, 0)
+            this.setState({signInVisible: true})
      }
 
   }
+
+  _showAlert = (title, msg) => {
+   Alert.alert(
+      title,
+      msg,
+      [
+        {text: 'OK', onPress: () => {}},
+        { onDismiss: () => {} }
+      ],
+      { cancelable: false }
+   )
+ }
 
   render(){
 
@@ -108,7 +127,7 @@ export default class CommentModal extends React.PureComponent{
 
             </View>
             <View style={{flex : 3}}>
-              <TouchableOpacity style={styles.commentButton} onPress={() => this.setModalVisible(true)}>
+              <TouchableOpacity style={styles.commentButton} onPress={() =>  this.props.setModalVisible(true, 0)}>
                 <Text style={{color: '#C0C0C0', fontSize: 14}}>Nhập bình luận ...</Text>
               </TouchableOpacity>
             </View>
@@ -133,15 +152,15 @@ export default class CommentModal extends React.PureComponent{
 
           <Modal
              transparent={true}
-             visible={this.state.modalVisible}
-             onRequestClose={() => {}}
+             visible={this.props.modalVisible}
+             onRequestClose={() => this.props.setModalVisible(false, 0)}
              >
             <View>
                  <TouchableOpacity style={{
                    backgroundColor:'black',
                    opacity: 0.7,
                    height: screenHeight - this.state.keyboardHeight- (Platform.OS == "ios" ? 150 : 170)}}
-                   onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                   onPress={() => this.props.setModalVisible(false, 0)}>
 
                  </TouchableOpacity>
                  <View style={{
@@ -184,45 +203,8 @@ export default class CommentModal extends React.PureComponent{
             </View>
           </Modal>
 
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={this.state.registerVisible}
-            onRequestClose={() => {}}>
-             <View style={{backgroundColor: 'black',
-                           height: screenHeight /4,
-                           marginTop: screenHeight*3/4,
-                           padding: 20}}>
+          <SignInModal visible={this.state.signInVisible} setModalVisible={this.setSignInModalVisible} navigation={this.props.navigation} setLoading={this.setSignInLoading} updateUser={this.props.updateUser}/>
 
-                <View style={{flexDirection: 'row'}}>
-                  <BaomoiText style={{color: 'white', flex : 3, fontSize: 20}}> Đăng Nhập để bình luận</BaomoiText>
-                  <View style={{flex: 1,  alignItems: 'flex-end'}}>
-                    <TouchableOpacity onPress={() => this.setState({registerVisible: false})}>
-                      <Icon
-                      name='clear'
-                      size={30}
-                      color='#fff'
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <TouchableOpacity style={{marginTop: 20,
-                                          height: 30,
-                                          backgroundColor: '#E23636',
-                                          borderRadius: 5,
-                                          justifyContent:'center',
-                                          alignItems:'center'
-                                        }}
-                                        onPress={() => {
-                                          this.props.navigation.navigate('SignIn')
-                                          this.setState({registerVisible: false})
-                                        }}>
-                    <Text style={{color:'white', fontWeight: 'bold', fontSize: 15}}>SIGN IN</Text>
-
-                </TouchableOpacity>
-
-             </View>
-          </Modal>
       </View>
 
     )

@@ -29,15 +29,20 @@ export default class SiderBar extends React.Component {
             modalVisible: false,
             loading: false
         }
+        this.updateUser = this.updateUser.bind(this)
     }
-    componentWillMount() {
+    componentDidMount() {
+        this.updateUser()
+    }
+
+    updateUser(){
         AsyncStorage.getItem('user')
         .then(res => {
+
             if(res){
                 const user = JSON.parse(res)
                 this.setState({
                     user: user,
-                    token: user.token
                 }, () => {
                     axios({
                         method: "GET",
@@ -59,7 +64,8 @@ export default class SiderBar extends React.Component {
     handleExchangeGiftsPress = () => {
         if(this.checkLogedIn()){
             this.props.navigation.navigate("ExchangeGifts", {
-                xu: this.state.user.xu
+                xu: this.state.user.xu,
+                updateUser: this.updateUser
             })
         }
     }
@@ -88,7 +94,7 @@ export default class SiderBar extends React.Component {
 
     logOut = async () => {
         AsyncStorage.clear()
-        this.props.navigation.navigate("AuthLoadingScreen")
+        this.setState({user : null})
     }
 
     sendEmail = () => {
@@ -108,6 +114,7 @@ export default class SiderBar extends React.Component {
         if(this.state.user !== null){
             return true
         }else{
+            this.setModalVisible(!this.state.modalVisible)
             return false
         }
     }
@@ -193,7 +200,7 @@ export default class SiderBar extends React.Component {
 
                             <View>
                                 <View>
-                                    {this.state.modalVisible && <SignInModal visible={this.state.modalVisible} setModalVisible={this.setModalVisible} navigation={this.props.navigation} setLoading={this.setLoading}/>}
+                                    <SignInModal visible={this.state.modalVisible} setModalVisible={this.setModalVisible} navigation={this.props.navigation} setLoading={this.setLoading} updateUser={this.updateUser}/>
                                 </View>
                                 <View style={{alignSelf: "flex-end", marginBottom: 7}}>
                                     <Icon
