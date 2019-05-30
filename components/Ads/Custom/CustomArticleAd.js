@@ -14,7 +14,9 @@ import {
 } from 'react-native';
 import { ListItem, List, Tile, Card, Divider, Icon, Badge } from 'react-native-elements';
 import { BaomoiText } from '../../StyledText';
+import {Consumer} from '../../../context/context'
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
+
 export default class CustomArticleAd extends Component {
     constructor(props) {
         super(props);
@@ -73,28 +75,32 @@ export default class CustomArticleAd extends Component {
         if(this.state.data){
             return(
                 <View style={{height: 130}}>
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={() => Linking.openURL(this.state.data.acf.customAdURL)}
-                        style={{padding: 10, flex: 1}}
-                    >
-                        <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
-                            <View style={{flex: 2}}>
-                                <View style={{flexDirection: "row", alignItems: "center"}}>
-                                    <View style={{borderRadius: 5, borderWidth: 1, width: 40, borderColor: '#C0C0C0', alignItems: "center", justifyContent: "center"}}>
-                                        <Text style={{fontSize: 10, color: '#C0C0C0'}}>Tài Trợ</Text>
+                    <Consumer>
+                      {({textColor, backGround, fontSizeRatio}) => (
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => Linking.openURL(this.state.data.acf.customAdURL)}
+                            style={{padding: 10, flex: 1}}
+                        >
+                            <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
+                                <View style={{flex: 2}}>
+                                    <View style={{flexDirection: "row", alignItems: "center"}}>
+                                        <View style={{borderRadius: 5, borderWidth: 1, width: 40, borderColor: '#C0C0C0', alignItems: "center", justifyContent: "center"}}>
+                                            <Text style={{fontSize: 10, color: '#C0C0C0'}}>Tài Trợ</Text>
+                                        </View>
+                                        <Text style={{color: '#C0C0C0', fontSize: 13}}> {this.state.data.acf.sponsor_name}</Text>
                                     </View>
-                                    <Text style={{color: '#C0C0C0', fontSize: 14}}> {this.state.data.acf.sponsor_name}</Text>
-                                </View>
-                                <BaomoiText style={{fontSize: 18, fontWeight: '500',color: "black", marginTop: 5}}>{this.state.data.acf.custom_title}</BaomoiText>
+                                    <BaomoiText style={{fontSize: 18, fontWeight: '500',color: textColor, marginTop: 5}}>{this.state.data.acf.custom_title}</BaomoiText>
 
+                                </View>
+                                <Image
+                                    source={{uri :this.state.data.acf.customAdImageURL || defaultImg}}
+                                    style={{height: 90, flex: 1, marginLeft: 5, borderRadius: 5}}
+                                />
                             </View>
-                            <Image
-                                source={{uri :this.state.data.acf.customAdImageURL || defaultImg}}
-                                style={{height: 90, flex: 1, marginLeft: 5, borderRadius: 5}}
-                            />
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                      )}
+                    </Consumer>
                 </View>
             )
         }else {

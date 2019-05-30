@@ -19,6 +19,7 @@ import _ from 'lodash';
 import {Video} from 'expo';
 import axios from 'axios';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
+import CommentList from './CommentList'
 import VideoArticle from './Articles/Video';
 import { BaomoiText } from './StyledText';
 import {Consumer} from '../context/context.js';
@@ -117,27 +118,75 @@ export default class VideoPlay extends React.PureComponent {
   }
 
   fetchVideos = async() => {
-      var Article = []
-      axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=10",{
+
+     var Articles = []
+     if(this.props.article.tags.length != 0)
+     {
+
+     var tag_length = this.props.article.tags.length;
+     var first_tag = Math.floor(Math.random() * tag_length);
+
+
+     await axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&tags="+ this.props.article.tags[first_tag].toString(),{
+                             cancelToken: this.cancelTokenSource.token
+                         })
+     .then(res => res.data)
+     .then(json => {
+       if(json.length > 1)
+       {
+           const first_article = json[Math.floor(Math.random() * json.length)]
+           if(first_article.id !== this.props.article.id)
+           Articles.push(first_article)
+       }
+     })
+     .catch(err => console.log(err))
+
+
+
+     var second_tag = Math.floor(Math.random() * tag_length);
+
+     while(second_tag == first_tag && tag_length != 1) second_tag = Math.floor(Math.random() * tag_length)
+     if(tag_length > 1)
+     await axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&tags="+ this.props.article.tags[second_tag].toString(),{
+                               cancelToken: this.cancelTokenSource.token
+                           })
+       .then(res => res.data)
+       .then(json => {
+         if(json.length > 1){
+             const second_article = json[Math.floor(Math.random() * json.length)]
+             if(second_article.id !== this.props.article.id)
+             Articles.push(second_article)
+         }
+      })
+       .catch(err => console.log(err))
+
+
+   }
+
+     await axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=20",{
          cancelToken: this.cancelTokenSource.token
      })
      .then(res => res.data)
      .then(json => {
-       // while(this.state.Articles.length < 5){
-       //
-       //     var is_duplicated = false;
-       //     var new_article = json[Math.floor(Math.random() * json.length)]
-       //     Articles.forEach((article) => {
-       //         if(article){
-       //               if(article.id === new_article.id || this.props.article.id === new_article.id) is_duplicated = true
-       //           }
-       //     })
-       //     if(!is_duplicated){
-       //        Articles.push(new_article)
-       //     }
-       // }
-       this.setState({otherVideos : json})
+
+
+          while(Articles.length < 10){
+
+             var is_duplicated = false;
+             var new_article = json[Math.floor(Math.random() * json.length)]
+             Articles.forEach((article) => {
+                 if(article){
+                       if(article.id === new_article.id || this.props.article.id === new_article.id) is_duplicated = true
+                   }
+             })
+             if(!is_duplicated){
+                Articles.push(new_article)
+             }
+           }
+
+
      })
+     this.setState({otherVideos : Articles})
 
    }
 
@@ -165,49 +214,51 @@ export default class VideoPlay extends React.PureComponent {
      renderItem = ({item, index}) => (
 
          <View style={{paddingHorizontal: 10, paddingVertical: 20, borderBottomWidth: 1 , borderColor: '#e0e0e0'}}>
-             <TouchableWithoutFeedback
-                 onPress={() => this.changeVideo(item)}
-             >
-                 <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
-                       <View style={{alignItems: 'center', justifyContent:'center'}}>
-                           <Image
-                             key={index}
-                             style={{ width: screenWidth -40, height: (screenWidth - 40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: 'white'}}
-                             source={{ uri: item.thumb || defaultImg }}
-                             />
+             <Consumer>
+               {({textColor, backGround, fontSizeRatio}) => (
+                     <TouchableWithoutFeedback
+                         onPress={() => this.changeVideo(item)}
+                     >
+                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
+                               <View style={{alignItems: 'center', justifyContent:'center'}}>
+                                   <Image
+                                     key={index}
+                                     style={{ width: screenWidth -40, height: (screenWidth - 40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: backGround}}
+                                     source={{ uri: item.thumb || defaultImg }}
+                                     />
 
-                             <View style={{position:'absolute', opacity:0.6}}>
-                               <Icon
-                                   size={125}
-                                   name='controller-play'
-                                   type='entypo'
-                                   color='white'
-                               />
+                                     <View style={{position:'absolute', opacity:0.6}}>
+                                       <Icon
+                                           size={125}
+                                           name='controller-play'
+                                           type='entypo'
+                                           color='white'
+                                       />
+                                     </View>
+                                   <View style={{position:'absolute', opacity:0.8}}>
+                                     <Icon
+                                         size={120}
+                                         name='controller-play'
+                                         type='entypo'
+                                         color='black'
+                                     />
+                                   </View>
+                               </View>
+                             <View>
+                                 <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
+                                     {
+                                       (item.taxonomy_source[0])?
+                                          <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                       :
+                                           <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                     }
+                                 </View>
+                                 <BaomoiText style={{fontSize: 18, fontWeight: '500', fontFamily: 'baomoi-regular', color: textColor}}>{item.title.plaintitle}</BaomoiText>
                              </View>
-                           <View style={{position:'absolute', opacity:0.8}}>
-                             <Icon
-                                 size={120}
-                                 name='controller-play'
-                                 type='entypo'
-                                 color='black'
-                             />
-                           </View>
-                       </View>
-                     <View>
-                         <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
-                             {
-                               (item.taxonomy_source[0])?
-                                  <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
-                               :
-                                   <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
-                             }
                          </View>
-                         <BaomoiText style={{fontSize: 18, fontWeight: '500', fontFamily: 'baomoi-regular', color: 'black'}}>{item.title.plaintitle}</BaomoiText>
-                     </View>
-                 </View>
-             </TouchableWithoutFeedback>
-
-
+                     </TouchableWithoutFeedback>
+                 )}
+             </Consumer>
          </View>
      )
 
@@ -280,7 +331,7 @@ export default class VideoPlay extends React.PureComponent {
 
                 <Consumer>
                   {({textColor, backGround, fontSizeRatio}) => (
-                      <ScrollView style={{padding: 10}}>
+                      <ScrollView style={{padding: 10, backgroundColor: backGround}}>
 
                               {this.props.article &&
                                 <View>
@@ -297,6 +348,9 @@ export default class VideoPlay extends React.PureComponent {
                                 renderItem={this.renderItem}
                                 keyExtractor={(item, index) => item.id.toString()}
                                 />
+
+                              <CommentList comments={this.props.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.props.user} setModalVisible={this.props.setModalVisible}/>
+
                       </ScrollView>
                     )}
                 </Consumer>
@@ -308,9 +362,8 @@ export default class VideoPlay extends React.PureComponent {
 
 const styles = StyleSheet.create({
    container: {
-      marginTop: 70,
+      marginTop: 50,
       flex: 1,
-      backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
    },

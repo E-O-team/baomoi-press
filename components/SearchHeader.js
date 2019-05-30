@@ -8,6 +8,7 @@ import {
     View,
     Button,
     TouchableHighlight,
+    StatusBar
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import {SafeAreaView} from 'react-navigation';
@@ -26,8 +27,6 @@ export default class Header extends React.Component{
           style={{
             flexDirection: "row",
             height: 50,
-
-            marginTop: Platform.OS == "ios" ? 20 : 20 // only for IOS to give StatusBar Space
           }}
         >
           <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>

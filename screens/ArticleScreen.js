@@ -93,9 +93,10 @@ export default class ArticleScreen extends React.Component {
          {
              axios({
                  method: "GET",
-                 url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
-                 headers: {'Authorization': 'Bearer ' + this.state.user.token},
-             },{cancelToken: this.cancelTokenSource.token})
+                 url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1&id=' + this.state.user.id.toString(),
+             }, {
+                 cancelToken: this.cancelTokenSource.token
+             })
          }
        }
 
@@ -114,32 +115,49 @@ export default class ArticleScreen extends React.Component {
        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
-    onShare = () => {
-      Share.share({
-        ...Platform.select({
-          ios: {
-            message: 'Have a look on : ',
-            url: this.state.Article.link,
-          },
-          android: {
-            message: 'Have a look on : \n' + this.state.Article.link
-          }
-        }),
-        title: 'Wow, did you see that?'
-      }, {
-        ...Platform.select({
-          ios: {
-            // iOS only:
-            excludedActivityTypes: [
-              'com.apple.UIKit.activity.PostToTwitter'
-            ]
-          },
-          android: {
-            // Android only:
-            dialogTitle: 'Share : ' + this.state.Article.link
-          }
-        })
-      });
+    onShare = async () => {
+        try {
+              const result = await Share.share({
+                ...Platform.select({
+                  ios: {
+                    message: 'Have a look on : ',
+                    url: this.state.Article.link,
+                  },
+                  android: {
+                    message: 'Have a look on : \n' + this.state.Article.link
+                  }
+                }),
+                title: 'Wow, did you see that?'
+              }, {
+                ...Platform.select({
+                  ios: {
+                    // iOS only:
+                    excludedActivityTypes: [
+                      'com.apple.UIKit.activity.PostToTwitter'
+                    ]
+                  },
+                  android: {
+                    // Android only:
+                    dialogTitle: 'Share : ' + this.state.Article.link
+                  }
+                })
+              });
+
+              if (result.action === Share.sharedAction) {
+                      axios({
+                          method: "GET",
+                          url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=5&id=' + this.state.user.id.toString(),
+                      }, {
+                          cancelToken: this.cancelTokenSource.token
+                      })
+
+                  } else if (result.action === Share.dismissedAction) {
+                      // dismissed
+                  }
+        } catch (error) {
+            alert(error.message);
+        }
+
     }
 
     fetchComment = () => {
@@ -154,18 +172,22 @@ export default class ArticleScreen extends React.Component {
       // .then(json => console.log(json))
       .catch(err => console.log(err))
     }
+
     setCommentModalVisible = (visible, parent) => {
       if(this._isMounted) this.setState({commentModalVisible: visible, commentParent: parent})
     }
+
     updateUser = async () => {
       const json = await JSON.parse(await AsyncStorage.getItem('user'))
       if(this._isMounted) this.setState({
           user: json
       })
     }
+
     updateArticle = (article) => {
-        this.setState({Article : article})
+        this.setState({Article : article}, () => this.fetchComment())
     }
+
     setAds = () => {
       //Get PopUpAds
       //this.setState({PopUpAds : AsyncStorage.getItem('pop-up-Ads')})
@@ -185,9 +207,10 @@ export default class ArticleScreen extends React.Component {
       }
       //
     }
-    renderMidAd =(index) => <BannerAd key={index} size='rectangle' AdPosition='Content(Giữa bài viết)'/>
-    navigateBack = () => this.props.navigation.goBack()
 
+    renderMidAd =(index) => <BannerAd key={index} size='rectangle' AdPosition='Content(Giữa bài viết)'/>
+
+    navigateBack = () => this.props.navigation.goBack()
 
     render(){
       const headerSource = this.state.scrollY.interpolate({
@@ -201,7 +224,6 @@ export default class ArticleScreen extends React.Component {
         <View style={{backgroundColor: backGround, flexDirection:'column', flex: 1}}>
           <Animated.View style={{
                                   position:'absolute',
-                                  top: 20,
                                   right: 0,
                                   left: 0,
                                   height: 50,
@@ -223,7 +245,7 @@ export default class ArticleScreen extends React.Component {
                 </TouchableOpacity>
               </View>
               <Animated.View style={{opacity: (this.state.Article && this.state.Article.format === 'video') ? 1 : headerSource, flex: 5}}>
-                { (this.state.Article) && <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user} updateUser={this.updateUser}/> }
+                { (this.state.Article) && <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={true} user={this.state.user} updateUser={this.updateUser} navigation={this.props.navigation}/> }
               </Animated.View>
 
               <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
@@ -265,7 +287,7 @@ export default class ArticleScreen extends React.Component {
                                   </View>
                                   <Divider style={{backgroundColor:'#696969'}}/>
                                   <View style={{flexDirection:'row', height: 75, alignItems:'center', justifyContent:'space-between', padding: 5}}>
-                                  <BaomoiText style={{fontSize: 16}}>Giao diện</BaomoiText>
+                                  <BaomoiText style={{fontSize: 16}}>Đọc ban đêm</BaomoiText>
                                   <Switch
                                       onValueChange={switchMode}
                                       value={nightMode}
@@ -286,7 +308,7 @@ export default class ArticleScreen extends React.Component {
           </Animated.View>
 
           {(this.state.Article && this.state.Article.format === 'standard') &&
-                  <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 70}}
+                  <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 50}}
                                 scrollEventThrottle={16}
                                 onScroll={Animated.event(
                                 [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
@@ -302,7 +324,7 @@ export default class ArticleScreen extends React.Component {
                         <View style={{padding: 10}}>
                           <Text style={{fontSize: 24*fontSizeRatio, fontWeight: 'bold',fontFamily: 'baomoi-regular', color: textColor, marginBottom: 5}}>{this.state.Article.title.plaintitle}</Text>
 
-                          <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} updateUser={this.updateUser} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")}/>
+                          <AuthorSubscription taxonomy_source={this.state.Article.taxonomy_source[0]} onHeader={false} user={this.state.user} updateUser={this.updateUser} moment={moment(this.state.Article.modified).fromNow().replace("trước", "").replace("một", "1")} navigation={this.props.navigation}/>
                         </View>
 
 
@@ -397,7 +419,7 @@ export default class ArticleScreen extends React.Component {
             }
 
             {(this.state.Article && this.state.Article.format === 'video') &&
-              <VideoPlay navigation={this.props.navigation} article={this.state.Article} updateArticle={this.updateArticle}/>
+              <VideoPlay navigation={this.props.navigation} article={this.state.Article} updateArticle={this.updateArticle} comments={this.state.comments} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
             }
 
 

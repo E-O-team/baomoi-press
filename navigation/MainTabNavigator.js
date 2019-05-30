@@ -27,15 +27,16 @@ import TermsScreen from '../screens/TermsScreen';
 import ExchangeGiftsScreen from '../screens/ExchangeGiftsScreen';
 import ExchangeHistoryScreen from '../screens/ExchangeHistoryScreen';
 import NotificationsDetail from '../screens/NotificationsDetail';
+import InviteScreen from '../screens/InviteScreen';
 
 var { width, height } = Dimensions.get('window');
-const baomoi_app_url = 'https://baomoi.press/'
+const baomoi_app_url = 'https://play.google.com/store/apps/details?id=com.press.baomoi'
 
 const HomeStack = createStackNavigator({
   Home: {
       screen: HomeTabNavigator,
       navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation}/>,
+        header: <Header navigation={navigation} shouldHaveDivider={false}/>,
       }),
   },
   Article: ArticleScreen,
@@ -49,6 +50,7 @@ const HomeStack = createStackNavigator({
   Notifications: NotificationScreen,
   NotificationsDetail: NotificationsDetail,
   ExchangeGifts: ExchangeGiftsScreen,
+  Invite: InviteScreen,
   Source: SourceScreen,
   Terms: TermsScreen,
   ExchangeHistory: ExchangeHistoryScreen,
@@ -109,7 +111,7 @@ const VideoStack = createStackNavigator({
   Video: {
       screen: VideoScreen,
       navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation}/>,
+        header: <Header navigation={navigation} shouldHaveDivider={true}/>,
       }),
   },
   Article: ArticleScreen,
@@ -222,7 +224,7 @@ class TabBarComponent extends Component {
     if(this._isClickedHomeBtn) this.animating()
   }
 
-  animating = () =>{
+  animating = () => {
 
     this.setState({
       left:  new Animated.Value(width/2),

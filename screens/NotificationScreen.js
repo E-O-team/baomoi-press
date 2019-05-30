@@ -81,8 +81,7 @@ export default class NotificationScreen extends React.Component {
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
-                        height: 60,
-                        marginTop: 20,
+                        height: 50,
                         flexDirection: "row",
                         backgroundColor: backGround,
                         alignItems:'center',

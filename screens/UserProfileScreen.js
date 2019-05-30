@@ -21,8 +21,7 @@ export default class UserProfile extends React.PureComponent {
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
-                        height: 60,
-                        marginTop: 20,
+                        height: 50,
                         flexDirection: "row",
                         backgroundColor: backGround,
                         alignItems:'center',
@@ -74,11 +73,6 @@ export default class UserProfile extends React.PureComponent {
         })
     }
 
-    logOut = async () => {
-        AsyncStorage.clear()
-        this.props.navigation.navigate("AuthLoadingScreen")
-    }
-
     render(){
         const {user} = this.state
         return(
@@ -95,7 +89,6 @@ export default class UserProfile extends React.PureComponent {
                     }
                     <View style={styles.name_email}>
                         <Text style={styles.name}>{user.name}</Text>
-                        <Text style={styles.email}>{user.email}</Text>
                     </View>
                 </View>
                 <View style={styles.usersConfig}>
@@ -117,7 +110,7 @@ export default class UserProfile extends React.PureComponent {
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Email</Text>
-                            <Text style={{fontSize: 20, color: '#696969'}}>{user.email}</Text>
+                            <Text style={{fontSize: 20, color: '#696969'}}>{user.user_email}</Text>
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Ngày Sinh</Text>
@@ -143,12 +136,6 @@ export default class UserProfile extends React.PureComponent {
                                 user: user,
                                 token: this.state.token
                             })}
-                        />
-                        <Button
-                            style={{}}
-                            buttonStyle={styles.button}
-                            title="Đăng Xuất"
-                            onPress={this.logOut}
                         />
                     </ScrollView>
                 </View>
@@ -219,6 +206,7 @@ const styles = StyleSheet.create({
     },
     button:{
         marginTop: 10,
+        marginBottom: 10,
         backgroundColor: '#e12f28',
         marginHorizontal: 10
     }

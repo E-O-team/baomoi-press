@@ -36,7 +36,7 @@ export default class Video extends React.PureComponent {
                               <View style={{alignItems: 'center', justifyContent:'center'}}>
                                   <Image
                                     key={index}
-                                    style={{ width: width - 40, height: (width-40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: 'white'}}
+                                    style={{ width: width - 40, height: (width-40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: ui.backGround}}
                                     source={{ uri: item.thumb || defaultImg }}
 
                                     />
@@ -57,13 +57,13 @@ export default class Video extends React.PureComponent {
                                     />
                                   </View>
                               </View>
-                            <View>
-                                <View style={{flexDirection: "row", alignItems:'flex-start', marginTop: 8, justifyContent:'flex-start'}}>
+                            <View style={{marginLeft: 10}}>
+                                <View style={{flexDirection: "row", alignItems:'center', marginTop: 8, justifyContent:'flex-start'}}>
                                     {
                                       (item.taxonomy_source[0])?
-                                         <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                         <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                       :
-                                          <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                                          <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                     }
                                     <Comments id={item.id}/>
                                 </View>

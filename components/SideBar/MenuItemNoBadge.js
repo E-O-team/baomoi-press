@@ -19,7 +19,7 @@ export default class MenuItemNoBadge extends React.Component {
                 <Text style={{color: textColor, fontSize: 18, marginLeft: 10}} >{content}</Text>
                 {hot &&
                     <Badge containerStyle={{ backgroundColor: "#fd2624"}} wrapperStyle={{marginLeft: 10}}>
-                        <Text style={{color: "white"}}>HOT</Text>
+                        <Text style={{color: "white"}}>{hot.toString()}</Text>
                     </Badge>}
                 </View>
                 <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />

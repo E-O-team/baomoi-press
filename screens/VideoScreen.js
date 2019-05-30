@@ -85,28 +85,26 @@ export default class VideoListScreen extends React.Component{
 
     render(){
     return(
-        <View style={{flex: 1, padding: 10}}>
+
             <Consumer>
                 {({textColor, backGround}) => (
-                <View>
-                    <FlatList
-                    onScroll={this.handleOnScroll}
-                    data={this.state.articles}
-                    extraData={this.state.articles}
-                    renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
-                    keyExtractor={item => item.id.toString()}
-                    removeClippedSubviews={true}
-                    windowSize={15}
-                    refreshing={this.state.refreshing}
-                    ListFooterComponent={() => <ActivityIndicator size="large" animating />}
-                    onRefresh={this.handleRefresh}
-                    onEndReached={() => this.handleLoadMore()}
-                    onEndReachedThreshold={0.7}
-                    />
-                </View>
-            )}
+                    <View style={{flex: 1, backgroundColor: backGround}}>
+                        <FlatList
+                        onScroll={this.handleOnScroll}
+                        data={this.state.articles}
+                        extraData={this.state.articles}
+                        renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
+                        keyExtractor={item => item.id.toString()}
+                        removeClippedSubviews={true}
+                        windowSize={15}
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.handleRefresh}
+                        onEndReached={() => this.handleLoadMore()}
+                        onEndReachedThreshold={0.7}
+                        />
+                    </View>
+                )}
             </Consumer>
-        </View>
     )
     }
 }

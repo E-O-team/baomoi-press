@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage, Platform, DatePickerAndroid, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage, Platform, DatePickerAndroid, SafeAreaView, Picker} from 'react-native';
 import axios from 'axios';
 import DatePickerios from '../components/DatePickerios';
 import DatePickerandroid from '../components/DatePickerandroid';
@@ -24,8 +24,7 @@ export default class UserProfileEdit extends React.Component {
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
-                        height: 60,
-                        marginTop: 20,
+                        height: 50,
                         flexDirection: "row",
                         backgroundColor: backGround,
                         alignItems:'center',
@@ -57,7 +56,8 @@ export default class UserProfileEdit extends React.Component {
             birth_date: user.birth_date,
             gender: user.gender,
             so_thich: user.so_thich,
-            mobile_number: user.mobile_number,
+            mobile_number: (user.mobile_number.length != 0) ?  user.mobile_number : 'Điền số điện thoại',
+            user_email: (user.user_email.length != 0) ?  user.user_email : 'Điền email',
             token: token,
         })
     }
@@ -68,6 +68,7 @@ export default class UserProfileEdit extends React.Component {
         data.append("gender", this.state.gender)
         data.append("so_thich", this.state.so_thich)
         data.append("mobile_number", this.state.mobile_number)
+        data.append("user_email", this.state.user_email)
         axios({
             method: "POST",
             url: 'https://baomoi.press/wp-json/wp/v2/update_user_info',
@@ -81,8 +82,7 @@ export default class UserProfileEdit extends React.Component {
     }
 
     logOut = async () => {
-        AsyncStorage.clear()
-        this.props.navigation.navigate("Auth")
+        this.props.navigation.pop(2)
     }
 
     handleOnDateChange = (newDate) => {
@@ -121,29 +121,54 @@ export default class UserProfileEdit extends React.Component {
             >
 
                 <DatePick date={user.birth_date} handleOnDateChange={this.handleOnDateChange}/>
-                <FormLabel>giới tính</FormLabel>
-                <FormInput placeholder={user.gender} onChangeText={(text) => this.setState({gender: text})}/>
-                <FormLabel>sở thích</FormLabel>
-                <FormInput placeholder={user.so_thich} onChangeText={(text) => this.setState({so_thich: text})}/>
-                <FormLabel>số điện thoại</FormLabel>
-                <FormInput placeholder={user.mobile_number} onChangeText={(text) => this.setState({mobile_number: text})}/>
-
+                <FormLabel labelStyle={styles.formLabel}>Email</FormLabel>
+                <FormInput placeholder={user.user_email || 'Điền email'} onChangeText={(text) => this.setState({user_email: text})} inputStyle={styles.formInput}/>
+                <FormLabel labelStyle={styles.formLabel}>Giới tính</FormLabel>
+                <Picker
+                  selectedValue={this.state.gender}
+                  style={{height: 50, width: 100, marginLeft: 15}}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({gender: itemValue})
+                  }>
+                  <Picker.Item label="Nam" value="Nam" />
+                  <Picker.Item label="Nữ" value="Nữ" />
+                </Picker>
+                <FormLabel labelStyle={styles.formLabel}>Sở thích</FormLabel>
+                <Picker
+                  selectedValue={this.state.so_thich}
+                  style={{height: 50, width: 150, marginLeft: 15}}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({so_thich: itemValue})
+                  }>
+                  <Picker.Item label="Nghe nhạc" value="Nghe nhạc" />
+                  <Picker.Item label="Xem phim" value="Xem phim" />
+                  <Picker.Item label="Đá bóng" value="Đá bóng" />
+                  <Picker.Item label="Caffe" value="Caffe" />
+                </Picker>
+                <FormLabel labelStyle={styles.formLabel}>Số điện thoại</FormLabel>
+                <FormInput placeholder={user.mobile_number || 'Điền số điện thoại'} textContentType='telephoneNumber' onChangeText={(text) => this.setState({mobile_number: text})} inputStyle={styles.formInput}/>
                 <Button
                     buttonStyle={styles.button}
                     title="Lưu"
                     onPress={this.handleSubmit}
                 />
 
-                <Text style={{color: '#696969', marginHorizontal: 10, marginTop: 20}}>Lưu ý: bạn cần điền đầy đủ thông tin trước khi thực hiện bình luận bài viết</Text>
+                <Text style={{color: '#696969', marginHorizontal: 10, marginTop: 20, marginLeft: 15}}>Lưu ý: bạn cần điền đầy đủ thông tin trước khi thực hiện đổi quà</Text>
             </ScrollView>
         )
     }
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
     button:{
         marginTop: 10,
         backgroundColor: '#e12f28',
         marginHorizontal: 10
-    }
+    },
+    formLabel: {
+        fontSize: 16
+    },
+    formInput: {
+        borderBottomWidth:1, borderBottomColor:'#C0C0C0', marginLeft: 5, fontSize: 15
+    },
 })

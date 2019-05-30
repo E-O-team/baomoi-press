@@ -56,9 +56,10 @@ export default class HomeScreen extends React.Component {
     //         header: <Header navigation={navigation}/>
     //     }
     // }
-    componentDidMount() { // componentDidMount
+    componentDidMount() {
         this.fetchNews()
         this.notificationSubscription = Notifications.addListener(this._handleNotification);
+        FacebookAds.AdSettings.clearTestDevices();
     }
 
     fetchNews = () => {

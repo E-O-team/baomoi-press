@@ -21,7 +21,8 @@ export default class SourceScreen extends React.Component {
         super(props)
         this.state = {
             source: this.props.navigation.getParam("source"),
-            articles: []
+            articles: [],
+            page: 1
         }
     }
 
@@ -34,8 +35,7 @@ export default class SourceScreen extends React.Component {
                     <SafeAreaView
                         style={{
 
-                            height: 60,
-                            marginTop: 20,
+                            height: 50,
                             flexDirection: "row",
                             backgroundColor: backGround,
                             alignItems:'center',
@@ -44,16 +44,14 @@ export default class SourceScreen extends React.Component {
 
                         }}
                     >
-                        <View style={{flex: 1, alignItems: "flex-start"}}>
+                        <TouchableOpacity style={{flex: 1, alignItems: "flex-start"}}
+                              onPress={() => navigation.goBack()}>
                             <Icon
                                 name='chevron-left'
                                 size={35}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                }}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Nguồn tin</Text></View>
                         <View style={{flex: 1}}></View>
                     </SafeAreaView>
@@ -65,11 +63,15 @@ export default class SourceScreen extends React.Component {
 
     componentDidMount() {
         this.cancelTokenSource = axios.CancelToken.source()
-        axios.get("https://baomoi.press//wp-json/wp/v2/posts?filter[taxonomy]=source&filter[term]=" + this.state.source.slug, {
+        this.fetchNews()
+    }
+
+    fetchNews = () => {
+        axios.get("https://baomoi.press//wp-json/wp/v2/posts?filter[taxonomy]=source&per_page=10&page="+this.state.page+"&filter[term]=" + this.state.source.slug, {
             cancelToken: this.cancelTokenSource.token
         })
         .then(res => this.setState({
-            articles: res.data
+            articles: [...this.state.articles, ...res.data],
         }))
         .catch(err => {
             if(axios.isCancel(err)){
@@ -78,6 +80,12 @@ export default class SourceScreen extends React.Component {
                 console.log(err)
             }
         })
+    }
+
+    handleLoadMore = () => {
+        this.setState({
+            page: this.state.page + 1,
+        }, () => this.fetchNews())
     }
 
     componentWillUnmount() {
@@ -98,6 +106,10 @@ export default class SourceScreen extends React.Component {
                             extraData={this.state.articles}
                             renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
                             keyExtractor={item => item.id.toString()}
+                            onEndReached={this.handleLoadMore}
+                            removeClippedSubviews={true}
+                            windowSize={15}
+                            onEndReachedThreshold={0.5}
                         />
                     </View>
                 )}

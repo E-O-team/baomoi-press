@@ -1,6 +1,6 @@
 import React from 'react';
 // import DatePickerAndroid from 'react-native';
-import { View, DatePickerAndroid,TouchableOpacity  } from 'react-native';
+import { View, DatePickerAndroid,TouchableOpacity, StyleSheet  } from 'react-native';
 import dateFormat from 'dateformat';
 import { Button, FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 export default class DatePickerandroid extends React.Component {
@@ -48,9 +48,17 @@ export default class DatePickerandroid extends React.Component {
             <TouchableOpacity
                 onPress={this.calendarLaunched}
             >
-                <FormLabel>Ngày sinh</FormLabel>
-                <FormInput placeholder={"Nhấp vào để chọn ngày sinh"} editable={false} />
+                <FormLabel labelStyle={styles.formLabel}>Ngày sinh</FormLabel>
+                <FormInput placeholder={"Nhấp vào để chọn ngày sinh"} editable={false} inputStyle={styles.formInput}/>
             </TouchableOpacity>
         )
     }
 };
+const styles = StyleSheet.create({
+    formLabel: {
+        fontSize: 16
+    },
+    formInput: {
+        marginLeft: 5, fontSize: 15
+    }
+})

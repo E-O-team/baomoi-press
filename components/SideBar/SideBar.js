@@ -19,6 +19,8 @@ import axios from 'axios';
 import MenuItemNoBadge from './MenuItemNoBadge';
 import MenuItemWithBadge from './MenuItemWithBadge';
 import SignInModal from '../../components/Modals/SignInModal';
+import UserShareTokenModal from '../../components/Modals/UserShareTokenModal';
+import ReferenceInputModal from '../../components/Modals/ReferenceInputModal';
 const defaultImg ='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
 const FB = 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=410408676429078&height=200&width=200&ext=1555596027&hash=AeRSIiZ4P4tf_hA_'
 export default class SiderBar extends React.Component {
@@ -26,13 +28,28 @@ export default class SiderBar extends React.Component {
         super()
         this.state={
             user: null,
-            modalVisible: false,
+            signInModalVisible: false,
+            userShareModalVisible: false,
+            referenceInputModalVisible: false,
             loading: false
         }
         this.updateUser = this.updateUser.bind(this)
     }
     componentDidMount() {
         this.updateUser()
+    }
+
+    componentWillReceiveProps(props) {
+
+        const state = props.navigation.state;
+        const route = state.routes[state.index];
+        var routeChild = route.routes[route.index];
+        var routeGrandChild = routeChild.routes[routeChild.index]
+
+        if(routeGrandChild.params && routeGrandChild.params.shouldUpdateSideBar) {
+            this.updateUser()
+        }
+
     }
 
     updateUser(){
@@ -49,9 +66,12 @@ export default class SiderBar extends React.Component {
                         url: "https://baomoi.press/wp-json/wp/v2/users/" + this.state.user.id,
                         headers: {'Authorization': 'Bearer ' + this.state.user.token},
                     })
-                    .then((res) => this.setState({
-                        user: res.data
-                    }))
+                    .then(res => {
+                        res.data.token = this.state.user.token
+                        this.setState({
+                            user: res.data
+                        })
+                    })
                     .catch(err => console.log(err))
 
                 })
@@ -82,6 +102,12 @@ export default class SiderBar extends React.Component {
         }
     }
 
+    handleInvitePress = () => {
+        if(this.checkLogedIn()){
+            this.props.navigation.navigate("Invite")
+        }
+    }
+
     handleNavigationPressed = (navigationDesination) => {
         if(navigationDesination == "Following"){
             this.handleSubscribedPressed()
@@ -89,6 +115,8 @@ export default class SiderBar extends React.Component {
             this.handleNotificationPress()
         }else if (navigationDesination == "ExchangeGifts") {
             this.handleExchangeGiftsPress()
+        }else if (navigationDesination == "Invite") {
+            this.handleInvitePress()
         }
     }
 
@@ -114,14 +142,26 @@ export default class SiderBar extends React.Component {
         if(this.state.user !== null){
             return true
         }else{
-            this.setModalVisible(!this.state.modalVisible)
+            this.setSignInModalVisible(!this.state.signInModalVisible)
             return false
         }
     }
 
-    setModalVisible = (visible) => {
+    setSignInModalVisible = (visible) => {
         this.setState({
-            modalVisible: visible,
+            signInModalVisible: visible,
+        });
+    }
+
+    setReferenceInputModalVisible = (visible) => {
+        this.setState({
+            referenceInputModalVisible: visible,
+        });
+    }
+
+    setUserShareModalVisible = (visible) => {
+        this.setState({
+            userShareModalVisible: visible,
         });
     }
 
@@ -159,7 +199,7 @@ export default class SiderBar extends React.Component {
             <Consumer>
                 {({textColor, backGround}) => (
                     <View style={{backgroundColor: backGround, flex: 1, padding: 10}}>
-                        <View style={{flexDirection: "row", backgroundColor: '#dd273e', marginHorizontal: -10, marginTop: -10, height: 120, alignItems: "flex-end", justifyContent: 'space-between', }}>
+                        <View style={{flexDirection: "row", backgroundColor: '#dd273e', marginHorizontal: -10, marginTop: -10, height: 100, alignItems: "flex-end", justifyContent: 'space-between', }}>
                             {user ? (
                                 <TouchableOpacity
                                     onPress={() => this.props.navigation.navigate("UserProfile")}
@@ -183,7 +223,7 @@ export default class SiderBar extends React.Component {
                             ) : (
 
                                     <TouchableOpacity
-                                        onPress={() => this.setModalVisible(!this.state.modalVisible)}
+                                        onPress={() => this.setSignInModalVisible(!this.state.signInModalVisible)}
                                     >
                                         <View style={{flexDirection: "row", alignItems: "center"}}>
                                             <Icon
@@ -192,7 +232,7 @@ export default class SiderBar extends React.Component {
                                                 reverse
                                                 color="#a6122b"
                                             />
-                                            <Button onPress={() => this.setModalVisible(!this.state.modalVisible)} buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} />
+                                            <Button onPress={() => this.setSignInModalVisible(!this.state.signInModalVisible)} buttonStyle={{width: 100, padding: 0, marginLeft: -15}} setLoading={this.setLoading} loading={this.state.loading} title="Đăng nhập" backgroundColor="#dd273e" textStyle={{fontSize: 20}} />
                                         </View>
                                     </TouchableOpacity>
 
@@ -200,7 +240,9 @@ export default class SiderBar extends React.Component {
 
                             <View>
                                 <View>
-                                    <SignInModal visible={this.state.modalVisible} setModalVisible={this.setModalVisible} navigation={this.props.navigation} setLoading={this.setLoading} updateUser={this.updateUser}/>
+                                    <SignInModal visible={this.state.signInModalVisible} setModalVisible={this.setSignInModalVisible} navigation={this.props.navigation} setLoading={this.setLoading} updateUser={this.updateUser}/>
+                                    <ReferenceInputModal visible={this.state.referenceInputModalVisible} setModalVisible={this.setReferenceInputModalVisible} navigation={this.props.navigation} user={this.state.user} updateUser={this.updateUser}/>
+                                    <UserShareTokenModal visible={this.state.userShareModalVisible} setModalVisible={this.setUserShareModalVisible} navigation={this.props.navigation} user={this.state.user} updateUser={this.updateUser}/>
                                 </View>
                                 <View style={{alignSelf: "flex-end", marginBottom: 7}}>
                                     <Icon
@@ -250,8 +292,15 @@ export default class SiderBar extends React.Component {
                                     <View style={{backgroundColor: "#fc5656", height: 18, width: 5}}></View>
                                     <Text style={{color: textColor, marginLeft: 10, fontSize: 18, fontWeight: "bold"}}>Nhiệm vụ kiếm xu</Text>
                                 </View>
+                                {(this.state.user && !this.state.user.acf.hasEnterReferenceCode) &&
+                                <TouchableOpacity onPress={() => this.setReferenceInputModalVisible(!this.state.referenceInputModalVisible) }>
+                                    <MenuItemNoBadge name="email-variant" type="material-community" color="#f46c6c" content="Nhập mã giới thiệu" textColor={textColor} hot='+2xu' />
+                                </TouchableOpacity>
+                                }
+                                <TouchableOpacity onPress={() => { if(this.checkLogedIn()) this.setUserShareModalVisible(!this.state.userShareModalVisible) }}>
+                                    <MenuItemNoBadge name="medal" type="material-community" color="#f46c6c" content="Chia sẻ App kiếm tiền" textColor={textColor} hot='HOT'/>
+                                </TouchableOpacity>
                                 <MenuItemNoBadge name="smartphone" type="feather" color="#768cb1" content="Xem clip kiếm thêm xu" textColor={textColor} hot={false}/>
-                                <MenuItemNoBadge name="medal" type="material-community" color="#f46c6c" content="Chia sẻ kiếm tiền" textColor={textColor} hot={true}/>
                             </View>
                             <View style={{marginTop: 25}}>
                                 <View style={{flexDirection: "row"}}>

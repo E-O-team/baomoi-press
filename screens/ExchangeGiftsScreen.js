@@ -12,6 +12,7 @@ import {
     FlatList,
     Dimensions,
     WebView,
+    Linking
 } from 'react-native';
 import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
@@ -52,8 +53,7 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                 {({backGround, textColor}) => (
                     <SafeAreaView
                         style={{
-                        height: 60,
-                        marginTop: 20,
+                        height: 50,
                         flexDirection: "row",
                         backgroundColor: backGround,
                         alignItems:'center',
@@ -161,7 +161,7 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                                 <View style={{backgroundColor:"white", padding: 10, marginTop: 15}}>
                                     <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
                                         <Text style={{fontSize: 19.5, fontWeight: "bold"}}>THỂ LỆ HƯỚNG DẪN</Text>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => Linking.openURL('https://baomoi.press/the-le-huong-dan-kiem-xu-tren-app')}>
                                             <Text style={{color: "#00b990"}}>Chi tiết ></Text>
                                         </TouchableOpacity>
                                     </View>

@@ -48,7 +48,6 @@ export default class FacebookInterstitial extends React.Component {
     }
 
     componentDidMount() {
-      FacebookAds.AdSettings.addTestDevice(FacebookAds.AdSettings.currentDeviceHash)
 
     }
 

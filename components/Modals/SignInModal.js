@@ -127,8 +127,10 @@ export default class SignInModal extends React.PureComponent {
             if (type === 'success') {
                 // Get the user's name using Facebook's Graph API
                 const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large),email`);
-                const {email, id, name, picture} = await response.json()
-                this.handleCreateAccount(email, id, name, picture)
+                const {id, name, picture} = await response.json()
+                var generated_email = id.toString() + '@facebook.com'
+                this.handleCreateAccount(generated_email, id, name, picture)
+
             } else {
             // type === 'cancel'
             }

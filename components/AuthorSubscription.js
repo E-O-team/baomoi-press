@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, AsyncStorage, Image} from 'react-native';
+import {Text, View, StyleSheet, AsyncStorage, Image, TouchableOpacity} from 'react-native';
 import { BaomoiText } from './StyledText';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
@@ -26,8 +26,6 @@ export default class AuthorSubscription extends React.PureComponent{
 
     this.cancelTokenSource = axios.CancelToken.source()
     this.updateSource()
-
-
 
   }
   updateSource = () => {
@@ -100,6 +98,13 @@ export default class AuthorSubscription extends React.PureComponent{
       if(source === this.state.source.term_id.toString()) this.isSubscribed()
     })
   }
+
+  navigate = () => {
+      this.props.navigation.navigate("Source", {
+          source: this.state.source
+      })
+  }
+
   componentWillUnmount() {
 
      this.cancelTokenSource && this.cancelTokenSource.cancel()
@@ -130,13 +135,14 @@ export default class AuthorSubscription extends React.PureComponent{
 
     return(
       <View style={styles.container}>
-        <View style={{height: 30 , width: 30, borderRadius: 30/2, borderColor: '#696969', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
+
+        <TouchableOpacity style={{height: 30 , width: 30, borderRadius: 30/2, borderColor: '#C0C0C0', borderWidth: 1, alignItems:'center', justifyContent:'center'}} onPress={this.navigate}>
           <Image
           source={{uri: this.state.logo || defaultImg}}
           resizeMode='contain'
           style={{width: 24, height: 24, borderRadius: 24/2}}
           />
-        </View>
+        </TouchableOpacity>
         {
           (this.props.onHeader) ? <BaomoiText style={[styles.text,{color: '#006666'}]}>{this.state.source.name}</BaomoiText>
           : <BaomoiText style={[styles.text,{color: '#C0C0C0'}]}>{this.state.source.name} - {this.props.moment}</BaomoiText>

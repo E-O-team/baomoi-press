@@ -4,10 +4,13 @@ import {
     Text,
     StyleSheet,
     ScrollView,
-    Dimensions
+    Dimensions,
+    SafeAreaView,
+
 
 } from 'react-native';
 import HTML from 'react-native-render-html'
+import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 import {Consumer} from '../context/context.js';
 
 export default class NotificationsDetail extends Component {
@@ -19,6 +22,41 @@ export default class NotificationsDetail extends Component {
       this.setState({
           noti: this.props.navigation.getParam("data", "ERR"),
       })
+    }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+                            height: 50,
+                            flexDirection: "row",
+                            backgroundColor: backGround,
+                            alignItems:'center',
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#C6C3BC',
+
+                        }}
+                    >
+                        <View style={{flex: 1, alignItems: "flex-start"}}>
+                            <Icon
+                                name='chevron-left'
+                                size={35}
+                                color={textColor}
+                                onPress={() => {
+                                    navigation.goBack()
+                                }}
+                            />
+                        </View>
+                        <View style={{flex: 1}}></View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
+        }
     }
 
     render() {

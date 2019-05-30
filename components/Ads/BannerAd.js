@@ -30,32 +30,50 @@ export default class BannerAd extends React.PureComponent {
     }
 
     render() {
-        const AdTypes = ["Admob", "Custom", "Facebook"]
+        const AdTypes = ["Admob", "Custom"]//Facebook
         // const AdTypes = ["Admob"]
         let choosenAdType = this.shuffle(AdTypes)
-        if(this.props.size == "large"){
+        if(this.props.size === "large"){
             if(choosenAdType[0] == "Admob"){
+                //console.log('Large Admob')
                 return <AdmobLargeBannerAd AdPosition={this.props.AdPosition}/>
             }else if (choosenAdType[0] == "Custom") {
+                //console.log('Large Custom')
                 return <CustomLargeBannerAd AdPosition={this.props.AdPosition}/>
-            }else if (choosenAdType[0] == "Facebook") {
-                return <FacebookLargeBanner AdPosition={this.props.AdPosition}/>
             }
-        }else if (this.props.size == "small") {
+            // else if (choosenAdType[0] == "Facebook") {
+            //     return <FacebookLargeBanner AdPosition={this.props.AdPosition}/>
+            // }
+            else {
+              return null
+            }
+        }else if (this.props.size === "small") {
             if(choosenAdType[0] == "Admob"){
+                //console.log('small Admob')
                 return <AdmobBannerAd AdPosition={this.props.AdPosition}/>
             }else if (choosenAdType[0] == "Custom") {
+                //console.log('small Custom')
                 return <CustomBannerAd AdPosition={this.props.AdPosition}/>
-            }else if (choosenAdType[0] == "Facebook") {
-                return <FacebookBanner AdPosition={this.props.AdPosition}/>
             }
-        }else if (this.props.size == "rectangle") {
+            // else if (choosenAdType[0] == "Facebook") {
+            //     return <FacebookBanner AdPosition={this.props.AdPosition}/>
+            // }
+            else {
+              return null
+            }
+        }else if (this.props.size === "rectangle") {
             if(choosenAdType[0] == "Admob"){
+                //console.log('rectangle Admob')
                 return <AdmobRectangleBannerAd AdPosition={this.props.AdPosition}/>
             }else if (choosenAdType[0] == "Custom") {
+                //console.log('rectangle Custom')
                 return <CustomRectangleBannerAd AdPosition={this.props.AdPosition}/>
-            }else if (choosenAdType[0] == "Facebook") {
-                return <FacebookRectangle AdPosition={this.props.AdPosition}/>
+            }
+            // else if (choosenAdType[0] == "Facebook") {
+            //     return <FacebookRectangle AdPosition={this.props.AdPosition}/>
+            // }
+            else {
+              return null
             }
         }
     }

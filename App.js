@@ -54,10 +54,12 @@ export default class App extends React.Component {
     } else {
       return (
         <Provider>
-            <View style={{flex: 1, backgroundColor: "white"}}>
+            <SafeAreaView style={{flex: 1,
+                                  backgroundColor: "white",
+                                  marginTop: Platform.OS == "ios" ? 20 : StatusBar.currentHeight}}>
                 {Platform.OS === 'ios' && <StatusBar backgroundColor="white" />}
                 <AppNavigator />
-            </View>
+            </SafeAreaView>
         </Provider>
       );
     }

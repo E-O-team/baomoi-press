@@ -74,11 +74,22 @@ export default class ExchangeGiftsModal extends React.Component {
         }, () => console.log(this.state.selectedCarrier))
     }
 
-    handleSubmit = () => {
+    handleSubmit = async() => {
         const current_xu = this.props.navigation.getParam("xu")
+        let user = JSON.parse(await AsyncStorage.getItem('user'))
+
         if(current_xu < this.props.coin) {
             this.setState({
                 errorMessage: "Xu của bạn không đủ để thực hiện yêu cầu"
+            })
+        }
+        else if(user.birth_date.length == 0 ||
+                user.gender.length == 0 ||
+                user.so_thich.length == 0 ||
+                user.mobile_number.length == 0 ||
+                user.user_email.length == 0) {
+            this.setState({
+                errorMessage: "Bạn cần điền đầy đủ hồ sơ để thực hiện đổi quà"
             })
         }
         else if(this.state.selectedCarrier !== null){
@@ -87,7 +98,7 @@ export default class ExchangeGiftsModal extends React.Component {
                 loading: true,
             }, async() => {
                 const data = new FormData()
-                let user = JSON.parse(await AsyncStorage.getItem('user'))
+                
                 data.append("fields[carrier]", this.state.selectedCarrier)
                 data.append("fields[price]", this.props.value)
                 data.append("title", user.name)

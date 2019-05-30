@@ -94,11 +94,13 @@ export default class Sources extends React.Component {
                                 <View style={{justifyContent: "space-between"}}>
                                     <View></View>
                                     <View style={{marginTop: 10, marginBottom: 10, flexDirection: "row", alignItems: "center"}}>
-                                        <Avatar
-                                            medium
-                                            rounded
-                                            source={{uri: this.state.img || defaultImg}}
-                                        />
+                                        <View style={{height: 42 , width: 42, borderRadius: 42/2, borderColor: '#C0C0C0', borderWidth: 1, alignItems:'center', justifyContent:'center'}}>
+                                              <Image
+                                              source={{uri: this.state.img || defaultImg}}
+                                              resizeMode='contain'
+                                              style={{width: 36, height: 36, borderRadius: 36/2}}
+                                              />
+                                        </View>
                                         <Text style={{color: textColor, fontWeight: "bold", fontSize: 17, marginLeft: 10}}>{this.state.source.name}</Text>
                                     </View>
                                     <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />

@@ -3,7 +3,8 @@ import {
     TouchableOpacity,
     View,
     Image,
-    Dimensions
+    Dimensions,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Divider, Icon } from 'react-native-elements';
 import {Consumer} from '../../context/context.js'
@@ -31,6 +32,7 @@ export default class Post3Pic extends React.PureComponent {
                         <TouchableOpacity
                             onPress={this.navigate}
                             style={{flex: 1}}
+                            activeOpacity={1}
                         >
                             <Image
                                 source={{uri: item.content.images[0] || defaultImg}}
@@ -41,6 +43,7 @@ export default class Post3Pic extends React.PureComponent {
                         <TouchableOpacity
                             onPress={this.navigate}
                             style={{flex: 1}}
+                            activeOpacity={1}
                         >
                             <Image
                                 source={{uri: item.content.images[1] || defaultImg}}
@@ -51,6 +54,7 @@ export default class Post3Pic extends React.PureComponent {
                         <TouchableOpacity
                             onPress={this.navigate}
                             style={{flex: 1}}
+                            activeOpacity={1}
                         >
                             <Image
                                 source={{uri: item.content.images[2] || defaultImg}}
@@ -60,22 +64,20 @@ export default class Post3Pic extends React.PureComponent {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={{flex: 1}}>
-                    <TouchableOpacity
-                        onPress={this.navigate}
-                    >
-                    <View style={{flexDirection: "row", alignItems:'center'}}>
-                        {
-                          (item.taxonomy_source[0])?
-                             <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
-                          :
-                              <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
-                        }
-                        <Comments id={item.id}/>
-                    </View>
+                <TouchableWithoutFeedback style={{flex: 1}} onPress={this.navigate}>
+                    <View>
+                        <View style={{flexDirection: "row", alignItems:'center'}}>
+                            {
+                              (item.taxonomy_source[0])?
+                                 <BaomoiText style={{color: '#696969', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                              :
+                                  <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
+                            }
+                            <Comments id={item.id}/>
+                        </View>
                         <BaomoiText style={{fontSize: 17.3, fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
-                    </TouchableOpacity>
-                </View>
+                    </View>
+                </TouchableWithoutFeedback>
             </View>
         )
     }

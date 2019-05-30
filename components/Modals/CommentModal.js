@@ -50,12 +50,19 @@ export default class CommentModal extends React.PureComponent{
     //don't need to do now
   }
 
+  updateUser = () => {
+      this.props.updateUser()
+      this.props.navigation.setParams({ shouldUpdateSideBar : true})
+  }
+
   submitComment = () => {
     if(this.props.user)
       {
 
             if(this.state.text.length > 3)
             {
+
+                this.setState({text: ''}, () => this.props.setModalVisible(false, 0))
 
                 axios({
                     method: 'post',
@@ -70,8 +77,7 @@ export default class CommentModal extends React.PureComponent{
                     cancelToken: this.cancelTokenSource.token
                 })
                 .then(res => {
-                    this._showAlert('Thành công', 'Bình luận đang được kiểm duyệt')
-                    this.setState({text: ''}, () => this.props.setModalVisible(false, 0))
+                    this._showAlert('Thành công', 'Bình luận của bạn đang được kiểm duyệt')
                     this.props.onFetch()
                 })
                 .catch(err => console.log(err))
@@ -194,7 +200,7 @@ export default class CommentModal extends React.PureComponent{
                          onPress={() => {
                            this.submitComment()
                          }}>
-                         <BaomoiText style={{color: 'white', fontSize:10, fontWeight:'bold'}}>PHÁT BIỂU</BaomoiText>
+                            <BaomoiText style={{color: 'white', fontSize:10, fontWeight:'bold'}}>PHÁT BIỂU</BaomoiText>
                         </TouchableHighlight>
                       </View>
                     </View>
@@ -203,7 +209,7 @@ export default class CommentModal extends React.PureComponent{
             </View>
           </Modal>
 
-          <SignInModal visible={this.state.signInVisible} setModalVisible={this.setSignInModalVisible} navigation={this.props.navigation} setLoading={this.setSignInLoading} updateUser={this.props.updateUser}/>
+          <SignInModal visible={this.state.signInVisible} setModalVisible={this.setSignInModalVisible} navigation={this.props.navigation} setLoading={this.setSignInLoading} updateUser={this.updateUser}/>
 
       </View>
 
@@ -220,9 +226,9 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     flexDirection: 'row',
-    borderColor: '#e0e0e0',
+    borderTopColor: '#e0e0e0',
     justifyContent:'center',
-    borderWidth: 0.5
+    borderTopWidth: 0.5
   },
   commentButton:{
     marginLeft: 10,

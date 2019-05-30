@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import axios from 'axios';
 import { FacebookAds } from "expo";
-FacebookAds.AdSettings.addTestDevice(FacebookAds.AdSettings.currentDeviceHash)
 
 export default class FacebookBanner extends React.Component {
 
@@ -63,7 +62,7 @@ export default class FacebookBanner extends React.Component {
                       onError={(error) => console.log('error', error)}
                   />
               );
-          }else{
+          }else {
               return null
           }
 

@@ -7,7 +7,7 @@ import { View, Text, Dimensions, Platform, Animated, Easing, Image, Button, Touc
 import { LinearGradient } from "expo";
 import { Ionicons  } from '@expo/vector-icons';
 import {Icon} from 'react-native-elements';
-import logo from '../assets/images/logo-256x256.png';
+import logo from '../assets/images/transparent-icon.png';
 var { width, height } = Dimensions.get('window');
 height = height-20
 
@@ -77,7 +77,7 @@ export default class CustomTabBarBottom extends React.Component {
               <TouchableOpacity onPress={()=>this.onClickBtn()}>
                 <Image
                 source={logo}
-                style={{ width: 55, height: 55, resizeMode:'contain', borderRadius: 55/2}}
+                style={{ width: 55, height: 55, resizeMode:'contain'}}
                 />
               </TouchableOpacity>
             </View>

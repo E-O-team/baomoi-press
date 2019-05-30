@@ -3,8 +3,6 @@ import { StyleSheet, Text, View, Platform } from "react-native";
 import { FacebookAds } from "expo";
 import axios from 'axios';
 
-FacebookAds.AdSettings.addTestDevice(FacebookAds.AdSettings.currentDeviceHash)
-
 export default class FacebookRectangle extends React.Component {
 
     constructor(props) {

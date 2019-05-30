@@ -26,10 +26,15 @@ export default class InterstitialAd extends React.PureComponent {
         const AdTypes = ["Admob", "Facebook"]
         // const AdTypes = ["Admob"]
         let choosenAdType = this.shuffle(AdTypes)
-        if(choosenAdType[0] == "Admob"){
+        if(choosenAdType[0] == "Admob") {
             return <AdmobInterstitialAd AdPosition={this.props.AdPosition}/>
-        }else if (choosenAdType[0] == "Facebook") {
-            return <FacebookInterstitial AdPosition={this.props.AdPosition}/>
+        }
+
+        // else if (choosenAdType[0] == "Facebook") {
+        //     return <FacebookInterstitial AdPosition={this.props.AdPosition}/>
+        // }
+        else {
+          return null
         }
     }
 
