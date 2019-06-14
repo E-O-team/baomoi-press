@@ -36,7 +36,7 @@ export default class Post3Pic extends React.PureComponent {
                         >
                             <Image
                                 source={{uri: item.content.images[0] || defaultImg}}
-                                style= {{height: 90, marginLeft: 5, borderRadius: 5}}
+                                style= {{height: 90, borderRadius: 5}}
                                 loadingIndicatorSource={spinner}
                             />
                         </TouchableOpacity>
@@ -64,7 +64,7 @@ export default class Post3Pic extends React.PureComponent {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <TouchableWithoutFeedback style={{flex: 1}} onPress={this.navigate}>
+                <TouchableWithoutFeedback style={{flex: 1 }} onPress={this.navigate}>
                     <View>
                         <View style={{flexDirection: "row", alignItems:'center'}}>
                             {
@@ -75,7 +75,7 @@ export default class Post3Pic extends React.PureComponent {
                             }
                             <Comments id={item.id}/>
                         </View>
-                        <BaomoiText style={{fontSize: 17.3, fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
+                        <BaomoiText style={{fontSize: 17.3,fontWeight: '500', color: ui.textColor}} numberOfLines={3}>{item.title.plaintitle}</BaomoiText>
                     </View>
                 </TouchableWithoutFeedback>
             </View>

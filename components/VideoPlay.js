@@ -10,6 +10,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Modal,
   Image,
   ScrollView,
@@ -213,39 +214,17 @@ export default class VideoPlay extends React.PureComponent {
 
      renderItem = ({item, index}) => (
 
-         <View style={{paddingHorizontal: 10, paddingVertical: 20, borderBottomWidth: 1 , borderColor: '#e0e0e0'}}>
+         <View style={{ borderBottomWidth: 1 , borderColor: '#e0e0e0'}}>
              <Consumer>
                {({textColor, backGround, fontSizeRatio}) => (
+                 <View style={{ height: 130}}>
                      <TouchableWithoutFeedback
                          onPress={() => this.changeVideo(item)}
+                         style={{flex: 1}}
                      >
-                         <View style={{flex: 1, flexDirection: "column", justifyContent: 'center'}}>
-                               <View style={{alignItems: 'center', justifyContent:'center'}}>
-                                   <Image
-                                     key={index}
-                                     style={{ width: screenWidth -40, height: (screenWidth - 40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: backGround}}
-                                     source={{ uri: item.thumb || defaultImg }}
-                                     />
-
-                                     <View style={{position:'absolute', opacity:0.6}}>
-                                       <Icon
-                                           size={125}
-                                           name='controller-play'
-                                           type='entypo'
-                                           color='white'
-                                       />
-                                     </View>
-                                   <View style={{position:'absolute', opacity:0.8}}>
-                                     <Icon
-                                         size={120}
-                                         name='controller-play'
-                                         type='entypo'
-                                         color='black'
-                                     />
-                                   </View>
-                               </View>
-                             <View>
-                                 <View style={{flexDirection: "row", alignItems:'center', marginTop: 8}}>
+                         <View style={{flex: 1, flexDirection: "row", alignItems:'center'}}>
+                             <View style={{flex: 2}}>
+                                 <View style={{flexDirection: "row", alignItems:'center'}}>
                                      {
                                        (item.taxonomy_source[0])?
                                           <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{item.taxonomy_source[0].name} - {moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
@@ -253,11 +232,26 @@ export default class VideoPlay extends React.PureComponent {
                                            <BaomoiText style={{color: '#C0C0C0', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                      }
                                  </View>
-                                 <BaomoiText style={{fontSize: 18, fontWeight: '500', fontFamily: 'baomoi-regular', color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                 <BaomoiText style={{fontSize: 18,fontWeight: '500', color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                             </View>
+                             <View style={{height: 90, flex: 1, justifyContent:'flex-end'}}>
+                                 <Image
+                                     source={{uri :item.thumb || defaultImg}}
+                                     style={{flex: 1, marginLeft: 5, borderRadius: 5}}
+                                     />
+                                 <View style={{position:'absolute', opacity:0.7, left: 5}}>
+                                   <Icon
+                                       size={40}
+                                       name='play-circle'
+                                       type='material-community'
+                                       color='black'
+                                   />
+                                 </View>
                              </View>
                          </View>
                      </TouchableWithoutFeedback>
-                 )}
+                 </View>
+                )}
              </Consumer>
          </View>
      )
@@ -349,7 +343,7 @@ export default class VideoPlay extends React.PureComponent {
                                 keyExtractor={(item, index) => item.id.toString()}
                                 />
 
-                              <CommentList comments={this.props.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.props.user} setModalVisible={this.props.setModalVisible}/>
+                              <CommentList article={this.props.article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.props.user} setModalVisible={this.props.setModalVisible} shouldUpdate={this.props.shouldUpdateCommentList}/>
 
                       </ScrollView>
                     )}

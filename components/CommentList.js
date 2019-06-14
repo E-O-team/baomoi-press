@@ -18,23 +18,32 @@ import moment from 'moment/min/moment-with-locales'
 moment.locale('vi');
 import HTML from 'react-native-render-html';
 export default class CommentList extends React.PureComponent{
-
-    state = {comments: [], isLoadingComments: false}
+    _isMounted = false;
+    state = {comments: [], page: 1}
 
   componentDidMount(){
     this.cancelTokenSource = axios.CancelToken.source()
-
+    this._isMounted = true;
   }
+
+  fetchComment = () => {
+    axios.get("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.article.id.toString() + '&per_page=10&page=' + this.state.page, {
+        cancelToken: this.cancelTokenSource.token
+    })
+    .then(res => {
+      if(this._isMounted) this.setState({comments : [...this.state.comments, ...res.data] }, () => { if(this.props.user) this.FetchAsync() })
+    })
+    .catch(err => console.log(err))
+  }
+
   FetchAsync = async () => {
-      const results = this.state.comments.map(async (obj) => this.fetchFBAvatar(obj));
+     const results = this.state.comments.map(async (obj) => this.fetchFBAvatar(obj));
      Promise.all(results).then((completed) => this.setState({comments: completed}));
-
   }
+
   fetchFBAvatar = (obj) => {
     if(obj.author == 0) {return obj}
-    else{
-
-
+    else {
     return  axios({
                   method: "GET",
                   url: "https://baomoi.press/wp-json/wp/v2/users/" + obj.author,
@@ -42,13 +51,15 @@ export default class CommentList extends React.PureComponent{
               },{
                   cancelToken: this.cancelTokenSource.token
               }).then(res => {
-                if(res.data.custom_avatar.length != 0) {
-                  obj.author_avatar_urls['96'] = res.data.custom_avatar
-                }
-                return obj
+                    if(res.data.custom_avatar.length != 0) {
+                      obj.author_avatar_urls['96'] = res.data.custom_avatar;
+                    }
+
+                    return obj;
               }).catch(err => {console.log(err) ; return obj})
     }
   }
+
   renderComment = (item) => {
     if(item.parent == 0) return this.renderThreadedComments(item)
     else return null
@@ -74,8 +85,8 @@ export default class CommentList extends React.PureComponent{
           </View>
         );
 
-
   }
+
   commentView = (item) => {
     return (
             <View style={styles.container}>
@@ -109,21 +120,37 @@ export default class CommentList extends React.PureComponent{
       );
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.comments.length !== prevProps.comments.length) {
-      this.setState({ comments: this.props.comments }, () => {
-        if(this.props.user) this.FetchAsync()
-      })
-    }
-    if (this.props.user !== prevProps.user){
-      if (this.props.comments.length > 0) this.FetchAsync()
-    }
-
+  handleLoadMore = () => {
+      this.setState({
+          page: this.state.page + 1,
+      }, () => this.fetchComment())
   }
-  componentWillUnmount() {
 
+  componentDidUpdate(prevProps) {
+        if(this.props.user !== prevProps.user) {
+            if(this.state.comments.length > 0) this.FetchAsync()
+        }
+
+        if((this.props.article !== prevProps.article) ) {
+            this.setState({
+                comments : [],
+                page: 1,
+            }, () => this.fetchComment())
+        }
+
+        if((this.props.shouldUpdate !== prevProps.shouldUpdate) && this.props.shouldUpdate) {
+            this.setState({
+                comments : [],
+                page: 1,
+            }, () => this.fetchComment())
+        }
+  }
+
+  componentWillUnmount() {
+     this._isMounted = false;
      this.cancelTokenSource && this.cancelTokenSource.cancel()
   }
+
   render(){
     return(
         <View>
@@ -142,9 +169,13 @@ export default class CommentList extends React.PureComponent{
                         )
                       }}
                       keyExtractor={(item, index) => index.toString()}
+                      removeClippedSubviews={true}
+                      windowSize={16}
                       initialNumToRender={5}
-                      renderItem={(item) =>
-                      this.renderComment(item.item)}
+                      renderItem={(item) => this.renderComment(item.item)}
+                      onEndReached={this.handleLoadMore}
+                      onEndReachedThreshold={0.5}
+
                     />
                   </View> : <View></View>
                       }

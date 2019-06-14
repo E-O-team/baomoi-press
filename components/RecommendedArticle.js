@@ -45,16 +45,14 @@ export default class RecommendedArticle extends React.PureComponent{
   }
 
   fetchComment = () => {
-    const request_length = this.state.numberOfComments + 20
-    axios.get("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.item.id +"&per_page="+request_length.toString(),{
-        cancelToken: this.cancelTokenSource.token
-    })
-    .then(res => res.data)
-    .then(json => {
-      this.setState({numberOfComments : json.length}, () => {if(this.state.numberOfComments >= request_length) this.fetchComment()  })
-    })
-    // .then(json => console.log(json))
-    .catch(err => console.log(err))
+      axios.get("https://baomoi.press/wp-json/wp/v2/comments?post="+this.props.item.id.toString(), {
+          cancelToken: this.cancelTokenSource.token
+      })
+      .then(res => {
+         this.setState({numberOfComments : parseInt(res.headers['x-wp-total'], 10) })
+      })
+      // .then(json => console.log(json))
+      .catch(err => console.log(err))
   }
 
 
@@ -115,7 +113,7 @@ export default class RecommendedArticle extends React.PureComponent{
                                                             }
                                                          </View>
                                                     </View>
-                                                        <BaomoiText style={{ fontSize: 18*fontSizeRatio,color:textColor, fontWeight: '400'}}>{item.title.plaintitle}</BaomoiText>
+                                                        <BaomoiText style={{ fontSize: 18*fontSizeRatio,color:textColor,fontWeight: '500'}}>{item.title.plaintitle}</BaomoiText>
                                               </View>
                                           </View> :
 
@@ -138,7 +136,7 @@ export default class RecommendedArticle extends React.PureComponent{
                                                           }
                                                        </View>
                                                   </View>
-                                                  <BaomoiText style={{fontSize: 17.3, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                                                  <BaomoiText style={{fontSize: 17.3,fontWeight: '500', color: textColor}}>{item.title.plaintitle}</BaomoiText>
                                               </View>
                                               <Image
                                                   source={{uri :item.thumb || defaultImg}}

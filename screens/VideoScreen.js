@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, FlatList, ActivityIndicator} from 'react-native';
+import {Text, View, FlatList, ActivityIndicator, ScrollView} from 'react-native';
 import axios from 'axios';
 import Articles from '../components/Articles/Articles';
 import Header from '../components/Header.js';
@@ -29,6 +29,7 @@ export default class VideoListScreen extends React.Component{
       this.fetchVideos()
   }
   fetchVideos = () => {
+      console.log(this.state.page)
       this.cancelTokenSource = axios.CancelToken.source()
       axios.get("https://baomoi.press/wp-json/wp/v2/posts?filter[post_format]=post-format-video&per_page=5&page=" + this.state.page, {
           cancelToken: this.cancelTokenSource.token
@@ -53,7 +54,8 @@ export default class VideoListScreen extends React.Component{
   handleRefresh = () => {
       this.setState({
               refreshing: true,
-              page: 1
+              page: 1,
+              articles: []
           },
           () => this.fetchVideos()
       );
@@ -96,11 +98,11 @@ export default class VideoListScreen extends React.Component{
                         renderItem={({ item, index }) => <Articles item={item} navigation={this.props.navigation} ui={{textColor, backGround}} index={index}/>}
                         keyExtractor={item => item.id.toString()}
                         removeClippedSubviews={true}
-                        windowSize={15}
+                        windowSize={18}
                         refreshing={this.state.refreshing}
                         onRefresh={this.handleRefresh}
                         onEndReached={() => this.handleLoadMore()}
-                        onEndReachedThreshold={0.7}
+                        onEndReachedThreshold={0.5}
                         />
                     </View>
                 )}

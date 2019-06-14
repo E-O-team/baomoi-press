@@ -22,9 +22,11 @@ export default class FollowingScreen extends React.Component {
         this.state={
             data: []
         }
+        this.cancelTokenSource = axios.CancelToken.source()
     }
 
-    componentWillMount() {
+    componentDidMount() {
+
         AsyncStorage.getItem('user')
         .then(res => {
             if(res){
@@ -37,6 +39,8 @@ export default class FollowingScreen extends React.Component {
                         method: "GET",
                         url: "https://baomoi.press/wp-json/wp/v2/users/" + this.state.user.id,
                         headers: {'Authorization': 'Bearer ' + this.state.user.token},
+                    },{
+                        cancelToken: this.cancelTokenSource.token
                     })
                     .then((res) => this.setState({
                         data: Object.values(res.data.subscribed)
@@ -63,28 +67,32 @@ export default class FollowingScreen extends React.Component {
                             backgroundColor: backGround,
                             alignItems:'center',
                             borderBottomWidth: 1,
-                            borderBottomColor: '#C6C3BC',
+                            borderBottomColor: '#e0e0e0',
 
                         }}
                     >
-                        <View style={{flex: 1, alignItems: "flex-start"}}>
+                        <TouchableOpacity style={{flex: 1, alignItems: "center"}}
+                                          onPress={() => {
+                                                navigation.goBack()
+                                                navigation.openDrawer()
+                                            }}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                    navigation.openDrawer()
-                                }}
                             />
-                        </View>
-                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Theo dõi</Text></View>
+                        </TouchableOpacity>
+                        <View style={{flex: 4, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold", color: textColor}}>Theo dõi</Text></View>
                         <View style={{flex: 1}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
             )
         }
+    }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     render(){

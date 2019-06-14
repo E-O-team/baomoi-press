@@ -86,20 +86,22 @@ export default class NotificationScreen extends React.Component {
                         backgroundColor: backGround,
                         alignItems:'center',
                         borderBottomWidth: 1,
-                        borderBottomColor: '#C6C3BC'
+                        borderBottomColor: '#e0e0e0'
                         }}
                     >
-                        <View>
+                        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}
+                                          onPress={() => {
+                                                    navigation.goBack()
+                                                    navigation.openDrawer()
+                                                }}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                    navigation.openDrawer()
-                                }}
                             />
-                        </View>
+                        </TouchableOpacity>
+                        <View style={{flex: 4, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold", color: textColor}}>Thông báo</Text></View>
+                        <View style={{flex: 1}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
@@ -110,7 +112,7 @@ export default class NotificationScreen extends React.Component {
         return (
             <Consumer>
                 {({textColor, backGround}) => (
-                    <ScrollView style={{flex: 1}}>
+                    <ScrollView style={{flex: 1, backgroundColor: backGround}}>
                         <FlatList
                             data={this.state.data}
                             extraData={this.state.data}

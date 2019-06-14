@@ -32,9 +32,10 @@ export default class ArticleScreen extends React.Component {
     state = {
         Article: undefined,
         user: undefined,
-        comments: [],
         scrollY: new Animated.Value(0),
         TopViewHeight: 100,
+        numberOfComments: undefined,
+        shouldUpdateCommentList : false,
         settingModalVisible: false,
         commentModalVisible: false,
         commentParent: 0,
@@ -56,19 +57,21 @@ export default class ArticleScreen extends React.Component {
           this.fetchComment()
           this.updateUser()
           this.getTimeCount()
-          if(!this.state.Article.format === 'video') this.setAds()
+          if(!(this.state.Article.format === 'video')) this.setAds()
         })
     }
     shouldComponentUpdate(nextProps, nextState) {
+        if(this.state.Article !== nextProps.navigation.getParam("Article", "ERR")) return true
+
         if(this.state.user){
             if(this.state.user.subscribed !== nextState.user.subscribed) return true
         }
-        return (this.state.Article !== nextState.Article || this.state.comments !== nextState.comments ||
+
+        return (this.state.Article !== nextState.Article || this.state.numberOfComments !== nextState.numberOfComments ||
                 this.state.TopViewHeight !== nextState.TopViewHeight || this.state.settingModalVisible !== nextState.settingModalVisible ||
                 this.state.commentModalVisible !== nextState.commentModalVisible || this.state.commentParent !== nextState.commentParent ||
-                this.state.user !== nextState.user || this.state.intervalId !== nextState.intervalId)
+                this.state.user !== nextState.user || this.state.intervalId !== nextState.intervalId || this.state.shouldUpdateCommentList !== nextState.shouldUpdateCommentList)
     }
-
 
     getTimeCount = async() => {
 
@@ -82,6 +85,7 @@ export default class ArticleScreen extends React.Component {
         }
 
     }
+
     timer = async () =>  {
       // setState method is used to update the state
        this._timeCount++
@@ -93,7 +97,7 @@ export default class ArticleScreen extends React.Component {
          {
              axios({
                  method: "GET",
-                 url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1&id=' + this.state.user.id.toString(),
+                 url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1&action_type=reading&id=' + this.state.user.id.toString(),
              }, {
                  cancelToken: this.cancelTokenSource.token
              })
@@ -101,18 +105,6 @@ export default class ArticleScreen extends React.Component {
        }
 
        if(this._timeCount >= 7200) this._timeCount = 1
-
-
-    }
-
-
-
-    componentWillUnmount() {
-      // use intervalId from the state to clear the interval
-        clearInterval(this.state.intervalId)
-        AsyncStorage.setItem('seconds', this._timeCount.toString())
-       this._isMounted = false;
-       this.cancelTokenSource && this.cancelTokenSource.cancel()
     }
 
     onShare = async () => {
@@ -146,7 +138,7 @@ export default class ArticleScreen extends React.Component {
               if (result.action === Share.sharedAction) {
                       axios({
                           method: "GET",
-                          url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=5&id=' + this.state.user.id.toString(),
+                          url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=5&action_type=social_sharing&id=' + this.state.user.id.toString(),
                       }, {
                           cancelToken: this.cancelTokenSource.token
                       })
@@ -161,13 +153,13 @@ export default class ArticleScreen extends React.Component {
     }
 
     fetchComment = () => {
-      const request_length = this.state.comments.length + 20
-      fetch("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id +"&per_page="+request_length.toString(), {
+      this.setState({shouldUpdateCommentList : true})
+
+      axios.get("https://baomoi.press/wp-json/wp/v2/comments?post="+this.state.Article.id.toString(), {
           cancelToken: this.cancelTokenSource.token
       })
-      .then(res => res.json())
-      .then(json => {
-        if(this._isMounted) this.setState({comments : json}, () => {if(this.state.comments.length >= request_length) this.fetchComment()  })
+      .then(res => {
+        if(this._isMounted) this.setState({numberOfComments : parseInt(res.headers['x-wp-total'], 10), shouldUpdateCommentList : false })
       })
       // .then(json => console.log(json))
       .catch(err => console.log(err))
@@ -188,29 +180,42 @@ export default class ArticleScreen extends React.Component {
         this.setState({Article : article}, () => this.fetchComment())
     }
 
-    setAds = () => {
-      //Get PopUpAds
-      //this.setState({PopUpAds : AsyncStorage.getItem('pop-up-Ads')})
 
-      //Add Ads in the middle of content'
+
+    setAds = () => {
       var article = this.state.Article
       const string = this.state.Article.content.plaintext
+
       if(string.indexOf('<ads>') == -1) {
-        var middle_position = Math.floor(string.length /2)
-        var match = /\r|\n/.exec(string.slice(middle_position));
-        if(match)
-        {
-          const new_content = [string.slice(0, middle_position+match.index), ' <ads></ads> ', string.slice(middle_position+match.index)].join('');
-          article.content.plaintext = new_content
-          if(this._isMounted) this.setState({Article: article})
-        }
+            var middle_position = Math.floor(string.length /2)
+            var match = /\r|\n/.exec(string.slice(middle_position));
+
+            if(match) {
+              const new_content = [string.slice(0, middle_position+match.index), ' <ads></ads> ', string.slice(middle_position+match.index)].join('');
+              article.content.plaintext = new_content
+              if(this._isMounted) this.setState({Article: article})
+            }
       }
-      //
     }
 
     renderMidAd =(index) => <BannerAd key={index} size='rectangle' AdPosition='Content(Giữa bài viết)'/>
 
     navigateBack = () => this.props.navigation.goBack()
+
+    componentDidUpdate (prevProps) {
+        const prev_props_article = prevProps.navigation.getParam("Article", "ERR")
+        const new_props_article = this.props.navigation.getParam("Article", "ERR")
+
+        if(prev_props_article !== new_props_article) this.updateArticle(new_props_article)
+    }
+
+    componentWillUnmount() {
+      // use intervalId from the state to clear the interval
+        clearInterval(this.state.intervalId)
+        AsyncStorage.setItem('seconds', this._timeCount.toString())
+        this._isMounted = false;
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
+    }
 
     render(){
       const headerSource = this.state.scrollY.interpolate({
@@ -308,10 +313,11 @@ export default class ArticleScreen extends React.Component {
           </Animated.View>
 
           {(this.state.Article && this.state.Article.format === 'standard') &&
-                  <ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 50}}
+                  <Animated.ScrollView ref={(scrollView) => { this.scrollView = scrollView }} style={{ height: this.state.height - 40 , backgroundColor: backGround , marginTop: 50}}
                                 scrollEventThrottle={16}
                                 onScroll={Animated.event(
-                                [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
+                                [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}],
+                                { useNativeDriver: true }
                                 )}>
 
 
@@ -413,17 +419,17 @@ export default class ArticleScreen extends React.Component {
 
                     <RecommendedList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}}/>
 
-                    <CommentList comments={this.state.comments} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
+                    <CommentList article={this.state.Article} navigation={this.props.navigation} ui={{textColor, backGround, fontSizeRatio}} user={this.state.user} setModalVisible={this.setCommentModalVisible} shouldUpdate={this.state.shouldUpdateCommentList}/>
 
-              </ScrollView>
+              </Animated.ScrollView>
             }
 
             {(this.state.Article && this.state.Article.format === 'video') &&
-              <VideoPlay navigation={this.props.navigation} article={this.state.Article} updateArticle={this.updateArticle} comments={this.state.comments} user={this.state.user} setModalVisible={this.setCommentModalVisible}/>
+              <VideoPlay navigation={this.props.navigation} article={this.state.Article} updateArticle={this.updateArticle} user={this.state.user} setModalVisible={this.setCommentModalVisible} shouldUpdateCommentList={this.state.shouldUpdateCommentList}/>
             }
 
 
-             <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.comments.length} onFetch={this.fetchComment} user={this.state.user} updateUser={this.updateUser} commentParent={this.state.commentParent} modalVisible={this.state.commentModalVisible} setModalVisible={this.setCommentModalVisible} navigation={this.props.navigation}/>
+             <CommentModal scrollView={this.scrollView} article={this.state.Article} commentLength={this.state.numberOfComments} onFetch={this.fetchComment} user={this.state.user} updateUser={this.updateUser} commentParent={this.state.commentParent} modalVisible={this.state.commentModalVisible} setModalVisible={this.setCommentModalVisible} navigation={this.props.navigation}/>
 
 
 

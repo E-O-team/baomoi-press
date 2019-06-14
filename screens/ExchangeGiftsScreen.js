@@ -33,8 +33,40 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
         this.state ={
             modalVisible: false,
             value: null,
-            coin: null
+            coin: undefined,
+            user : null,
         }
+    }
+
+    componentDidMount() {
+        this.cancelTokenSource = axios.CancelToken.source()
+        this.fetchUser()
+    }
+
+    fetchUser = () => {
+        AsyncStorage.getItem('user')
+        .then(res => {
+            if(res){
+                const user = JSON.parse(res)
+
+                axios({
+                    method: "GET",
+                    url: "https://baomoi.press/wp-json/wp/v2/users/" + user.id,
+                    headers: {'Authorization': 'Bearer ' + user.token},
+                })
+                .then((resource) => {
+                    resource.data.token = user.token
+
+                     this.setState({
+                        user : resource.data,
+                        xu: resource.data.xu || 0,
+                        numberOfInvitedFriends : (resource.data.invitedFriends) ? resource.data.invitedFriends.length : 0
+                    })
+                })
+                .catch(err => console.log(err))
+
+            }
+        })
     }
 
     setModalVisible = (visible, value, coin) => {
@@ -58,26 +90,32 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                         backgroundColor: backGround,
                         alignItems:'center',
                         borderBottomWidth: 1,
-                        borderBottomColor: '#C6C3BC'
+                        borderBottomColor: '#e0e0e0'
                         }}
                     >
-                        <View>
+                        <TouchableOpacity   style={{flex: 1, alignItems: 'center'}}
+                                            onPress={() => {
+                                                navigation.goBack()
+                                                navigation.openDrawer()
+                                            }}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                    navigation.openDrawer()
-                                }}
                             />
-                        </View>
+                        </TouchableOpacity>
+                        <View style={{flex: 5}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
             )
         }
     }
+
+    componentWillUnmount() {
+        this.cancelTokenSource && this.cancelTokenSource.cancel()
+    }
+
     render(){
         const {Width} = Dimensions.get('window')
         Rules = (props) => {
@@ -128,9 +166,9 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
             <Consumer>
                 {({textColor, backGround}) => {
                     return(
-                        <ScrollView style={{flex: 1, backgroundColor: "#f3f3f3"}}>
+                        <ScrollView style={{flex: 1, backgroundColor: backGround}}>
                             <View style={{paddingBottom: 10}}>
-                                {this.state.modalVisible && <ExchangeGiftsModal visible={this.state.modalVisible} value={this.state.value} coin={this.state.coin} updateUser={this.props.navigation.getParam("updateUser")} setModalVisible={this.setModalVisible} navigation={this.props.navigation}/>}
+                                {this.state.modalVisible && <ExchangeGiftsModal visible={this.state.modalVisible} value={this.state.value} coin={this.state.coin} updateUser={this.fetchUser} user={this.state.user} setModalVisible={this.setModalVisible} navigation={this.props.navigation}/>}
                                 <View style={{backgroundColor: "#dd273e", height: 110, alignItems: "center", justifyContent: "center"}}>
                                     <Text style={{color: "white", fontSize: 25}}>Mời bạn ngay</Text>
                                     <Text style={{color: "white", fontSize: 25}}>Nhận quà mỏi tay</Text>
@@ -139,12 +177,12 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                                     <Text style={{fontSize: 20.5, fontWeight: "bold"}}>Thông tin của bạn</Text>
                                     <View style={{ height: 110, alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
                                         <View style={{ flex:1, alignItems: "center", justifyContent: "center"}}>
-                                            <Text style={{color: "#01969a", fontSize: 30, fontWeight: "bold"}}>0</Text>
+                                            <Text style={{color: "#01969a", fontSize: 30, fontWeight: "bold"}}>{this.state.numberOfInvitedFriends}</Text>
                                             <Text style={{color: "black", fontSize: 20}}>Bạn bè đã mời ></Text>
                                         </View>
                                         <View style={{ backgroundColor: "#949494", height: 90, width: 2}}></View>
                                         <View style={{ flex:1, alignItems: "center", justifyContent: "center"}}>
-                                            <Text style={{color: "#01969a", fontSize: 30, fontWeight: "bold"}}>{this.props.navigation.getParam("xu")}</Text>
+                                            <Text style={{color: "#01969a", fontSize: 30, fontWeight: "bold"}}>{this.state.xu}</Text>
                                             <View style={{flexDirection: "row", alignItems: "center"}}>
                                                 <Icon
                                                     type="material-community"
@@ -168,12 +206,12 @@ export default class ExchangeGiftsScreen extends React.PureComponent {
                                     <Rules
                                         name="people"
                                         type="simple-line-icon"
-                                        content="mời bạn bè cài đặt và đăng nhập lần đầu tiên thành công trên ứng dụng báo mới."
+                                        content="Mời bạn bè cài đặt và đăng nhập lần đầu tiên thành công trên ứng dụng báo mới."
                                     />
                                     <Rules
                                         name="star-circle-outline"
                                         type="material-community"
-                                        content="Mỗi lượt mời thành công, cả hai đều được cộng 100 xu, tối đa 1300 xu/ngày."
+                                        content="Nhập mã giới thiệu thành công người giới thiệu được +5 xu, người nhập mã được +2 xu"
                                     />
                                     <Rules
                                         name="present"

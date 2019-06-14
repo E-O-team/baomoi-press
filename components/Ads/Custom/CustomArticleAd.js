@@ -90,7 +90,7 @@ export default class CustomArticleAd extends Component {
                                         </View>
                                         <Text style={{color: '#C0C0C0', fontSize: 13}}> {this.state.data.acf.sponsor_name}</Text>
                                     </View>
-                                    <BaomoiText style={{fontSize: 18, fontWeight: '500',color: textColor, marginTop: 5}}>{this.state.data.acf.custom_title}</BaomoiText>
+                                    <BaomoiText style={{fontSize: 18,fontWeight: '500', color: textColor, marginTop: 5}}>{this.state.data.acf.custom_title}</BaomoiText>
 
                                 </View>
                                 <Image

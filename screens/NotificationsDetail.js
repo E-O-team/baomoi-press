@@ -6,7 +6,7 @@ import {
     ScrollView,
     Dimensions,
     SafeAreaView,
-
+    TouchableOpacity
 
 } from 'react-native';
 import HTML from 'react-native-render-html'
@@ -37,21 +37,21 @@ export default class NotificationsDetail extends Component {
                             backgroundColor: backGround,
                             alignItems:'center',
                             borderBottomWidth: 1,
-                            borderBottomColor: '#C6C3BC',
+                            borderBottomColor: '#e0e0e0',
 
                         }}
                     >
-                        <View style={{flex: 1, alignItems: "flex-start"}}>
+                        <TouchableOpacity style={{flex: 1, alignItems: "center"}}
+                                            onPress={() => {
+                                                navigation.goBack()
+                                            }}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                }}
                             />
-                        </View>
-                        <View style={{flex: 1}}></View>
+                        </TouchableOpacity>
+                        <View style={{flex: 5}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
@@ -62,8 +62,8 @@ export default class NotificationsDetail extends Component {
     render() {
         return (
           <Consumer>
-            {({textColor, fontSizeRatio}) => (
-            <ScrollView style={styles.container}>
+            {({textColor, backGround, fontSizeRatio}) => (
+            <ScrollView style={[styles.container, {backgroundColor: backGround}]}>
             <Text style={{textAlign: 'center', fontFamily: 'baomoi-regular', fontSize: 24*fontSizeRatio, color: textColor, fontWeight:'bold'}}>{this.state.noti.title.rendered}</Text>
             <HTML
               alterChildren = { (node) => {

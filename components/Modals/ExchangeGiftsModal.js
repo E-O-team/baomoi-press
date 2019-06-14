@@ -75,8 +75,16 @@ export default class ExchangeGiftsModal extends React.Component {
     }
 
     handleSubmit = async() => {
-        const current_xu = this.props.navigation.getParam("xu")
-        let user = JSON.parse(await AsyncStorage.getItem('user'))
+        if(this.state.buttonTitle === "Cập nhật hồ sơ") {
+            this.props.setModalVisible(!this.state.modalVisible, null)
+            this.props.navigation.goBack()
+            this.props.navigation.navigate("UserProfile")
+            return
+        }
+
+        let user = this.props.user
+
+        const current_xu = parseInt(user.xu, 10)
 
         if(current_xu < this.props.coin) {
             this.setState({
@@ -89,7 +97,8 @@ export default class ExchangeGiftsModal extends React.Component {
                 user.mobile_number.length == 0 ||
                 user.user_email.length == 0) {
             this.setState({
-                errorMessage: "Bạn cần điền đầy đủ hồ sơ để thực hiện đổi quà"
+                errorMessage: "Bạn cần cập nhật đầy đủ hồ sơ để thực hiện đổi quà",
+                buttonTitle: "Cập nhật hồ sơ"
             })
         }
         else if(this.state.selectedCarrier !== null){
@@ -98,7 +107,7 @@ export default class ExchangeGiftsModal extends React.Component {
                 loading: true,
             }, async() => {
                 const data = new FormData()
-                
+
                 data.append("fields[carrier]", this.state.selectedCarrier)
                 data.append("fields[price]", this.props.value)
                 data.append("title", user.name)
@@ -122,10 +131,13 @@ export default class ExchangeGiftsModal extends React.Component {
 
                         axios({
                             method: "GET",
-                            url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=-'+this.props.coin.toString(),
-                            headers: {'Authorization': 'Bearer ' + user.token},
+                            url: 'https://baomoi.press/wp-json/wp/v2/add_xu?ammount=-'+ this.props.coin.toString() + '&id=' + user.id.toString(),
                         })
-                        .then(() => this.props.updateUser())
+                        .then(() => {
+                            this.props.updateUser()
+                            const updateSideBar_func = this.props.navigation.getParam("updateUser" , "ERR")
+                            updateSideBar_func()
+                        })
                     }
                 })
                 .catch(err => console.log(err))

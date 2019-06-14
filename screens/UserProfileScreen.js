@@ -26,20 +26,21 @@ export default class UserProfile extends React.PureComponent {
                         backgroundColor: backGround,
                         alignItems:'center',
                         borderBottomWidth: 1,
-                        borderBottomColor: '#C6C3BC'
+                        borderBottomColor: '#C0C0C0'
                         }}
                     >
-                        <View>
+                        <TouchableOpacity   style={{flex : 1, alignItems: 'center'}}
+                                            onPress={() => {
+                                                navigation.goBack()
+                                                navigation.openDrawer()
+                                            }}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                    navigation.openDrawer()
-                                }}
                             />
-                        </View>
+                        </TouchableOpacity>
+                        <View style={{flex : 5}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
@@ -114,7 +115,7 @@ export default class UserProfile extends React.PureComponent {
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Ngày Sinh</Text>
-                            <Text style={{fontSize: 20, color: '#696969'}}>{dateFormat(user.birth_date, "dd-mm-yyyy")}</Text>
+                            <Text style={{fontSize: 20, color: '#696969'}}>{user.birth_date ? dateFormat(user.birth_date, "dd-mm-yyyy") : ""}</Text>
                         </View>
                         <View style={styles.userInfo}>
                             <Text style={{fontSize: 20,}}>Giới Tính</Text>
@@ -134,7 +135,8 @@ export default class UserProfile extends React.PureComponent {
                             title="Chỉnh sửa"
                             onPress={() => this.props.navigation.navigate("UserProfileEdit", {
                                 user: user,
-                                token: this.state.token
+                                token: this.state.token,
+                                updateUser : this.props.navigation.getParam("updateUser" , null)
                             })}
                         />
                     </ScrollView>

@@ -41,7 +41,7 @@ export default class Articles extends React.Component {
             cancelToken: this.cancelTokenSource.token
         })
         .then(res => this.setState({
-            numberOfComments: res.data.length
+            numberOfComments: parseInt(res.headers['x-wp-total'], 10)
         }))
         .catch(err => {
             if(axios.isCancel(err)){
@@ -87,7 +87,7 @@ export default class Articles extends React.Component {
 
     render(){
         Comments = (props) => {
-            if(this.state.numberOfComments !== 0){
+            if(this.state.numberOfComments != 0){
                 return(
                   <View style={{flexDirection: "row", alignItems: "center"}}>
                       <BaomoiText style={{color: '#696969', fontSize: 15}}> - {this.state.numberOfComments} </BaomoiText>
@@ -154,7 +154,7 @@ export default class Articles extends React.Component {
                 {(index == 0 && !this.props.notification) &&
                     <View>
                         <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 10}}>
-                            <Text style={{fontSize: 15, fontWeight: "bold"}}>SỰ KIỆN NÓNG</Text>
+                            <Text style={{fontSize: 15, fontWeight: "bold", color: textColor}}>SỰ KIỆN NÓNG</Text>
                             <Icon
                                 name='share-google'
                                 type='evilicon'

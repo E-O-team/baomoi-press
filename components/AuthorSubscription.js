@@ -18,7 +18,8 @@ export default class AuthorSubscription extends React.PureComponent{
   }
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if (this.props.user != prevProps.user) this.checkSubscription()
+    if (this.props.user !== prevProps.user ) this.checkSubscription()
+
     if(this.props.taxonomy_source !=  prevProps.taxonomy_source) this.updateSource()
   }
 
@@ -44,9 +45,6 @@ export default class AuthorSubscription extends React.PureComponent{
       // .then(json => console.log(json))
       .catch(err => console.log(err))
 
-  }
-  isSubscribed = () =>{
-    this.setState({isSubscribed: true})
   }
 
   onSubscribe = async () => {
@@ -94,9 +92,8 @@ export default class AuthorSubscription extends React.PureComponent{
 
   }
   checkSubscription = () => {
-    this.props.user.subscribed && Object.values(this.props.user.subscribed).map( source => {
-      if(source === this.state.source.term_id.toString()) this.isSubscribed()
-    })
+        if(this.props.user && this.props.user.subscribed.includes(this.state.source.term_id.toString())) this.setState({isSubscribed : true})
+        else this.setState({isSubscribed : false})
   }
 
   navigate = () => {

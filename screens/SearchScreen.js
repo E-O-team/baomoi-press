@@ -65,6 +65,7 @@ export default class SearchScreen extends React.Component{
                   underlineColorAndroid='transparent'
                   onSubmitEditing={() => params.onSubmit(params.text)}
                   placeholder='Tìm kiếm'
+                  autoFocus={true}
                   />
                 </View>
                 <View style={{flex: 1, justifyContent:'center'}}>
@@ -102,7 +103,7 @@ export default class SearchScreen extends React.Component{
       .catch(err => console.log(err))
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
       this.cancelTokenSource && this.cancelTokenSource.cancel()
  }
 
@@ -120,7 +121,7 @@ export default class SearchScreen extends React.Component{
 
   fetchPosts = (text) => {
       const str = text.replace(" ", "-")
-      
+
       axios.get("https://baomoi.press/wp-json/wp/v2/posts?search=" + str +"&per_page=10&page=" + this.state.page, {
           cancelToken: this.cancelTokenSource.token
       })
@@ -166,7 +167,7 @@ export default class SearchScreen extends React.Component{
                                         <BaomoiText style={{color: '#696969', fontSize: 14}}>{moment(item.modified).fromNow().replace("trước", "").replace("một", "1")}</BaomoiText>
                                   }
                               </View>
-                              <BaomoiText style={{fontSize: 17.3, fontWeight: '500',color: textColor}}>{item.title.plaintitle}</BaomoiText>
+                              <BaomoiText style={{fontSize: 17.3, fontWeight: '500', color: textColor}}>{item.title.plaintitle}</BaomoiText>
                           </View>
                           <Image
                               source={{uri :item.thumb || defaultImg}}

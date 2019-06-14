@@ -14,7 +14,7 @@ import {
     TouchableHighlight,
     Alert,
 } from 'react-native';
-import { Facebook } from 'expo';
+import { Facebook, Notifications } from 'expo';
 import {
     Consumer
 } from '../../context/context.js'
@@ -58,6 +58,7 @@ export default class SignInModal extends React.PureComponent {
     }
 
     signInApp = async(user, picture, fbName) => {
+
         axios({
             method: "GET",
             url: 'https://baomoi.press/wp-json/wp/v2/current_user',
@@ -72,15 +73,12 @@ export default class SignInModal extends React.PureComponent {
                 headers: {'Authorization': 'Bearer ' + user.token},
             })
         })
-        .then(res => {
+        .then(async(res) => {
             res.data.token = user.token
+
             const avatar_data = new FormData()
             avatar_data.append("avatar_url", picture.data.url)
 
-
-            // const data = {
-            //     avatar_url: picture.data.url
-            // }
             axios({
                 method: "POST",
                 url: 'https://baomoi.press/wp-json/wp/v2/update_user_avatar',
@@ -88,7 +86,6 @@ export default class SignInModal extends React.PureComponent {
                 data: avatar_data
             })
             .then(() => {
-
                 const fbDisplayName_data = new FormData()
                 fbDisplayName_data.append("name", fbName)
 
@@ -105,7 +102,22 @@ export default class SignInModal extends React.PureComponent {
                 })
                 .catch(error => console.log(error))
 
+            })
 
+            let ExpoToken = await Notifications.getExpoPushTokenAsync();
+            const expoToken_data = new FormData()
+            expoToken_data.append("fields[deviceToken]", ExpoToken)
+
+            axios({
+                method: "POST",
+                url: 'https://baomoi.press/wp-json/acf/v3/users/' + res.data.id,
+                headers: {'Authorization': 'Bearer ' + user.token},
+                data: expoToken_data
+            })
+            .then(res => {})
+            .catch(err => {
+                AsyncStorage.clear()
+                console.log("getExpoPushTokenAsync:" + err.message);
             })
 
         })

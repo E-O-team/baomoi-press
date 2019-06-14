@@ -5,6 +5,10 @@ import AppNavigator from './navigation/AppNavigator';
 import { Provider } from './context/context.js'
 import dateFormat from 'dateformat';
 import splashLogo from './assets/images/logo-splash.png';
+
+if(__DEV__) {
+  import('./ReactotronConfig').then(() => console.log('Reactotron Configured'))
+}
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
@@ -24,7 +28,7 @@ export default class App extends React.Component {
 
       // Android remote notification permissions are granted during the app
       // install, so this will only ask on iOS
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      const { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
       finalStatus = status;
     }
 

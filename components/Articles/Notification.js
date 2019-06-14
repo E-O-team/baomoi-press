@@ -28,32 +28,36 @@ export default class notification extends React.PureComponent {
         const {id} = this.props.item
         const date = this.props.item.modified
         return(
-            <View style={{padding: 10}}>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => this.props.navigation.navigate("NotificationsDetail", {
-                        data: item,
-                    })}
-                >
-                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                        <View>
-                            <View>
-                                <Text style={{fontWeight: "bold", fontSize: 20}}>{title}</Text>
+            <Consumer>
+                {({backGround, textColor}) => (
+                    <View style={{padding: 10}}>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={() => this.props.navigation.navigate("NotificationsDetail", {
+                                data: item,
+                            })}
+                        >
+                            <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+                                <View>
+                                    <View>
+                                        <Text style={{fontWeight: "bold", fontSize: 20, color: textColor}}>{title}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={{color: textColor}}>{dateFormat(date, "dd-mm-yyyy")}</Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    <Icon
+                                        name='angle-right'
+                                        type='font-awesome'
+                                        color='#696969'
+                                    />
+                                </View>
                             </View>
-                            <View>
-                                <Text>{dateFormat(date, "dd-mm-yyyy")}</Text>
-                            </View>
-                        </View>
-                        <View>
-                            <Icon
-                                name='angle-right'
-                                type='font-awesome'
-                                color='#696969'
-                            />
-                        </View>
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
-            </View>
+                )}
+            </Consumer>
         )
     }
 }

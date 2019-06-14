@@ -69,10 +69,10 @@ bannerError() {
     console.log("An error");
     return;
   }
-showInterstitial = async() => {
-    await AdMobInterstitial.requestAdAsync();
-    await AdMobInterstitial.showAdAsync();
-
+showInterstitial = () => {
+    AdMobInterstitial.requestAdAsync()
+    .then(() => AdMobInterstitial.showAdAsync())
+    .catch(error => console.warn(error))
   }
 render() {
     return null

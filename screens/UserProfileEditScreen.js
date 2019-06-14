@@ -29,19 +29,20 @@ export default class UserProfileEdit extends React.Component {
                         backgroundColor: backGround,
                         alignItems:'center',
                         borderBottomWidth: 1,
-                        borderBottomColor: '#C6C3BC'
+                        borderBottomColor: '#C0C0C0'
                         }}
                     >
-                        <View>
+                        <TouchableOpacity   style={{flex: 1, alignItems: 'center'}}
+                                            onPress={() => {
+                                                navigation.goBack()
+                                            }}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
-                                onPress={() => {
-                                    navigation.goBack()
-                                }}
                             />
-                        </View>
+                        </TouchableOpacity>
+                        <View style={{flex : 5}}></View>
                     </SafeAreaView>
                 )}
             </Consumer>
@@ -54,10 +55,10 @@ export default class UserProfileEdit extends React.Component {
         this.setState({
             user: user,
             birth_date: user.birth_date,
-            gender: user.gender,
-            so_thich: user.so_thich,
-            mobile_number: (user.mobile_number.length != 0) ?  user.mobile_number : 'Điền số điện thoại',
-            user_email: (user.user_email.length != 0) ?  user.user_email : 'Điền email',
+            gender: user.gender || "Nam",
+            so_thich: user.so_thich || "Nghe nhạc",
+            mobile_number: user.mobile_number,
+            user_email: user.user_email,
             token: token,
         })
     }
@@ -76,13 +77,14 @@ export default class UserProfileEdit extends React.Component {
             data: data
         })
         .then(res => {
-            this.logOut()
+            this.goOut()
         })
         .catch(err => console.log(err))
     }
 
-    logOut = async () => {
+    goOut = async () => {
         this.props.navigation.pop(2)
+        this.props.navigation.openDrawer()
     }
 
     handleOnDateChange = (newDate) => {

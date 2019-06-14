@@ -75,7 +75,7 @@ export default class AuthLoadingScreen extends React.Component {
                     }
                 })
                 .catch(err => {
-                    // AsyncStorage.clear()
+                    AsyncStorage.clear()
                     // this.props.navigation.navigate("App")
                     console.log("here:" + err.message);
                 })

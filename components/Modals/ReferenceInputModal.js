@@ -79,8 +79,25 @@ export default class SignInModal extends React.PureComponent {
             cancelToken: this.cancelTokenSource.token
         })
         .then(res => {
-            this.setState({text : 'Success!'})
-            this.props.updateUser()
+            const id_data = new FormData()
+            id_data.append("owner_id", codeOwner.id.toString())
+            id_data.append("user_id", this.props.user.id.toString())
+
+            axios({
+                method: "POST",
+                url: 'https://baomoi.press/wp-json/wp/v2/invited_friend',
+                data: id_data
+            }, {
+                cancelToken: this.cancelTokenSource.token
+            })
+            .then(resource => {
+                this.setState({text : 'Success!'})
+                this.props.updateUser()
+            })
+            .catch(err => {
+                console.log("InvitedFriends:" + err.message);
+            })
+
         })
         .catch(err => {
             console.log("HasEnterReference:" + err.message);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {createMaterialTopTabNavigator} from 'react-navigation';
+import { Animated } from 'react-native';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import OtherCategoriesScreens from '../screens/HomeScreen/OtherCategoriesScreens';
 import {ThemeContext, Provider, Consumer} from '../context/context.js';
@@ -113,7 +114,7 @@ export default createMaterialTopTabNavigator({
     EntertainmentScreen: {
         screen: OtherCategoriesScreens,
         navigationOptions:{
-            tabBarLabel: "Gỉải trí",
+            tabBarLabel: "Giải trí",
         },
         params: {
             categories: [
@@ -411,5 +412,6 @@ export default createMaterialTopTabNavigator({
             padding: 0
         }
     },
+    animationEnabled: true,
 }
 )

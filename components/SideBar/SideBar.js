@@ -44,10 +44,12 @@ export default class SiderBar extends React.Component {
         const state = props.navigation.state;
         const route = state.routes[state.index];
         var routeChild = route.routes[route.index];
-        var routeGrandChild = routeChild.routes[routeChild.index]
+        if(routeChild.index) {
+            var routeGrandChild = routeChild.routes[routeChild.index]
 
-        if(routeGrandChild.params && routeGrandChild.params.shouldUpdateSideBar) {
-            this.updateUser()
+            if(routeGrandChild.params && routeGrandChild.params.shouldUpdateSideBar) {
+                this.updateUser()
+            }
         }
 
     }
@@ -81,6 +83,14 @@ export default class SiderBar extends React.Component {
         })
     }
 
+    handleAvatarPress = () => {
+        if(this.checkLogedIn()){
+            this.props.navigation.navigate("UserProfile", {
+                updateUser: this.updateUser
+            })
+        }
+    }
+
     handleExchangeGiftsPress = () => {
         if(this.checkLogedIn()){
             this.props.navigation.navigate("ExchangeGifts", {
@@ -109,7 +119,10 @@ export default class SiderBar extends React.Component {
     }
 
     handleNavigationPressed = (navigationDesination) => {
-        if(navigationDesination == "Following"){
+        if(navigationDesination == "UserProfile") {
+            this.handleAvatarPress()
+        }
+        else if(navigationDesination == "Following") {
             this.handleSubscribedPressed()
         }else if (navigationDesination == "Notifications") {
             this.handleNotificationPress()
@@ -171,28 +184,43 @@ export default class SiderBar extends React.Component {
         })
     }
 
+    showAlert = (title, msg) => {
+     Alert.alert(
+        title,
+        msg,
+        [
+          {text: 'OK', onPress: () => {}},
+          { onDismiss: () => {} }
+        ],
+        { cancelable: false }
+     )
+   }
 
     render(){
         const {user} = this.state
         TopNavigator = (props) => {
             const {name, type, color, content, navigationDesination, size} = props
             return(
-                <TouchableOpacity
-                    style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
-                    onPress={() => {
-                        this.handleNavigationPressed(navigationDesination)
-                    }}
-                >
-                    <View style={{borderWidth: 1, borderColor: "black", borderRadius: 50, height: 45, width: 45, justifyContent:"center"}}>
-                        <Icon
-                            name={name}
-                            type={type}
-                            color={color}
-                            size={size}
-                        />
-                    </View>
-                    <Text style={{color: "#52607b"}}>{content}</Text>
-                </TouchableOpacity>
+                <Consumer>
+                    {({textColor, backGround}) => (
+                        <TouchableOpacity
+                            style={{flex: 1, alignItems: "center", justifyContent: "space-around"}}
+                            onPress={() => {
+                                this.handleNavigationPressed(navigationDesination)
+                            }}
+                        >
+                            <View style={{borderWidth: 1, borderColor: textColor, borderRadius: 50, height: 45, width: 45, justifyContent:"center"}}>
+                                <Icon
+                                    name={name}
+                                    type={type}
+                                    color={color}
+                                    size={size}
+                                />
+                            </View>
+                            <Text style={{color: "#52607b"}}>{content}</Text>
+                        </TouchableOpacity>
+                    )}
+                </Consumer>
             )
         }
         return(
@@ -202,7 +230,9 @@ export default class SiderBar extends React.Component {
                         <View style={{flexDirection: "row", backgroundColor: '#dd273e', marginHorizontal: -10, marginTop: -10, height: 100, alignItems: "flex-end", justifyContent: 'space-between', }}>
                             {user ? (
                                 <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate("UserProfile")}
+                                    onPress={() => {
+                                        this.handleNavigationPressed("UserProfile")
+                                    }}
                                     activeOpacity={0.5}
                                 >
                                     <View style={{flexDirection: "row", paddingLeft: 5, paddingBottom: 5}}>
@@ -244,16 +274,16 @@ export default class SiderBar extends React.Component {
                                     <ReferenceInputModal visible={this.state.referenceInputModalVisible} setModalVisible={this.setReferenceInputModalVisible} navigation={this.props.navigation} user={this.state.user} updateUser={this.updateUser}/>
                                     <UserShareTokenModal visible={this.state.userShareModalVisible} setModalVisible={this.setUserShareModalVisible} navigation={this.props.navigation} user={this.state.user} updateUser={this.updateUser}/>
                                 </View>
-                                <View style={{alignSelf: "flex-end", marginBottom: 7}}>
+                                <TouchableOpacity style={{alignSelf: "flex-end", marginBottom: 7}}
+                                                  onPress={() => this.props.navigation.closeDrawer()}>
                                     <Icon
                                         name='close'
                                         type='evilicon'
                                         size={30}
                                         color="white"
-                                        onPress={() => this.props.navigation.closeDrawer()}
                                         underlayColor="#e12f28"
                                     />
-                                </View>
+                                </TouchableOpacity>
                                 <View style={{backgroundColor:"#3a5685", height: 50, width: 150, marginBottom: 5, alignItems: "center", borderTopLeftRadius: 60, borderBottomLeftRadius: 60, alignItems: "flex-start", paddingLeft: 15, justifyContent: "space-around" }}>
                                     <Text style={{color: "white"}}>MỜI BẠN, KHUI QUÀ</Text>
                                     {user ? (
@@ -300,16 +330,18 @@ export default class SiderBar extends React.Component {
                                 <TouchableOpacity onPress={() => { if(this.checkLogedIn()) this.setUserShareModalVisible(!this.state.userShareModalVisible) }}>
                                     <MenuItemNoBadge name="medal" type="material-community" color="#f46c6c" content="Chia sẻ App kiếm tiền" textColor={textColor} hot='HOT'/>
                                 </TouchableOpacity>
-                                <MenuItemNoBadge name="smartphone" type="feather" color="#768cb1" content="Xem clip kiếm thêm xu" textColor={textColor} hot={false}/>
+                                <TouchableOpacity onPress={() => this.showAlert("Xem clip kiếm thêm xu", "Chức năng đang phát triển")}>
+                                    <MenuItemNoBadge name="smartphone" type="feather" color="#768cb1" content="Xem clip kiếm thêm xu" textColor={textColor} hot={false}/>
+                                </TouchableOpacity>
                             </View>
                             <View style={{marginTop: 25}}>
                                 <View style={{flexDirection: "row"}}>
                                     <View style={{backgroundColor: "#fc5656", height: 18, width: 5}}></View>
                                     <Text style={{color: textColor, marginLeft: 10, fontSize: 18, fontWeight: "bold"}}>Nhiệm vụ hằng ngày</Text>
                                 </View>
-                                <MenuItemWithBadge name='comments-o' type='font-awesome' color='#f4d644' content="Bình luận được duyệt" textColor={textColor} exp="+1exp" backgroundColor={backGround}/>
-                                <MenuItemWithBadge name='book' type='octicon' color='#f46c6c' content="Đọc bài báo 3 phút" textColor={textColor} exp="+1exp" backgroundColor={backGround}/>
-                                <MenuItemWithBadge name='ios-people' type='ionicon' color='#f46c6c' content="Chia sẻ bài viết lên facebook" textColor={textColor} exp="+5Exp" backgroundColor={backGround}/>
+                                <MenuItemWithBadge name='comments-o' type='font-awesome' color='#f4d644' content="Bình luận được duyệt" textColor={textColor} exp="+1Exp" backgroundColor={backGround}/>
+                                <MenuItemWithBadge name='book' type='octicon' color='#f46c6c' content="Đọc bài báo 3 phút" textColor={textColor} exp="+1Exp" backgroundColor={backGround}/>
+                                <MenuItemWithBadge name='ios-people' type='ionicon' color='#f46c6c' content="Chia sẻ bài viết(facebook)" textColor={textColor} exp="+5Exp" backgroundColor={backGround}/>
                                 <MenuItemWithBadge name='md-mail-open' type='ionicon' color='#ea5251' content="Mời bạn bè cài đặt app" textColor={textColor} exp="+10Exp" backgroundColor={backGround}/>
                             </View>
                             <View style={{marginTop: 25}}>

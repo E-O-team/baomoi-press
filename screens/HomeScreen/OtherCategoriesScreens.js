@@ -14,30 +14,29 @@ import {
     Dimensions,
     AsyncStorage,
     ActivityIndicator,
+    InteractionManager
 } from 'react-native';
 import Header from '../../components/Header';
 import axios from 'axios';
 import {Consumer} from '../../context/context.js';
 import Articles from '../../components/Articles/Articles';
 export default class OtherCategoriesScreens extends React.PureComponent {
-    constructor(props){
-        super(props)
-        const categories = this.props.navigation.getParam('categories')
-        const category_id_arr = categories.map(category => category.id)
-        this.state = {
-            categories:  category_id_arr,
-            styles: styles,
+    state = {
+            categories:  [],
             refreshing: true,
             loading: false,
             page: 1,
             y: 0,
             isScrollDown: false,
         }
-    }
 
     componentDidMount() {
-        this.cancelTokenSource = axios.CancelToken.source()
-        this.fetchNews()
+        InteractionManager.runAfterInteractions(() => {
+            this.cancelTokenSource = axios.CancelToken.source()
+            const categories = this.props.navigation.getParam('categories')
+            const category_id_arr = categories.map(category => category.id)
+            this.setState({categories : category_id_arr}, () => this.fetchNews())
+        });
     }
 
     fetchNews = () => {
@@ -134,13 +133,13 @@ export default class OtherCategoriesScreens extends React.PureComponent {
                                 scrollEventThrottle={16}
                                 initialNumToRender={5}
                                 removeClippedSubviews={true}
-                                windowSize={15}
+                                windowSize={18}
                                 renderItem={this.renderItem}
                                 keyExtractor={this.keyExtractor}
                                 refreshing={this.state.refreshing}
                                 onRefresh={this.handleRefresh}
                                 onEndReached={() => this.handleLoadMore()}
-                                onEndReachedThreshold={0.7}
+                                onEndReachedThreshold={0.5}
                             />
                    </View>
                 )}

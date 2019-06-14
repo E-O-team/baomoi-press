@@ -27,7 +27,7 @@ export default class Video extends React.PureComponent {
         const ui = this.props.ui
         const index = this.props.index
             return(
-                <View style={{paddingHorizontal: 10, paddingVertical: 20}}>
+                <View style={{ paddingVertical: 20}}>
                     <TouchableOpacity
                         activeOpacity={1}
                         onPress={this.navigate}
@@ -36,11 +36,11 @@ export default class Video extends React.PureComponent {
                               <View style={{alignItems: 'center', justifyContent:'center'}}>
                                   <Image
                                     key={index}
-                                    style={{ width: width - 40, height: (width-40) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: ui.backGround}}
+                                    style={{ width: width - 20, height: (width-20) * 9/16, borderRadius: 5, overflow: 'hidden', overlayColor: ui.backGround}}
                                     source={{ uri: item.thumb || defaultImg }}
 
                                     />
-                                  <View style={{position:'absolute', opacity:0.6}}>
+                                  <View style={{position:'absolute', opacity:0.8}}>
                                     <Icon
                                         size={125}
                                         name='controller-play'
@@ -67,7 +67,7 @@ export default class Video extends React.PureComponent {
                                     }
                                     <Comments id={item.id}/>
                                 </View>
-                                <BaomoiText style={{fontSize: 18, fontWeight: '500', fontFamily: 'baomoi-regular', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                                <BaomoiText style={{fontSize: 18, fontFamily: 'baomoi-regular', fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                             </View>
                         </View>
                     </TouchableOpacity>

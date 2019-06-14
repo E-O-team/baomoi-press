@@ -76,7 +76,7 @@ export default class HomeScreen extends React.Component {
                     axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=on&per_page=4",{
                         cancelToken: this.cancelTokenSource.token
                     }),
-                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?page=" + this.state.page,{
+                    axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=off&per_page=10&page=" + this.state.page,{
                         cancelToken: this.cancelTokenSource.token
                     })
                 ])
@@ -96,7 +96,7 @@ export default class HomeScreen extends React.Component {
                     }
                 })
             }else{
-                axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=off&page=" + this.state.page,{
+                axios.get("https://baomoi.press/wp-json/wp/v2/posts?meta_key=ht_featured&meta_value=off&per_page=10&page=" + this.state.page,{
                     cancelToken: this.cancelTokenSource.token
                 })
                 .then(res => this.setState({
@@ -177,13 +177,15 @@ export default class HomeScreen extends React.Component {
     }
 
     handleLoadMore = () => {
-        console.log("loading more");
+        // console.log("loading more");
+        // console.log(this.state.page)
         this.setState({
             page: this.state.page + 1,
         }, () => this.fetchNews())
     }
 
     render() {
+        console.log('Home rendered')
         return(
             <Consumer>
                 {({textColor, backGround}) => (
@@ -206,7 +208,7 @@ export default class HomeScreen extends React.Component {
                             removeClippedSubviews={true}
                             windowSize={15}
                             onEndReached={() => this.handleLoadMore()}
-                            onEndReachedThreshold={0.5}
+                            onEndReachedThreshold={0.7}
 
                         />
                   </View>

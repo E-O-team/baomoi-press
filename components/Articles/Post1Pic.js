@@ -43,7 +43,7 @@ export default class Post1Pic extends React.PureComponent {
                                 }
                                 <Comments id={item.id}/>
                             </View>
-                            <BaomoiText style={{fontSize: 17.3, fontWeight: '500',color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
+                            <BaomoiText style={{fontSize: 17.3,fontWeight: '500', color: ui.textColor}}>{item.title.plaintitle}</BaomoiText>
                         </View>
                         <Image
                             source={{uri :item.thumb || defaultImg}}

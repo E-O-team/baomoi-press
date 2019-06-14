@@ -40,19 +40,19 @@ export default class SourceScreen extends React.Component {
                             backgroundColor: backGround,
                             alignItems:'center',
                             borderBottomWidth: 1,
-                            borderBottomColor: '#C6C3BC',
+                            borderBottomColor: '#e0e0e0',
 
                         }}
                     >
-                        <TouchableOpacity style={{flex: 1, alignItems: "flex-start"}}
+                        <TouchableOpacity style={{flex: 1, alignItems: "center"}}
                               onPress={() => navigation.goBack()}>
                             <Icon
                                 name='chevron-left'
-                                size={35}
+                                size={40}
                                 color={textColor}
                             />
                         </TouchableOpacity>
-                        <View style={{flex: 1, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold"}}>Nguồn tin</Text></View>
+                        <View style={{flex: 4, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold", color: textColor}}>Nguồn tin</Text></View>
                         <View style={{flex: 1}}></View>
                     </SafeAreaView>
                 )}
@@ -98,8 +98,7 @@ export default class SourceScreen extends React.Component {
         return(
             <Consumer>
                 {({textColor, backGround}) => (
-                    <View style={{backgroundColor: backGround}}>
-                        <Divider style={{ backgroundColor: '#e0e0e0', height: 1}} />
+                    <View style={{flex: 1, backgroundColor: backGround}}>
                         <FlatList
                             initialNumToRender={5}
                             data={this.state.articles}

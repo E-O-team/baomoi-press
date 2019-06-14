@@ -66,6 +66,40 @@ export default class ExchangeHistory extends React.PureComponent {
         this.getUserID()
     }
 
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+                        height: 50,
+                        flexDirection: "row",
+                        backgroundColor: backGround,
+                        alignItems:'center',
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#e0e0e0'
+                        }}
+                    >
+                        <TouchableOpacity   style={{flex: 1, alignItems: 'center'}}
+                                            onPress={() => {
+                                                    navigation.goBack()
+                                                }}>
+                            <Icon
+                                name='chevron-left'
+                                size={40}
+                                color={textColor}
+                            />
+                        </TouchableOpacity>
+                        <View style={{flex: 5}}></View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
+        }
+    }
+
     getUserID = async() => {
         // let user = JSON.parse(await AsyncStorage.getItem('user'))
         // console.log(user);
@@ -184,14 +218,18 @@ export default class ExchangeHistory extends React.PureComponent {
             )
         }
         return(
-            <ScrollView style={styles.container}>
-                <FlatList
-                    data={this.state.data}
-                    extraData={this.state.data}
-                    renderItem={({ item, index }) => <CardRequest data={item}/>}
-                    keyExtractor={item => item.id.toString()}
-                />
-            </ScrollView>
+            <Consumer>
+              {({backGround, textColor}) => (
+                    <ScrollView style={[styles.container, {backgroundColor: backGround}]}>
+                        <FlatList
+                            data={this.state.data}
+                            extraData={this.state.data}
+                            renderItem={({ item, index }) => <CardRequest data={item}/>}
+                            keyExtractor={item => item.id.toString()}
+                        />
+                    </ScrollView>
+                )}
+            </Consumer>
         )
     }
 };

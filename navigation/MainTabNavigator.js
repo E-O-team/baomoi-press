@@ -36,7 +36,7 @@ const HomeStack = createStackNavigator({
   Home: {
       screen: HomeTabNavigator,
       navigationOptions: ({ navigation }) => ({
-        header: <Header navigation={navigation} shouldHaveDivider={false}/>,
+        header: <Header navigation={navigation} shouldHaveDivider={false}/>
       }),
   },
   Article: ArticleScreen,
@@ -193,6 +193,12 @@ class TabBarComponent extends Component {
 
 
     const oldRoute = oldState.routes[oldState.index];
+
+    if(oldRoute.index === undefined) {
+        this.props.navigation.navigate("Home")
+        return
+    }
+
     var oldParams = oldRoute.routes[oldRoute.index].params;
     if(oldState.index === 0)
     {
@@ -204,6 +210,11 @@ class TabBarComponent extends Component {
 
     const newState = props.navigation.state;
     const newRoute = newState.routes[newState.index];
+
+    if(newRoute.index === undefined) {
+        this.props.navigation.navigate("Home")
+        return
+    }
     var newParams = newRoute.routes[newRoute.index].params;
     if(newState.index === 0)
     {
@@ -213,10 +224,10 @@ class TabBarComponent extends Component {
     const isVisible = !newParams || newParams.visible;
 
     if (wasVisible && !isVisible) {
-      Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 500 }).start();
+      Animated.timing(this.state.offset, { toValue: TAB_BAR_OFFSET, duration: 500}).start();
 
     } else if (isVisible && !wasVisible) {
-      Animated.timing(this.state.offset, { toValue: 0, duration: 500 }).start();
+      Animated.timing(this.state.offset, { toValue: 0, duration: 500}).start();
 
     }
 
@@ -277,7 +288,7 @@ class TabBarComponent extends Component {
           },
           android: {
             // Android only:
-            dialogTitle: 'Share : ' + baomoi_app_url
+            dialogTitle: 'Cùng đọc tin tức hot và được cộng xu từ Báo mới Press\n Bình chọn app tại đây: ' + baomoi_app_url
           }
         })
       });
@@ -286,7 +297,7 @@ class TabBarComponent extends Component {
   render() {
     const blackScreen = (this._isClickedHomeBtn) ? <View style={styles.overlayscreen}></View> : <View></View>
     const expandedView = (this._isClickedHomeBtn) ?
-                                    <View>
+                                    <Animated.View>
                                         <Animated.View style={{     right:this.state.left,
                                                                      bottom:this.state.bottom,
                                                                      position:'absolute',
@@ -333,7 +344,7 @@ class TabBarComponent extends Component {
                                             <Text style={styles.iconText}>Xu</Text>
                                           </TouchableOpacity>
                                         </Animated.View>
-                                </View> : <View></View>
+                                </Animated.View> : <Animated.View></Animated.View>
     return (
         <View>
             {blackScreen}

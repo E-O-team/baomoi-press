@@ -65,7 +65,7 @@ export default class CommentModal extends React.PureComponent{
                 this.setState({text: ''}, () => this.props.setModalVisible(false, 0))
 
                 axios({
-                    method: 'post',
+                    method: 'POST',
                     url: 'https://baomoi.press/wp-json/wp/v2/comments',
                     data: {
                       post: this.props.article.id,
@@ -84,8 +84,7 @@ export default class CommentModal extends React.PureComponent{
 
                 axios({
                     method: "GET",
-                    url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1',
-                    headers: {'Authorization': 'Bearer ' + this.props.user.token},
+                    url: 'https://baomoi.press/wp-json/wp/v2/add_exp?ammount=1&action_type=comments&id=' + this.props.user.id.toString(),
                 },{
                     cancelToken: this.cancelTokenSource.token
                 })

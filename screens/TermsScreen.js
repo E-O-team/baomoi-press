@@ -15,6 +15,44 @@ import {Consumer} from '../context/context.js'
 import { Avatar, Card, Icon, Button, Divider, Badge } from 'react-native-elements';
 
 export default class TermsScreen extends React.PureComponent {
+    static navigationOptions = ({navigation}) => {
+        return {
+            tabBarVisible: false,
+            header: (
+              <Consumer>
+                {({backGround, textColor}) => (
+                    <SafeAreaView
+                        style={{
+
+                            height: 50,
+                            flexDirection: "row",
+                            backgroundColor: backGround,
+                            alignItems:'center',
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#e0e0e0',
+
+                        }}
+                    >
+                        <TouchableOpacity style={{flex: 1, alignItems: "center"}}
+                              onPress={() => {
+                                             navigation.goBack()
+                                             navigation.openDrawer()
+                                         }}>
+                            <Icon
+                                name='chevron-left'
+                                size={40}
+                                color={textColor}
+                            />
+                        </TouchableOpacity>
+                        <View style={{flex: 4, alignItems: "center"}}><Text style={{fontSize: 20, fontWeight: "bold", color: textColor}}>Điều khoản</Text></View>
+                        <View style={{flex: 1}}></View>
+                    </SafeAreaView>
+                )}
+            </Consumer>
+            )
+        }
+    }
+
     render(){
         TextStyled = (props) => {
             return(
@@ -22,9 +60,9 @@ export default class TermsScreen extends React.PureComponent {
                     {({textColor}) => (
                         <View>
                             {(props.bold !== true)?
-                                <Text style={{color: textColor, marginBottom: 5, textAlign: "justify",}}>{props.content}</Text>
+                                <Text style={{color: textColor, marginBottom: 5, textAlign: "justify", fontFamily: 'baomoi-regular', fontSize: 16}}>{props.content}</Text>
                             :
-                                <Text style={{color: textColor, marginBottom: 5, textAlign: "justify", fontWeight: "bold"}}>{props.content}</Text>
+                                <Text style={{color: textColor, marginBottom: 5, textAlign: "justify", fontWeight: "bold", fontFamily: 'baomoi-regular'}}>{props.content}</Text>
                             }
                         </View>
                     )}
