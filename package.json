@@ -14,7 +14,7 @@
     "@babel/runtime": "^7.3.4",
     "@expo/samples": "2.1.1",
     "@expo/videoplayer": "^0.4.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-preset-react-native": "^4.0.1",
     "dateformat": "^3.0.3",
     "expo": "^31.0.2",
