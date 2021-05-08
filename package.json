@@ -18,7 +18,7 @@
     "babel-preset-react-native": "^4.0.1",
     "dateformat": "^3.0.3",
     "expo": "^31.0.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "moment": "^2.23.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
