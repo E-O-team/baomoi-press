@@ -17,7 +17,7 @@
     "axios": "^0.18.0",
     "babel-preset-react-native": "^4.0.1",
     "dateformat": "^3.0.3",
-    "expo": "^31.0.2",
+    "expo": "^46.0.14",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
     "react": "16.5.0",
